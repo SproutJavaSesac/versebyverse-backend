@@ -1,3 +1,27 @@
 spring:
   application:
     name: shoutify
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  # 404인 경우, static 리소스 참고하지 않고, 예외 핸들러에서 처리하도록 함.
+  web:
+    resources:
+      add-mappings: false
+
+# log
+# log level 설정, 예: info, debug, warn, error
+logging:
+  level:
+    org.springframework.jdbc.datasource.init.ScriptUtils: debug
