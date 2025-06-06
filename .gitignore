@@ -38,3 +38,6 @@ out/
 
 ### package files ###
 *.jar
+
+### secrets ###
+.env
