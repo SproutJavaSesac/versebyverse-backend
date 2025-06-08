@@ -1,9 +1,9 @@
 ---
 name: Feature request
-about: Feature request
-title: "[Feature] "
+about: 기능 요청
+title: "[기능] 구현할 기능 요약"
 labels: Feature
-assignees: Sooamazing
+assignees:
 
 ---
 

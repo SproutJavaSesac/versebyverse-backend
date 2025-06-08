@@ -1,9 +1,9 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: "[BUG] "
+about: 문제 상황 보고
+title: "[BUG][기능] 문제 요약 "
 labels: Bug
-assignees: Sooamazing
+assignees:
 
 ---
 
