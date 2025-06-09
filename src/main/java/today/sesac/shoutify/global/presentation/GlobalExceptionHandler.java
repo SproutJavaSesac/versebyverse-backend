@@ -3,6 +3,7 @@ package today.sesac.shoutify.global.presentation;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,10 +12,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import today.sesac.shoutify.global.exception.AbstractBaseException;
-import today.sesac.shoutify.global.exception.AbstractUndiscoveredException;
 import today.sesac.shoutify.global.exception.GlobalErrorCode;
-import today.sesac.shoutify.global.exception.LoginRequiredException;
-import today.sesac.shoutify.global.exception.PermissionRequiredException;
 import today.sesac.shoutify.global.response.ApiResponse;
 
 /**
@@ -44,60 +42,42 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * ExceptionHandler에서 구체적으로 정의하지 않은 BaseException을 처리합니다.
-	 * 기본적으로는 모두 정의되어 있어야 합니다.
+	 * AbstractBaseException을 상속받은 예외를 처리합니다.
+	 * http 상태 코드는 AbstractBaseException에서 정의된 IErrorCode의 상태 코드로 반환됩니다.
 	 *
-	 * @param exception ExceptionHandler에서 구체적으로 정의하지 않은 BaseException
+	 * @param exception AbstractBaseException 구현 예외
 	 * @return ApiResponse<ErrorResponse> 객체
 	 */
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(exception = AbstractBaseException.class)
-	public ApiResponse<ErrorResponse> handleBaseException(AbstractBaseException exception) {
-		log.error("[BaseException] : ", exception);
-		return createApiResponse(exception);
+	public ResponseEntity<ApiResponse<ErrorResponse>> handleBaseException(AbstractBaseException exception) {
+		log.warn("[BaseException] : ", exception);
+		ApiResponse<ErrorResponse> errorResponseApiResponse = ApiResponse.fail(
+			new ErrorResponse(
+				exception.getIErrorCode().name(),
+				exception.getIErrorCode().getMessage(),
+				exception.getParam()
+			)
+		);
+		return ResponseEntity
+			.status(exception.getIErrorCode().getHttpStatus())
+			.body(errorResponseApiResponse);
 	}
 
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	@ExceptionHandler(exception = LoginRequiredException.class)
-	public ApiResponse<ErrorResponse> handleLoginRequiredException(LoginRequiredException exception) {
-		return createApiResponse(exception);
-	}
-
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ExceptionHandler(exception = PermissionRequiredException.class)
-	public ApiResponse<ErrorResponse> handleNoPermissionException(PermissionRequiredException exception) {
-		return createApiResponse(exception);
-	}
-
+	/**
+	 * 요청한 url이 존재하지 않는 경우 발생하는 예외를 처리합니다.
+	 * 기본적으로 HTTP 상태 코드 404에 대응됩니다.
+	 * @param exception NoHandlerFoundException 예외
+	 * @return ApiResponse<ErrorResponse> 객체
+	 */
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(exception = NoHandlerFoundException.class)
 	public ApiResponse<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException exception) {
+		log.warn("[NoHandlerFoundException] : ", exception);
 		return ApiResponse.fail(
 			new ErrorResponse(
 				GlobalErrorCode.UNDISCOVERED.name(),
 				GlobalErrorCode.UNDISCOVERED.getMessage(),
 				null
-			)
-		);
-	}
-
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ExceptionHandler(exception = AbstractUndiscoveredException.class)
-	public ApiResponse<ErrorResponse> handleUndiscoveredException(AbstractUndiscoveredException exception) {
-		return createApiResponse(exception);
-	}
-
-	/**
-	 * AbstractBaseException을 상속받은 예외로 ApiResponse를 생성합니다.
-	 * @param exception AbstractBaseException 구현 예외
-	 * @return ApiResponse<ErrorResponse> 객체
-	 */
-	private ApiResponse<ErrorResponse> createApiResponse(AbstractBaseException exception) {
-		return ApiResponse.fail(
-			new ErrorResponse(
-				exception.getIErrorCode().name(),
-				exception.getIErrorCode().getMessage(),
-				exception.getParam()
 			)
 		);
 	}
@@ -113,7 +93,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(exception = MethodArgumentNotValidException.class)
 	public ApiResponse<List<ErrorResponse>> handleMethodArgumentNotValidException(
 		MethodArgumentNotValidException exception) {
-
+		log.warn("[MethodArgumentNotValidException] : ", exception);
 		List<ErrorResponse> errorList = exception.getBindingResult()
 			.getFieldErrors()
 			.stream()
