@@ -36,8 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### package files ###
-*.jar
 
 ### secrets ###
 .env
