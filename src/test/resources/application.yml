@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
+    url: jdbc:mysql://localhost:${DB_TEST_PORT}/${DB_TEST_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_TEST_USERNAME}
+    password: ${DB_TEST_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
+    properties:
+      hibernate:
+        format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
+        show-sql: true # hibernate가 실행하는 SQL을 로그로 출력
+
+  web:
+    resources:
+      add-mappings: false # 404인 경우, static 리소스 참고하지 않고, 예외 핸들러에서 처리하도록 함.
+
+# log level 설정, 예: trace, debug, info, warn, error
+logging:
+  level:
+    root: INFO
+    org:
+      springframework: info # slf4j 로그 레벨 설정
+      hibernate.SQL: DEBUG # hibernate가 실행하는 SQL을 로그로 출력
