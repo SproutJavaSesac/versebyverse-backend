@@ -1,5 +1,6 @@
 package today.sesac.shoutify.global.presentation;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -122,7 +123,21 @@ public class GlobalExceptionHandler {
 		/*
 		  사용자가 보낸 내용 중 오류가 발생한 파라미터
 		 */
-		String param
+		String param,
+		/*
+		  오류가 발생한 시각
+		 */
+		LocalDateTime timestamp
 	) {
+
+		/**
+		 * timestamp를 현재 시각으로 설정하는 생성자입니다.
+		 * @param name 오류 이름
+		 * @param message 오류 메시지
+		 * @param param 오류가 발생한 파라미터
+		 */
+		public ErrorResponse(String name, String message, String param) {
+			this(name, message, param, LocalDateTime.now());
+		}
 	}
 }
