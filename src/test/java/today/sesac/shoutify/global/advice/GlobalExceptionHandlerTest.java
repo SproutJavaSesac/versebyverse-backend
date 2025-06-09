@@ -1,4 +1,4 @@
-package today.sesac.shoutify.global.presentation;
+package today.sesac.shoutify.global.advice;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

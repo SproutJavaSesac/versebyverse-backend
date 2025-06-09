@@ -1,4 +1,4 @@
-package today.sesac.shoutify.global.presentation;
+package today.sesac.shoutify.global.advice;
 
 import java.time.LocalDateTime;
 import java.util.List;
