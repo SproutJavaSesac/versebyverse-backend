@@ -11,8 +11,8 @@ public abstract class AbstractBaseException extends RuntimeException {
 	private final IErrorCode IErrorCode;
 	private final String param;
 
-	protected AbstractBaseException(IErrorCode IErrorCode, String param, String errorMessage) {
-		super(errorMessage);
+	protected AbstractBaseException(IErrorCode IErrorCode, String param, String errorMessageInStackTrace) {
+		super(errorMessageInStackTrace);
 		this.IErrorCode = IErrorCode;
 		this.param = param;
 	}
