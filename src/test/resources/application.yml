@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
+      ddl-auto: create-drop # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
     properties:
       hibernate:
         format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
