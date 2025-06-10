@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +17,15 @@ import today.sesac.shoutify.global.domain.BaseEntity;
  */
 @Getter
 @Entity
-@Table(name = "rankings",
-	uniqueConstraints = {
-		@UniqueConstraint(columnNames = {"member_id", "category"})
-	})
+@Table(name = "rankings"
+	// ,
+	// uniqueConstraints = {
+	// 	@UniqueConstraint(columnNames = {"member_id", "category"})
+	// }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ranking extends BaseEntity {
 
-	private static final int FIRST_RANK = -1;
 	private static final String NEW_RANK_CHANGE = "NEW";
 
 	@Id
@@ -41,24 +42,30 @@ public class Ranking extends BaseEntity {
 	/**
 	 * 순위(랭킹)가 속한 카테고리
 	 */
+
+	@NotNull
 	@Column(columnDefinition = "tinyint unsigned")
 	private int category;
 
 	/**
 	 * 해당 카테고리의 점수
 	 */
+	@NotNull
 	private int score;
 
 	/**
 	 * 해당 카테고리의 순위
 	 */
-	private int rank;
+	@NotNull
+	private int ranks;
 
 	/**
-	 * 이전 순위.
-	 * -1이면 이전 순위가 없음을 의미
+	 * 이전 순위
+	 * <p>
+	 *     null이면 이전 순위가 없음을 의미합니다.
+	 * </p>
 	 */
-	private int previousRank;
+	private Integer previousRank;
 
 	/**
 	 * 순위 변화
@@ -69,18 +76,20 @@ public class Ranking extends BaseEntity {
 	 *     "NEW"이면 이전 순위가 없음을 의미
 	 * </p>
 	 */
+	@NotNull
+	@Column(length = 30)
 	private String rankChange;
 
 	private Ranking(
 		int category,
 		int score,
-		int rank,
-		int previousRank,
+		int ranks,
+		Integer previousRank,
 		String rankChange
 	) {
 		this.category = category;
 		this.score = score;
-		this.rank = rank;
+		this.ranks = ranks;
 		this.previousRank = previousRank;
 		this.rankChange = rankChange;
 	}
@@ -100,7 +109,7 @@ public class Ranking extends BaseEntity {
 			category.getCode(), // 카테고리 값
 			score, // 초기 점수
 			rank, // 초기 순위
-			FIRST_RANK, // 초기 이전 순위
+			null, // 초기 이전 순위 X
 			NEW_RANK_CHANGE // 초기 랭크 변화
 		);
 	}
