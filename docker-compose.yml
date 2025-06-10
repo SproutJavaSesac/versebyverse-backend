@@ -15,3 +15,18 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: Asia/Seoul
+  mysql-test:
+    container_name: shoutify-mysql-test
+    image: mysql:latest
+    # 한글 사용 위해 utf8mb4 설정
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    ports:
+      - '${DB_TEST_PORT}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_TEST_NAME}
+      MYSQL_USER: ${DB_TEST_USERNAME}
+      MYSQL_PASSWORD: ${DB_TEST_PASSWORD}
+      TZ: Asia/Seoul
