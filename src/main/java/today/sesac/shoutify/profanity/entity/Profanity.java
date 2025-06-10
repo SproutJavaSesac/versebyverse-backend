@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import today.sesac.shoutify.global.domain.BaseEntity;
 
 /**
  * 비속어 Entity
@@ -20,7 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "profanities")
-public class Profanity {
+public class Profanity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +39,6 @@ public class Profanity {
 
     @Column(length = 20)
     private String category;
-
-    @Column(nullable = false, updatable = false)       //updateable = false : 생성 시간 변경되지 않음
-    private LocalDateTime created_at;
-
-    @Column(nullable = false)
-    private LocalDateTime updated_at;
 
     private Profanity(String original, String replacement, String description, int severity, String category){
         this.original = original;
