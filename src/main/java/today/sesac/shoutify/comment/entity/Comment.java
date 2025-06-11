@@ -1,18 +1,16 @@
 package today.sesac.shoutify.comment.entity;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import today.sesac.shoutify.global.domain.BaseEntityOnlyCreatedAt;
 
 @Entity
-public class Comment {
+public class Comment extends BaseEntityOnlyCreatedAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(length = 5000, nullable = false)
     private String contents;
 
     @Column(nullable = false)
