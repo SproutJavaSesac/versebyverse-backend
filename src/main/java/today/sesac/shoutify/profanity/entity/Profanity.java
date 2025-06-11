@@ -2,13 +2,13 @@ package today.sesac.shoutify.profanity.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -26,10 +26,10 @@ import today.sesac.shoutify.global.domain.BaseEntity;
  * - severity: 심각도 등급<br>
  * - category: 카테고리(욕설, 성적, 혐오 등)
  */
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
 @Table(name = "profanities")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profanity extends BaseEntity {
 
     @Id
@@ -37,7 +37,7 @@ public class Profanity extends BaseEntity {
     private Long id;
 
     /**
-     * 비속어
+     * 비속어 원문을 나타냅니다.
      */
     @Column(nullable = false, length = 20, unique = true)
     private String original;
@@ -47,15 +47,27 @@ public class Profanity extends BaseEntity {
     private String description;
 
     /**
-     * 심각도 : 관리자가 지정하며 기본 값으로 1을 가짐
+     * 관리자가 심각도를 지정하며 기본 값으로 1을 가집니다
      */
     @ColumnDefault("1")
     private int severity;
 
-    @Column(length = 20)
-    private String category;
 
-    private Profanity(String original, String replacement, String description, int severity, String category){
+    /**
+     *  비속어 카테고리를 나타냅니다.
+     *  다음 중 하나의 {@link ProfanityCategory} 값을 가집니다.
+     *  <ul>
+     *      <li>{@code GENERAL_SWEAR} - 일반적인 욕설</li>
+     *      <li>{@code SEXUAL_DEGRADATION} - 성적 발언</li>
+     *      <li>{@code DISCRIMINATION_HATE} - 차별/혐오 표현</li>
+     *      <li>{@code MODIFIED_SWEAR} - 우회적/비표준 표현</li>
+     *  </ul>
+     */
+    @Column(length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProfanityCategory category;
+
+    private Profanity(String original, String replacement, String description, int severity, ProfanityCategory category){
         this.original = original;
         this.replacement = replacement;
         this.description = description;
@@ -63,7 +75,11 @@ public class Profanity extends BaseEntity {
         this.category = category;
     }
 
-    public static Profanity of(String original, String replacement, String description, int severity, String category) {
+    public static Profanity of(String original,
+            String replacement,
+            String description,
+            int severity,
+            ProfanityCategory category) {
 
        return new Profanity(original, replacement, description,severity, category);
     }
