@@ -1,9 +1,12 @@
 package today.sesac.shoutify.comment.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntityOnlyCreatedAt;
 
 @Entity
+@NoArgsConstructor(access= AccessLevel.PRIVATE)
 public class Comment extends BaseEntityOnlyCreatedAt {
 
     @Id
@@ -20,8 +23,26 @@ public class Comment extends BaseEntityOnlyCreatedAt {
     private int level;
 
     @Column(nullable = false)
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
-    private boolean isReported;
+    private boolean isReported = false;
+
+    private Comment(
+            String contents,
+            int score,
+            int level
+    ) {
+        this.contents = contents;
+        this.score = score;
+        this.level = level;
+    }
+
+    public static Comment create(
+            String contents,
+            int score,
+            int level
+    ) {
+        return new Comment(contents, score, level);
+    }
 }
