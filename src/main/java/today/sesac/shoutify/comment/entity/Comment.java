@@ -25,10 +25,10 @@ public class Comment extends BaseEntityOnlyCreatedAt {
     @Column(nullable = false)
     private int level;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted = false;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isReported = false;
 
     private Comment(
