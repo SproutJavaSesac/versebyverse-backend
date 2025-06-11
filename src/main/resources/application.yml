@@ -20,6 +20,20 @@ spring:
     resources:
       add-mappings: false
 
+  #vertex ai
+  ai:
+    vertex:
+      ai:
+        embedding:
+          project-id: ${AI_PROJECT_ID}
+          location: us-central1
+          credentials-uri: classpath:${AI_KEY_JSON}
+        gemini:
+          chat:
+            options:
+              model: gemini-2.5-flash-preview-04-17
+
+
 # log
 # log level 설정, 예: info, debug, warn, error
 logging:

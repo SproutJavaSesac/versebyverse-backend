@@ -21,8 +21,20 @@ configurations {
 
 repositories {
 	mavenCentral()
+//	// Spring Milestone 저장소 추가
+//	maven { url 'https://repo.spring.io/milestone' }
+//	// Spring Snapshot 저장소 추가
+//	maven { url 'https://repo.spring.io/snapshot' }
 }
-
+// Spring AI BOM을 사용하여 의존성 버전 관리
+dependencyManagement {
+	imports {
+		// 현재 Spring AI 1.0 GA 버전 (2025년 5월 23일 릴리즈)
+		// https://spring.io/blog/2025/05/20/spring-ai-1-0-GA-released/
+		// 만약 더 최신 버전이 있다면 해당 버전으로 변경
+		mavenBom "org.springframework.ai:spring-ai-bom:1.0.0"
+	}
+}
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -32,6 +44,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
 }
 
 tasks.named('test') {

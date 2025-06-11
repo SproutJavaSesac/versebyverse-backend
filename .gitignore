@@ -41,3 +41,6 @@ out/
 
 ### secrets ###
 .env
+
+### vertex ai 서비스 계정 키 ###
+/src/main/resources/shoutify-462404-5ccce38363a6.json
