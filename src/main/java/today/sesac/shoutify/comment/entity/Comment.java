@@ -2,11 +2,14 @@ package today.sesac.shoutify.comment.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntityOnlyCreatedAt;
 
+@Getter
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
-@NoArgsConstructor(access= AccessLevel.PRIVATE)
+@Table(name = "comments")
 public class Comment extends BaseEntityOnlyCreatedAt {
 
     @Id
@@ -46,3 +49,4 @@ public class Comment extends BaseEntityOnlyCreatedAt {
         return new Comment(contents, score, level);
     }
 }
+
