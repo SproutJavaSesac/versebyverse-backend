@@ -50,13 +50,11 @@ public class Ranking extends BaseEntity {
 	/**
 	 * 해당 카테고리의 점수
 	 */
-	@NotNull
 	private int score;
 
 	/**
 	 * 해당 카테고리의 순위
 	 */
-	@NotNull
 	private int ranks;
 
 	/**
