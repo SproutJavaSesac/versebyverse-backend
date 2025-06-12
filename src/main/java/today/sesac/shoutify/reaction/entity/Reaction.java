@@ -1,4 +1,4 @@
-package today.sesac.shoutify.entity;
+package today.sesac.shoutify.reaction.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntity;
+import today.sesac.shoutify.post.entity.Post;
 
 @Entity
 @Getter

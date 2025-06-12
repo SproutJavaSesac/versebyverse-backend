@@ -1,4 +1,4 @@
-package today.sesac.shoutify.entity;
+package today.sesac.shoutify.post.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
