@@ -39,3 +39,4 @@ out/
 
 ### secrets ###
 .env
+*.json
