@@ -14,6 +14,7 @@ import today.sesac.shoutify.post.entity.Post;
  * {user_id,post_id},{user_id,comment_id} 조합이 중복으로 있을 수 없음
  * 한 사람이 같은 게시물이나 댓글에 다수의 반응을 달 수 없음
  */
+@Table(name = "reaction")
 //@Table(name = "reactions", uniqueConstraints =
 //        {@UniqueConstraint(name = "uk_user-post", columnNames = {"user_id", "post_id"}),
 //                @UniqueConstraint(name = "uk_user-comment", columnNames = {"user_id", "comment_id"})})
