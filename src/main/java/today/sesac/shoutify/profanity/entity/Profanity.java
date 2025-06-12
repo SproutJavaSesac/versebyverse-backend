@@ -19,12 +19,6 @@ import today.sesac.shoutify.global.domain.BaseEntity;
  * <p>
  * 관리자(admin) 페이지를 통해 비속어의 등록, 수정, 삭제, 조회 기능을 제공합니다.
  * </p>
- * <p><b>주요 필드</b>
- * - original: 원문 비속어<br>
- * - replacement: 대체어 (순화 표현)<br>
- * - description: 비속어에 대한 설명<br>
- * - severity: 심각도 등급<br>
- * - category: 카테고리(욕설, 성적, 혐오 등)
  */
 @Entity
 @Getter
@@ -41,6 +35,9 @@ public class Profanity extends BaseEntity {
      */
     @Column(nullable = false, length = 20, unique = true)
     private String original;
+    /**
+     * 비속어 원문에 대한 대체어입니다.
+     */
     @Column(length = 20)
     private String replacement;
     @Column(length = 500)
