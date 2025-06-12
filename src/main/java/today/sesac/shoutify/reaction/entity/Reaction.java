@@ -1,16 +1,6 @@
 package today.sesac.shoutify.reaction.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +14,9 @@ import today.sesac.shoutify.post.entity.Post;
  * {user_id,post_id},{user_id,comment_id} 조합이 중복으로 있을 수 없음
  * 한 사람이 같은 게시물이나 댓글에 다수의 반응을 달 수 없음
  */
-@Table(name = "reactions", uniqueConstraints = {@UniqueConstraint(name = "uk_user-post", columnNames = {"user_id", "post_id"}), @UniqueConstraint(name = "uk_user-comment", columnNames = {"user_id", "comment_id"})})
+//@Table(name = "reactions", uniqueConstraints =
+//        {@UniqueConstraint(name = "uk_user-post", columnNames = {"user_id", "post_id"}),
+//                @UniqueConstraint(name = "uk_user-comment", columnNames = {"user_id", "comment_id"})})
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Reaction extends BaseEntity {
