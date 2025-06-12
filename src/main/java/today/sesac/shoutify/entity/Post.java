@@ -32,8 +32,8 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer score = 0;
 
-    @Column(name = "image", length = 500)
-    private String image; //url?
+    @Column(length = 50)
+    private String imageUrl;
 
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isReported = false;
@@ -44,14 +44,14 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private Boolean isHidden = false;
 
-    @Column(name = "my_emoji", length = 20)
+    @Column(length = 20)
     private String my_emoji;
 
-    private Post(String afterContents, String title, Integer score, String image, String my_emoji) {
+    private Post(String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
         this.afterContents = afterContents;
         this.title = title;
         this.score = score;
-        this.image = image;
+        this.imageUrl = imageUrl;
         this.isReported = false; //Boolean은 디폴트가 false
         this.isDeleted = false;
         this.isHidden = false;
@@ -59,9 +59,9 @@ public class Post extends BaseEntity {
     }
 
     // 팩토리 메소드
-    public static Post create(String afterContents, String title, Integer score, String image,
+    public static Post create(String afterContents, String title, Integer score, String imageUrl,
         String my_emoji) {
-        return new Post(afterContents, title, score, image, my_emoji);
+        return new Post(afterContents, title, score, imageUrl, my_emoji);
     }
 
 }
