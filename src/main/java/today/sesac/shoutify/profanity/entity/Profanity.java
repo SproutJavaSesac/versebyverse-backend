@@ -19,6 +19,7 @@ import today.sesac.shoutify.global.domain.BaseEntity;
  * <p>
  * 관리자(admin) 페이지를 통해 비속어의 등록, 수정, 삭제, 조회 기능을 제공합니다.
  * </p>
+ * @author qkralstjr
  */
 @Entity
 @Getter
