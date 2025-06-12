@@ -16,10 +16,6 @@ import today.sesac.shoutify.global.domain.BaseEntity;
 
 /**
  * {@code Profanity} 엔티티는 비속어 정보를 관리하기 위한 도메인입니다.
- * <p>
- * 관리자(admin) 페이지를 통해 비속어의 등록, 수정, 삭제, 조회 기능을 제공합니다.
- * </p>
- * @author qkralstjr
  */
 @Entity
 @Getter
@@ -41,6 +37,9 @@ public class Profanity extends BaseEntity {
      */
     @Column(length = 20)
     private String replacement;
+    /**
+     * 비속어에 대한 설명입니다.
+     */
     @Column(length = 500)
     private String description;
 

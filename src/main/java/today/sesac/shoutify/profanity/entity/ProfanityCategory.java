@@ -35,7 +35,8 @@ public enum ProfanityCategory {
     ProfanityCategory(String label) {
         this.label = label;
     }
-    public String getDescription() {
+
+    public String getLabel() {
         return label;
     }
 }
