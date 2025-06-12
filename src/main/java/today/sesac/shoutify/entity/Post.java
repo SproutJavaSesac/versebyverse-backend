@@ -59,8 +59,7 @@ public class Post extends BaseEntity {
     }
 
     // 팩토리 메소드
-    public static Post create(String afterContents, String title, Integer score, String imageUrl,
-        String my_emoji) {
+    public static Post create(String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
         return new Post(afterContents, title, score, imageUrl, my_emoji);
     }
 
