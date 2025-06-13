@@ -1,4 +1,4 @@
-package today.sesac.shoutify.comment.entity;
+package today.sesac.shoutify.comment.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
