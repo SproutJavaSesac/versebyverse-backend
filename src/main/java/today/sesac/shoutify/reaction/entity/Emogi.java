@@ -2,6 +2,9 @@ package today.sesac.shoutify.reaction.entity;
 
 import lombok.Getter;
 
+/**
+ * 게시물과 댓글에 부여되는 Emogi의 Enum 클래스입니다.
+ */
 @Getter
 public enum Emogi {
     HAPPY("happy"),
