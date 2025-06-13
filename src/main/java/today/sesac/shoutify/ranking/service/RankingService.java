@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import today.sesac.shoutify.ranking.domain.Ranking;
-import today.sesac.shoutify.ranking.domain.RankingCategory;
+import today.sesac.shoutify.ranking.entity.Ranking;
+import today.sesac.shoutify.ranking.entity.RankingCategory;
 import today.sesac.shoutify.ranking.repository.RankingRepository;
 
 /**

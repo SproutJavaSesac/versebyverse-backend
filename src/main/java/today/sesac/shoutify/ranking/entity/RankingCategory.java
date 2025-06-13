@@ -1,4 +1,4 @@
-package today.sesac.shoutify.ranking.domain;
+package today.sesac.shoutify.ranking.entity;
 
 import lombok.Getter;
 
