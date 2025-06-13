@@ -12,16 +12,11 @@ public enum Emogi {
     ANGRY("angry"),
     EXCITED("excited"),
     CONFUSED("confused"),
-    PROUD("proud")
-    ;
+    PROUD("proud");
 
     private final String emogi;
 
     Emogi(String emogi) {
         this.emogi = emogi;
-    }
-
-    public String getEmogi() {
-        return emogi;
     }
 }
