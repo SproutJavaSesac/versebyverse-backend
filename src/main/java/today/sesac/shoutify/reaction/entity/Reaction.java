@@ -19,8 +19,8 @@ import today.sesac.shoutify.post.entity.Post;
  */
 @Table(name = "reaction")
 //@Table(name = "reactions", uniqueConstraints =
-//        {@UniqueConstraint(name = "uk_user-post", columnNames = {"user_id", "post_id"}),
-//                @UniqueConstraint(name = "uk_user-comment", columnNames = {"user_id", "comment_id"})})
+//        {@UniqueConstraint(name = "uk_author-post", columnNames = {"author", "post_id"}),
+//                @UniqueConstraint(name = "uk_author-comment", columnNames = {"author", "comment_id"})})
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Reaction extends BaseEntity {
@@ -38,7 +38,7 @@ public class Reaction extends BaseEntity {
      * 해당 반응을 표시한 유저 id
      */
 //    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
+//    @JoinColumn(name = "author", nullable = false)
 //    private User user;
     /**
      * 해당 반응이 달린 댓글id
