@@ -63,7 +63,6 @@ public class Reaction extends BaseEntity {
 //        this.emogi = emogi;
 //        this.comment = null;
 //    }
-
     /**
      * 댓글 반응용 생성자
      * 게시물 반응 null

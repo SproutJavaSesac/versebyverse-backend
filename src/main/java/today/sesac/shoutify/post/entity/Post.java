@@ -25,6 +25,12 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContents;
     /**
+     * 게시물을 작성한 회원입니다
+     */
+//    @ManyToOne
+//    @JoinColumn(name = "author", nullable = false)
+//    private User user;
+    /**
      * 게시물의 제목입니다.
      */
     @Column(length = 255)
@@ -62,20 +68,21 @@ public class Post extends BaseEntity {
     @Column(length = 20)
     private String my_emoji;
 
-    private Post(String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-        this.afterContents = afterContents;
-        this.title = title;
-        this.score = score;
-        this.imageUrl = imageUrl;
-        this.isReported = false; //Boolean은 디폴트가 false
-        this.isDeleted = false;
-        this.isHidden = false;
-        this.my_emoji = my_emoji;
-    }
+//    private Post(User user, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
+//        this.user = user;
+//        this.afterContents = afterContents;
+//        this.title = title;
+//        this.score = score;
+//        this.imageUrl = imageUrl;
+//        this.isReported = false; //Boolean은 디폴트가 false
+//        this.isDeleted = false;
+//        this.isHidden = false;
+//        this.my_emoji = my_emoji;
+//    }
 
     // 팩토리 메소드
-    public static Post create(String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-        return new Post(afterContents, title, score, imageUrl, my_emoji);
-    }
+//    public static Post create(User user, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
+//        return new Post(user,afterContents, title, score, imageUrl, my_emoji);
+//    }
 
 }
