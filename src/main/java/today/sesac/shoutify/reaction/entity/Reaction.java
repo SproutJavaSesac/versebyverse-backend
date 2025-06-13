@@ -22,7 +22,7 @@ import today.sesac.shoutify.post.entity.Post;
 //        {@UniqueConstraint(name = "uk_author-post", columnNames = {"author", "post_id"}),
 //                @UniqueConstraint(name = "uk_author-comment", columnNames = {"author", "comment_id"})})
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reaction extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
