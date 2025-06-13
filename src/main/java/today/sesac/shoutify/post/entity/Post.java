@@ -1,11 +1,6 @@
 package today.sesac.shoutify.post.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +18,6 @@ public class Post extends BaseEntity {
 
     @Id //기본키
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
-    @Column //객체 필드를 테이블 컬럼에 매핑
     private Long id;
     /**
      * 비속어 ai 수정 전 게시물 내용입니다.
