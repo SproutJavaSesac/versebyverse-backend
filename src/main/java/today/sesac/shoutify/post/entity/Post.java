@@ -28,7 +28,7 @@ public class Post extends BaseEntity {
      */
 //    @ManyToOne
 //    @JoinColumn(name = "author", nullable = false)
-//    private User user;
+//    private User author;
     /**
      * 게시물의 제목입니다.
      */
@@ -67,8 +67,8 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private String my_emoji;
 
-//    private Post(User user, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-//        this.user = user;
+//    private Post(User author, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
+//        this.author = author;
 //        this.afterContents = afterContents;
 //        this.title = title;
 //        this.score = score;
@@ -80,8 +80,8 @@ public class Post extends BaseEntity {
 //    }
 
     // 팩토리 메소드
-//    public static Post create(User user, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-//        return new Post(user,afterContents, title, score, imageUrl, my_emoji);
+//    public static Post create(User author, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
+//        return new Post(author,afterContents, title, score, imageUrl, my_emoji);
 //    }
 
 }

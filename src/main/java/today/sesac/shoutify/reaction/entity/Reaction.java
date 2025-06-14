@@ -40,7 +40,7 @@ public class Reaction extends BaseEntity {
      */
 //    @ManyToOne
 //    @JoinColumn(name = "author", nullable = false)
-//    private User user;
+//    private User author;
     /**
      * 해당 반응이 달린 댓글id
      */
@@ -60,7 +60,7 @@ public class Reaction extends BaseEntity {
      */
 //    private Reaction(Post post, User user, Emogi emogi) {
 //        this.post = post;
-//        this.user = user;
+//        this.author = author;
 //        this.emoji = emoji;
 //        this.comment = null;
 //    }
@@ -68,19 +68,19 @@ public class Reaction extends BaseEntity {
      * 댓글 반응용 생성자
      * 게시물 반응 null
      */
-//    private Reaction(Comment comment, User user, Emogi emogi) {
+//    private Reaction(Comment comment, User author, Emogi emogi) {
 //        this.comment = comment;
-//        this.user = user;
+//        this.user = author;
 //        this.emoji = emoji;
 //        this.post = null; // 댓글 반응은 게시물 없음
 //    }
 
     //정적 팩토리 메서드
-//    public static Reaction createForPost(Post post, User user, Emoji emoji) {
-//        return new Reaction(post, user, emoji);
+//    public static Reaction createForPost(Post post, User author, Emoji emoji) {
+//        return new Reaction(post, author, emoji);
 //    }
 //
-//    public static Reaction createForComment(Comment comment, User user, Emoji emoji) {
-//        return new Reaction(comment, user, emoji);
+//    public static Reaction createForComment(Comment comment, User author, Emoji emoji) {
+//        return new Reaction(comment, author, emoji);
 //  }
 }
