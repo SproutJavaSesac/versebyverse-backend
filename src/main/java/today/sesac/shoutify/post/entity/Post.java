@@ -13,7 +13,6 @@ import today.sesac.shoutify.global.domain.BaseEntity;
 @Table(name = "posts") //엔티티<->매핑할 테이블 , 이름 생략시 엔티티 이름 사용, 유니크 제약조건
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //매개변수 없는 생성자를 protected로 만들어줌
-
 public class Post extends BaseEntity {
 
     @Id //기본키
