@@ -51,7 +51,7 @@ public class Reaction extends BaseEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Emogi emogi;
+    private Emoji emoji;
 
     /**
      * 게시물 반응용 생성자
@@ -60,7 +60,7 @@ public class Reaction extends BaseEntity {
 //    private Reaction(Post post, User user, Emogi emogi) {
 //        this.post = post;
 //        this.user = user;
-//        this.emogi = emogi;
+//        this.emoji = emoji;
 //        this.comment = null;
 //    }
     /**
@@ -70,16 +70,16 @@ public class Reaction extends BaseEntity {
 //    private Reaction(Comment comment, User user, Emogi emogi) {
 //        this.comment = comment;
 //        this.user = user;
-//        this.emogi = emogi;
+//        this.emoji = emoji;
 //        this.post = null; // 댓글 반응은 게시물 없음
 //    }
 
     //정적 팩토리 메서드
-//    public static Reaction createForPost(Post post, User user, Emogi emogi) {
-//        return new Reaction(post, user, emogi);
+//    public static Reaction createForPost(Post post, User user, Emoji emoji) {
+//        return new Reaction(post, user, emoji);
 //    }
 //
-//    public static Reaction createForComment(Comment comment, User user, Emogi emogi) {
-//        return new Reaction(comment, user, emogi);
+//    public static Reaction createForComment(Comment comment, User user, Emoji emoji) {
+//        return new Reaction(comment, user, emoji);
 //  }
 }
