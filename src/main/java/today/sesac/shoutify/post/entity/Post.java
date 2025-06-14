@@ -65,7 +65,7 @@ public class Post extends BaseEntity {
      * 자신의 게시물에 등록하는 이모지 입니다.
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
-    @Column(length = 20)
+    @Enumerated(EnumType.STRING)
     private String my_emoji;
 
 //    private Post(User user, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {

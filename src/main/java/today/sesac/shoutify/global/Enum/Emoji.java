@@ -1,4 +1,4 @@
-package today.sesac.shoutify.reaction.entity;
+package today.sesac.shoutify.global.Enum;
 
 import lombok.Getter;
 

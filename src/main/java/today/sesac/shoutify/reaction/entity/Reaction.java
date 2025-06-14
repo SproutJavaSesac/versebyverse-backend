@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import today.sesac.shoutify.global.Enum.Emoji;
 import today.sesac.shoutify.global.domain.BaseEntity;
 import today.sesac.shoutify.post.entity.Post;
 

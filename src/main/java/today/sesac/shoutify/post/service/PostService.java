@@ -6,7 +6,7 @@ import today.sesac.shoutify.post.repository.PostRespository;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public final class PostService {
     private PostRespository postRespository;
 
 }
