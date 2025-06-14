@@ -32,7 +32,6 @@ public class Post extends BaseEntity {
     /**
      * 게시물의 제목입니다.
      */
-    @Column(length = 255)
     private String title;
     /**
      * 게시물 작성후 ai로 판단되는 게시물에 대한 점수입니다.
