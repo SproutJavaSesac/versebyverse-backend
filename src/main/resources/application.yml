@@ -2,12 +2,13 @@ spring:
   application:
     name: shoutify
 
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
-    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:${DB_PORT:3306}/${DB_NAME:shoutify}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1234}
 
   jpa:
     hibernate:
@@ -31,12 +32,16 @@ spring:
           credentials-uri: classpath:${AI_KEY_JSON}
           chat:
             options:
-              model: gemini-2.5-flash-preview-04-17
+              model: gemini-2.0-flash
+              temperature: 0.5
 
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:
     root: INFO
+    org.springframework.ai: DEBUG
+    com.google.cloud.aiplatform.v1: DEBUG
+    io.grpc: DEBUG
     org:
       springframework: info # slf4j 로그 레벨 설정
       hibernate.SQL: DEBUG # hibernate가 실행하는 SQL을 로그로 출력

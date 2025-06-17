@@ -39,30 +39,36 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Spring AI Vertex AI Gemini
+	implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
+
+	// gRPC dependencies for Vertex AI
+	implementation 'io.grpc:grpc-okhttp:1.60.1'
+	implementation 'io.grpc:grpc-netty-shaded:1.60.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 
-    // gradle로 test를 실행할 때 .env 파일에 정의된 환경변수를 읽어와서 테스트 환경에 적용
-    def envFile = file('.env')
-    if (envFile.exists()) {
-        envFile.eachLine { line ->
-            if (line.trim() && !line.startsWith('#')) {
-                def (key, value) = line.split('=', 2)
-                if (key && value) {
-                    // 환경 변수 설정
-                    environment key, value.trim()
-                }
-            }
-        }
-    }
+	// gradle로 test를 실행할 때 .env 파일에 정의된 환경변수를 읽어와서 테스트 환경에 적용
+	def envFile = file('.env')
+	if (envFile.exists()) {
+		envFile.eachLine { line ->
+			if (line.trim() && !line.startsWith('#')) {
+				def (key, value) = line.split('=', 2)
+				if (key && value) {
+					// 환경 변수 설정
+					environment key, value.trim()
+				}
+			}
+		}
+	}
 }
 
