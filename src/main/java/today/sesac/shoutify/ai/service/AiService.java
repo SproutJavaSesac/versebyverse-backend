@@ -1,5 +1,6 @@
 package today.sesac.shoutify.ai.service;
 
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -33,5 +34,33 @@ public class AiService {
 
         log.info("변환 결과: {}", result);
         return result;
+    }
+
+    @PostConstruct
+    public void testGrpcLoad() {
+
+        System.out.println("=== gRPC 클래스 존재 여부 체크 ===");
+        try {
+            Class.forName("io.grpc.ManagedChannel");
+            System.out.println("✅ grpc-core 있음");
+            Class.forName("io.grpc.okhttp.OkHttpChannelProvider");
+            System.out.println("✅ grpc-okhttp 있음");
+            Class.forName("io.grpc.netty.shaded.io.grpc.netty.NettyChannelProvider");
+            System.out.println("✅ grpc-netty-shaded 있음");
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ 없음: " + e.getMessage());
+        }
+
+        try {
+            Class<?> grpcProvider = Class.forName("io.grpc.okhttp.OkHttpChannelProvider");
+            System.out.println("✅ gRPC OKHttpProvider found: " + grpcProvider.getName());
+        } catch (ClassNotFoundException e) {
+            System.err.println("❌ gRPC OkHttpChannelProvider NOT FOUND!");
+        }
+    }
+
+    public String askGemini(String message) {
+        Prompt prompt = new Prompt(message);
+        return chatClient.prompt(prompt).call().content();
     }
 }

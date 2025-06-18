@@ -35,13 +35,14 @@ spring:
               model: gemini-2.0-flash
               temperature: 0.5
 
+          transport: rest
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:
     root: INFO
-    org.springframework.ai: DEBUG
-    com.google.cloud.aiplatform.v1: DEBUG
-    io.grpc: DEBUG
+    org.springframework.ai: INFO
+    com.google.cloud.audit: INFO
+    io.grpc: INFO
     org:
       springframework: info # slf4j 로그 레벨 설정
       hibernate.SQL: DEBUG # hibernate가 실행하는 SQL을 로그로 출력

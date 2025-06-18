@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
+
 group = 'today.sesac'
 version = '0.0.1-SNAPSHOT'
 
@@ -26,26 +27,22 @@ repositories {
 //	// Spring Snapshot 저장소 추가
 //	maven { url 'https://repo.spring.io/snapshot' }
 }
-// Spring AI BOM을 사용하여 의존성 버전 관리
-dependencyManagement {
-	imports {
-		// 현재 Spring AI 1.0 GA 버전 (2025년 5월 23일 릴리즈)
-		// https://spring.io/blog/2025/05/20/spring-ai-1-0-GA-released/
-		// 만약 더 최신 버전이 있다면 해당 버전으로 변경
-		mavenBom "org.springframework.ai:spring-ai-bom:1.0.0"
-	}
-}
+
 dependencies {
+	// Replace the following with the starter dependencies of specific modules you wish to use
+	implementation 'org.springframework.ai:spring-ai-openai'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	// Spring AI Vertex AI Gemini
+	implementation platform('org.springframework.ai:spring-ai-bom:1.0.0')
 	implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
+	implementation 'com.google.cloud:google-cloud-vertexai:1.22.0'
 
-	// gRPC dependencies for Vertex AI
-	implementation 'io.grpc:grpc-okhttp:1.60.1'
-	implementation 'io.grpc:grpc-netty-shaded:1.60.1'
+	// gRPC dependencies for Vertex AI, bom version 관리
+	implementation platform('io.grpc:grpc-bom:1.70.0')
+	implementation 'io.grpc:grpc-okhttp'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
