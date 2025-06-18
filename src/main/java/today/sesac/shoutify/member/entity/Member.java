@@ -18,8 +18,8 @@ public class Member extends BaseEntity {
     private Long id;
 
     @NotNull
-    @Column(columnDefinition = "TINYINT(1)")
-    private boolean role;
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -29,13 +29,13 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
-    private Member(boolean role, SocialType socialType, String nickname) {
-        this.role = role;
+    private Member(RoleType roleType, SocialType socialType, String nickname) {
+        this.roleType = roleType;
         this.socialType = socialType;
         this.nickname = nickname;
     }
 
-    public static Member create(boolean role, SocialType socialType, String nickname) {
-        return new Member(role, socialType, nickname);
+    public static Member create(RoleType roleType, SocialType socialType, String nickname) {
+        return new Member(roleType, socialType, nickname);
     }
 }
