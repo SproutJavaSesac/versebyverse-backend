@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import today.sesac.shoutify.global.Enum.Emoji;
 import today.sesac.shoutify.global.domain.BaseEntity;
 
 /**
@@ -64,7 +65,7 @@ public class Post extends BaseEntity {
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
-    private String my_emoji;
+    private Emoji my_emoji;
 
 //    private Post(User author, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
 //        this.author = author;
