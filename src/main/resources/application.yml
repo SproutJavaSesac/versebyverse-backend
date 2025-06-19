@@ -29,12 +29,11 @@ spring:
         gemini:
           project-id: ${AI_PROJECT_ID}
           location: us-central1
-          credentials-uri: classpath:${AI_KEY_JSON}
+          credentials-uri: classpath:${AI_KEY_PATH}
           chat:
             options:
               model: gemini-2.0-flash
               temperature: 0.5
-
           transport: rest
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
