@@ -12,11 +12,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import lombok.RequiredArgsConstructor;
+import today.sesac.shoutify.auth.OAuth2AuthenticationSuccessHandler;
+
 /**
  * TODO: SecurityConfig의 위치 도메인 패키지 안에서 config 패키지를 만들고 넣을지, 공통 패키지를 안에 config 패키지를 만들지 논의 필요
  */
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,6 +43,7 @@ public class SecurityConfig {
 					.baseUri("/api/oauth2/authorization"))
 				.redirectionEndpoint(oAuth2 -> oAuth2
 					.baseUri("/login/oauth2/code/*"))
+				.successHandler(oAuth2AuthenticationSuccessHandler)
 			)
 		;
 
@@ -44,7 +51,7 @@ public class SecurityConfig {
 	}
 
 	/**
-	 * TODO: CORS 설정 시큐리티 설저 안에서 정할지, 아니면 따로 팔지 고민 필요
+	 * TODO: CORS 설정 시큐리티 설정 안에서 정할지, 아니면 따로 팔지 고민 필요
 	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
