@@ -3,10 +3,10 @@ package today.sesac.shoutify.global.Enum;
 import lombok.Getter;
 
 /**
- * 게시물과 댓글에 부여되는 Emoji의 Enum 클래스입니다.
+ * 게시물과 댓글, 자신의 감정을 표시하는 감정/반응하기 enum 입니다.
  */
 @Getter
-public enum Emoji {
+public enum Emotion {
     HAPPY("happy"),
     SAD("sad"),
     ANGRY("angry"),
@@ -14,9 +14,9 @@ public enum Emoji {
     CONFUSED("confused"),
     PROUD("proud");
 
-    private final String emoji;
+    private final String emotion;
 
-    Emoji(String emoji) {
-        this.emoji = emoji;
+    Emotion(String emotion) {
+        this.emotion = emotion;
     }
 }
