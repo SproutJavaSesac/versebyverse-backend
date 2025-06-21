@@ -14,12 +14,18 @@ import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntity;
 import today.sesac.shoutify.post.entity.Post;
 
+/**
+ * 댓글 엔티티
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "comments")
 public class Comment extends BaseEntity {
 
+	/**
+	 * 댓글 고유 식별자
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,11 +46,14 @@ public class Comment extends BaseEntity {
 	 * 댓글이 작성된 게시물
 	 */
 	@ManyToOne
-	@JoinColumn(name = "post_id")
+	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
+	// /**
+	//  * 댓글 작성자
+	//  */
 	// @ManyToOne
-	// @JoinColumn(name = "member_id")
+	// @JoinColumn(name = "member_id", nullable = false)
 	// private Member author;
 
 	/**
@@ -53,9 +62,15 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false)
 	private int level;
 
+	/**
+	 * 댓글 삭제 여부
+	 */
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean isDeleted;
 
+	/**
+	 * 댓글 신고 여부
+	 */
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean isReported;
 
@@ -74,4 +89,3 @@ public class Comment extends BaseEntity {
 		return new Comment(beforeContents, afterContents, post);
 	}
 }
-
