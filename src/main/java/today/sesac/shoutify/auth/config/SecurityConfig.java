@@ -14,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 import today.sesac.shoutify.auth.OAuth2AuthenticationSuccessHandler;
+import today.sesac.shoutify.auth.service.OAuth2UserCustomService;
 
 /**
  * TODO: SecurityConfig의 위치 도메인 패키지 안에서 config 패키지를 만들고 넣을지, 공통 패키지를 안에 config 패키지를 만들지 논의 필요
@@ -23,6 +24,7 @@ import today.sesac.shoutify.auth.OAuth2AuthenticationSuccessHandler;
 public class SecurityConfig {
 
 	private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+	private final OAuth2UserCustomService oAuth2UserCustomService;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,6 +45,9 @@ public class SecurityConfig {
 					.baseUri("/api/oauth2/authorization"))
 				.redirectionEndpoint(oAuth2 -> oAuth2
 					.baseUri("/login/oauth2/code/*"))
+				.userInfoEndpoint(userInfoEndpointConfig ->
+					userInfoEndpointConfig
+						.userService(oAuth2UserCustomService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
 			)
 		;
