@@ -18,14 +18,23 @@ public class MemberService {
 	/**
 	 * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기?
 	 */
-	public void createMember(RoleType roleType, SocialType socialType, String nickname) {
+	public Member createMember(RoleType roleType, SocialType socialType, String nickname) {
 		Member member = Member.create(roleType, socialType, nickname);
-		memberRepository.save(member);
+		Member savedMember = memberRepository.save(member);
+		return savedMember;
 	}
 
 	public Member findById(Long memberId) {
 		Member member = memberRepository.findById(memberId).orElseThrow(
 			() -> new MemberNotFoundException(String.valueOf(memberId), "해당 id를 가진 회원을 찾을 수 없습니다."));
+		return member;
+	}
+
+	// TODO: username? Email? 구분 어떻게 할지 정하기
+	public Member findByUsername(String username) {
+		Member member = memberRepository.findByUsername(username).orElseThrow(
+			() -> new MemberNotFoundException(String.valueOf(username), "해당 username을 가진 회원을 찾을 수 없습니다.")
+		);
 		return member;
 	}
 

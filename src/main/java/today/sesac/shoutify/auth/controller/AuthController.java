@@ -1,17 +1,16 @@
 package today.sesac.shoutify.auth.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import today.sesac.shoutify.auth.service.CurrentUser;
+import today.sesac.shoutify.global.response.ApiResponse;
+import today.sesac.shoutify.member.entity.RoleType;
+import today.sesac.shoutify.member.entity.SocialType;
 
 @Slf4j
 @RestController
@@ -19,11 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthController {
 
+	// TODO: 로그인 상태 확인용 임시 메서드 - 삭제 예정
 	@GetMapping("/status")
-	public ResponseEntity<?> checkAuthStatus(@AuthenticationPrincipal OAuth2User oAuth2User) {
-		String email = oAuth2User.getAttribute("email");
-		Map<String, String> response = new HashMap<>();
-		response.put("email", email);
-		return ResponseEntity.ok(response);
+	public ApiResponse<?> checkAuthStatus(@AuthenticationPrincipal CurrentUser currentUser) {
+		Long memberId = currentUser.getMemberId();
+		RoleType roleType = currentUser.getRoleType();
+		SocialType socialType = currentUser.getSocialType();
+		String email = currentUser.getUsername();
+
+		CheckStatusResponse response = new CheckStatusResponse(memberId, roleType, socialType, email);
+
+		return ApiResponse.success(response);
 	}
 }
