@@ -54,11 +54,11 @@ public class Comment extends BaseEntity {
 	 * 댓글 작성자
 	 */
 	@ManyToOne
-	@JoinColumn(name = "member_id", nullable = false)
+	@JoinColumn(name = "author_id", nullable = false)
 	private Member author;
 
 	/**
-	 * TODO: 대댓글 기능 추가 예정
+	 * 대댓글 기능 추가시 사용 예정
 	 */
 	@Column(nullable = false)
 	private int level;
