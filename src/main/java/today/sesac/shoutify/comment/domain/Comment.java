@@ -54,18 +54,22 @@ public class Comment extends BaseEntity {
 	private int level;
 
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean isDeleted = false;
+	private boolean isDeleted;
 
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean isReported = false;
+	private boolean isReported;
 
 	private Comment(String beforeContents, String afterContents, Post post) {
 		this.beforeContents = beforeContents;
 		this.afterContents = afterContents;
 		this.post = post;
+		// this.author = author;
 		this.level = 0;
+		this.isDeleted = false;
+		this.isReported = false;
 	}
 
+	// TODO: author 추가 필요
 	public static Comment create(String beforeContents, String afterContents, Post post) {
 		return new Comment(beforeContents, afterContents, post);
 	}
