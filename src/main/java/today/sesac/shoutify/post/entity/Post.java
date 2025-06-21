@@ -77,15 +77,15 @@ public class Post extends BaseEntity {
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
-    private Emotion emotion_type;
+    private Emotion emotionType;
     /**
      * 글의 컨셉입니다.
      * enum타입으로 총 5가지 입니다.
      */
     @Enumerated(EnumType.STRING)
-    private Concept concept_type;
+    private Concept conceptType;
 
-    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
+    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
         this.author = author;
         this.beforeContents = beforeContents;
         this.afterContents = afterContents;
@@ -94,12 +94,11 @@ public class Post extends BaseEntity {
         this.isReported = false;
         this.isDeleted = false;
         this.isHidden = false;
-        this.emotion_type = emotion_type;
-        this.concept_type = concept_type;
+        this.emotionType = emotionType;
+        this.conceptType = conceptType;
     }
 
-    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
-        return new Post(author, beforeContents, afterContents, title, imageUrl, emotion_type, concept_type);
+    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
+        return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType, conceptType);
     }
-
 }
