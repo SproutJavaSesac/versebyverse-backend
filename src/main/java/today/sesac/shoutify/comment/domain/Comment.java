@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntity;
+import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.post.entity.Post;
 
 /**
@@ -49,12 +50,12 @@ public class Comment extends BaseEntity {
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
-	// /**
-	//  * 댓글 작성자
-	//  */
-	// @ManyToOne
-	// @JoinColumn(name = "member_id", nullable = false)
-	// private Member author;
+	/**
+	 * 댓글 작성자
+	 */
+	@ManyToOne
+	@JoinColumn(name = "member_id", nullable = false)
+	private Member author;
 
 	/**
 	 * TODO: 대댓글 기능 추가 예정
@@ -74,18 +75,17 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean isReported;
 
-	private Comment(String beforeContents, String afterContents, Post post) {
+	private Comment(String beforeContents, String afterContents, Post post, Member author) {
 		this.beforeContents = beforeContents;
 		this.afterContents = afterContents;
 		this.post = post;
-		// this.author = author;
+		this.author = author;
 		this.level = 0;
 		this.isDeleted = false;
 		this.isReported = false;
 	}
 
-	// TODO: author 추가 필요
-	public static Comment create(String beforeContents, String afterContents, Post post) {
-		return new Comment(beforeContents, afterContents, post);
+	public static Comment create(String beforeContents, String afterContents, Post post, Member author) {
+		return new Comment(beforeContents, afterContents, post, author);
 	}
 }
