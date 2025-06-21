@@ -34,16 +34,22 @@ public class Post extends BaseEntity {
      * 게시물을 작성한 회원입니다
      */
     @ManyToOne
-    @JoinColumn(name = "author", nullable = false)
+    @JoinColumn(nullable = false)
     private Member author;
     /**
-     * 비속어 ai 수정 후 게시물 내용입니다.
+     * ai 수정 전 게시물 내용입니다.
+     */
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String beforeContents;
+    /**
+     * ai 수정 후 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContents;
     /**
      * 게시물의 제목입니다.
      */
+    @Column(nullable = false)
     private String title;
     /**
      * 게시물 내의 이미지 입니다. url로 저장됩니다.
@@ -79,8 +85,9 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Concept concept_type;
 
-    private Post(Member author, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
+    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
         this.author = author;
+        this.beforeContents = beforeContents;
         this.afterContents = afterContents;
         this.title = title;
         this.imageUrl = imageUrl;
@@ -91,8 +98,8 @@ public class Post extends BaseEntity {
         this.concept_type = concept_type;
     }
 
-    public static Post createPost(Member author, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
-        return new Post(author, afterContents, title, imageUrl, emotion_type, concept_type);
+    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotion_type, Concept concept_type) {
+        return new Post(author, beforeContents, afterContents, title, imageUrl, emotion_type, concept_type);
     }
 
 }
