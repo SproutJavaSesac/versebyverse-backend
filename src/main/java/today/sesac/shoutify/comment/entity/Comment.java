@@ -1,4 +1,4 @@
-package today.sesac.shoutify.comment.domain;
+package today.sesac.shoutify.comment.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
