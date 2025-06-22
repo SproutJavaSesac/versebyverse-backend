@@ -20,7 +20,8 @@ import today.sesac.shoutify.global.domain.BaseEntityOnlyCreatedAt;
 import today.sesac.shoutify.member.entity.Member;
 
 /**
- * 순위(랭킹) 정보입니다. 정적 팩토리 메서드 {@link #create(RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
+ * 순위(랭킹) 정보입니다.
+ * 정적 팩토리 메서드 {@link #create(Member, RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
  */
 @Getter
 @Entity
@@ -38,7 +39,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
   private Long id;
 
   /**
-   * 해당 순위의 회원
+   * 해당 순위의 회원.
    */
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
@@ -46,26 +47,26 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
   private Member member;
 
   /**
-   * 순위(랭킹)가 속한 카테고리
+   * 순위(랭킹)가 속한 카테고리.
    */
   @NotNull
   @Enumerated(EnumType.STRING)
   private RankingCategory category;
 
   /**
-   * 해당 카테고리의 점수
+   * 해당 카테고리의 점수.
    */
   @Column(columnDefinition = "int unsigned", nullable = false)
   private int score;
 
   /**
-   * 해당 카테고리의 순위
+   * 해당 카테고리의 순위.
    */
   @Column(columnDefinition = "int unsigned", nullable = false)
   private int ranks;
 
   /**
-   * 이전 순위
+   * 이전 순위.
    * <p>
    * null이면 이전 순위가 없음을 의미합니다.
    * </p>
@@ -74,7 +75,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
   private Integer previousRank;
 
   /**
-   * 순위(랭킹)의 기간 타입
+   * 순위(랭킹)의 기간 타입.
    */
   @NotNull
   @Enumerated(EnumType.STRING)

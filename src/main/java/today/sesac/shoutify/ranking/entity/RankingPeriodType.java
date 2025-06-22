@@ -2,6 +2,9 @@ package today.sesac.shoutify.ranking.entity;
 
 import lombok.Getter;
 
+/**
+ * 순위(랭킹) 기간 타입.
+ */
 @Getter
 public enum RankingPeriodType {
   DAILY("일간");
