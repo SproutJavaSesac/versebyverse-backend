@@ -30,6 +30,7 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
+              - profile
 
 # log level 설정, 예: trace, debug, info, warn, error
 logging:

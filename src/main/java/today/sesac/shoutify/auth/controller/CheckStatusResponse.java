@@ -13,5 +13,5 @@ public class CheckStatusResponse {
 	private Long memberId;
 	private RoleType roleType;
 	private SocialType socialType;
-	private String email;
+	private String username;
 }
