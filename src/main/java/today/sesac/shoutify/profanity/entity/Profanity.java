@@ -26,7 +26,6 @@ public class Profanity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   /**
    * 비속어 원문을 나타냅니다.
    */
