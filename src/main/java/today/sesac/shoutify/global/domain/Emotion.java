@@ -7,16 +7,10 @@ import lombok.Getter;
  */
 @Getter
 public enum Emotion {
-    HAPPY("happy"),
-    SAD("sad"),
-    ANGRY("angry"),
-    EXCITED("excited"),
-    CONFUSED("confused"),
-    PROUD("proud");
-
-    private final String emotion;
-
-    Emotion(String emotion) {
-        this.emotion = emotion;
-    }
+    HAPPY,
+    SAD,
+    ANGRY,
+    EXCITED,
+    CONFUSED,
+    PROUD;
 }
