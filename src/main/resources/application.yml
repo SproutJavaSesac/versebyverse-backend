@@ -6,9 +6,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
-    url: jdbc:mysql://localhost:${DB_PORT:3306}/${DB_NAME:shoutify}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:1234}
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
