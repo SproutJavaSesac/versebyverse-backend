@@ -50,7 +50,7 @@ public class SecurityConfig {
 				.userInfoEndpoint(userInfoEndpointConfig ->
 					userInfoEndpointConfig
 						.userService(oAuth2UserCustomService))
-				.successHandler(oAuth2AuthenticationSuccessHandler)
+				.successHandler(oAuth2AuthenticationSuccessHandler) //TODO: 실패 시 handler도 추가하기
 			)
 		;
 
