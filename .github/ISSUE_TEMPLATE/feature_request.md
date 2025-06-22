@@ -23,4 +23,4 @@ assignees:
 -->
 
 ## 이슈 생성 시 확인하기
-- [ ] Assignees, label, project, milestone 할당했나요?
+- [ ] Assignees, label, issue type, project, milestone 할당했나요?
