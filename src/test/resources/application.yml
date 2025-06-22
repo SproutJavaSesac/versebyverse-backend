@@ -14,6 +14,19 @@ spring:
         format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
         show-sql: true # hibernate가 실행하는 SQL을 로그로 출력
 
+  #vertex ai
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: ${AI_PROJECT_ID}
+          location: us-central1
+          credentials-uri: classpath:${AI_KEY_PATH}
+          chat:
+            options:
+              model: gemini-2.0-flash
+              temperature: 0.5
+          transport: rest
   web:
     resources:
       add-mappings: false # 404인 경우, static 리소스 참고하지 않고, 예외 핸들러에서 처리하도록 함.
