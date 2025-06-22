@@ -1,4 +1,4 @@
-package today.sesac.shoutify.global.Enum;
+package today.sesac.shoutify.global.domain;
 
 import lombok.Getter;
 

@@ -13,9 +13,9 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import today.sesac.shoutify.global.Enum.Concept;
-import today.sesac.shoutify.global.Enum.Emotion;
 import today.sesac.shoutify.global.domain.BaseEntity;
+import today.sesac.shoutify.global.domain.Concept;
+import today.sesac.shoutify.global.domain.Emotion;
 import today.sesac.shoutify.member.entity.Member;
 
 /**
