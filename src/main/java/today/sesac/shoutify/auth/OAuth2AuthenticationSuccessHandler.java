@@ -17,21 +17,21 @@ import today.sesac.shoutify.member.entity.RoleType;
 import today.sesac.shoutify.member.entity.SocialType;
 
 /**
- * OAuth2 로그인 성공 시 작동하는 동작들을 규정하는 클래스입니다.
+ * 소셜 로그인이 성공했을 떄 마지막으로 작동하는 동작들을 설정하는 클래스입니다.
  */
 @Slf4j
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	/**
-	 * 홈 페이지로 리다이렉트
+	 * 로그인 성공 시 홈(/) 페이지로 리다이렉트
 	 * TODO: 원래 로그인하려던 페이지로 보내주기(프론트 구현 필요)
 	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
 
-		//TODO: 팀원 확인 용 로그 - 테스트코드 직성 이후 삭제하기
+		//TODO: 팀원 확인용 로그 - 테스트코드 직성 이후 삭제하기
 		boolean authenticated = authentication.isAuthenticated();
 		CurrentUser currentUser = (CurrentUser)authentication.getPrincipal();
 		Long memberId = currentUser.getMemberId();
