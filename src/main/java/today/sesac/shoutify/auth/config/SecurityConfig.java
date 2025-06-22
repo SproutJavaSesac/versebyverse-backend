@@ -18,6 +18,7 @@ import today.sesac.shoutify.auth.service.OAuth2UserCustomService;
 
 /**
  * TODO: SecurityConfig의 위치 도메인 패키지 안에서 config 패키지를 만들고 넣을지, 공통 패키지를 안에 config 패키지를 만들지 논의 필요
+ * 스프링 시큐리티 설정을 관리하는 클래스입니다
  */
 @Configuration
 @RequiredArgsConstructor
@@ -36,7 +37,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(
 					"/api/oauth2/authorization",
-					"/login/oauth2/code/*"
+					"/login/oauth2/code/*",
+					"/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
 				).permitAll()
 				.anyRequest().authenticated()
 			)
@@ -57,6 +59,7 @@ public class SecurityConfig {
 
 	/**
 	 * TODO: CORS 설정 시큐리티 설정 안에서 정할지, 아니면 따로 팔지 고민 필요
+	 * CORS 설정
 	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {

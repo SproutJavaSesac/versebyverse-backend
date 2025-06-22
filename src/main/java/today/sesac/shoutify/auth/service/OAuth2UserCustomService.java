@@ -31,9 +31,11 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 		if (registrationId.equals("google")) {
 			socialType = SocialType.GOOGLE;
 		}
+		log.info("socialType: {}", socialType);
 
 		// TODO: oauth2User 형식에 맞게 변환
 		String email = oAuth2User.getAttribute("email");
+		log.info("email: {}", email);
 
 		RoleType roleType = RoleType.ROLE_USER;
 
@@ -41,11 +43,12 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 		Member member;
 		try {
 			member = memberService.findByUsername(email);
+			log.info("get member");
 		} catch (MemberNotFoundException e) {
 			member = memberService.createMember(roleType, socialType, "닉네임");
+			log.info("create member");
 		}
 
-		return CurrentUser.create(member.getId(), roleType, socialType,
-			email);
+		return CurrentUser.create(member.getId(), roleType, socialType, email);
 	}
 }

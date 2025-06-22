@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -21,12 +22,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import today.sesac.shoutify.auth.config.TestSecurityConfig;
 import today.sesac.shoutify.global.exception.LoginRequiredException;
 import today.sesac.shoutify.global.exception.PermissionRequiredException;
 
 /**
  * 전역 예외 처리 테스트
  */
+@Import(TestSecurityConfig.class) //TODO: 테스트 커스텀 유저 추가 애노테이션 구현 필요
 @WebMvcTest(controllers = GlobalExceptionHandlerTest.class)
 class GlobalExceptionHandlerTest {
 
