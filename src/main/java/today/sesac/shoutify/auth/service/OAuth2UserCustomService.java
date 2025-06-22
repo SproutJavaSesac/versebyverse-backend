@@ -15,7 +15,7 @@ import today.sesac.shoutify.member.exception.MemberNotFoundException;
 import today.sesac.shoutify.member.service.MemberService;
 
 /**
- * 소셜 로그인 과정에서
+ * 소셜 로그인 과정에서 리소스 서버로부터 사용자 정보를 받을 때, 사용자 정보를 가공할 수 있도록 설정하는 클래스입니다.
  */
 @Slf4j
 @Service
