@@ -31,7 +31,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
 		// 소셜 로그인 타입 확인
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
-		log.info("loadUser.registrationId: {}", registrationId);
+		log.info("loadUser.registrationId: {}", registrationId); // ex.google
 		SocialType socialType = null;
 		if (registrationId.equals("google")) {
 			socialType = SocialType.GOOGLE;
