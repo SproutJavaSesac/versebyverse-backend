@@ -14,6 +14,9 @@ import today.sesac.shoutify.member.entity.SocialType;
 import today.sesac.shoutify.member.exception.MemberNotFoundException;
 import today.sesac.shoutify.member.service.MemberService;
 
+/**
+ * 소셜 로그인 과정에서
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,9 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
+		log.info("oAuth2User: {}", oAuth2User);
 
+		// 소셜 로그인 타입 확인
 		String registrationId = userRequest.getClientRegistration().getRegistrationId();
 		log.info("loadUser.registrationId: {}", registrationId);
 		SocialType socialType = null;
@@ -33,20 +38,22 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 		}
 		log.info("socialType: {}", socialType);
 
-		// TODO: oauth2User 형식에 맞게 변환
+		// 사용자 정보 확인
 		String email = oAuth2User.getAttribute("email");
 		log.info("email: {}", email);
+		String nickname = oAuth2User.getAttribute("name");
+		log.info("nickname: {}", nickname); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
 
+		// 사용자 역할 확인
 		RoleType roleType = RoleType.ROLE_USER;
 
+		// 사용자 정보가 없으면 db에 저장, 있으면 불러오기
 		// TODO: 확인하고 없으면 새로 만들기
 		Member member;
 		try {
 			member = memberService.findByUsername(email);
-			log.info("get member");
 		} catch (MemberNotFoundException e) {
-			member = memberService.createMember(roleType, socialType, "닉네임");
-			log.info("create member");
+			member = memberService.createMember(roleType, socialType, email, nickname);
 		}
 
 		return CurrentUser.create(member.getId(), roleType, socialType, email);

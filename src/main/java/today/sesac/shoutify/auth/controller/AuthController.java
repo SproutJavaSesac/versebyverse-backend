@@ -24,9 +24,11 @@ public class AuthController {
 		Long memberId = currentUser.getMemberId();
 		RoleType roleType = currentUser.getRoleType();
 		SocialType socialType = currentUser.getSocialType();
-		String email = currentUser.getUsername();
+		String username = currentUser.getUsername();
+		log.info("checkAuthStatus: memberId = {}, roleType = {}, socialType = {}, username = {}",
+			memberId, roleType, socialType, username);
 
-		CheckStatusResponse response = new CheckStatusResponse(memberId, roleType, socialType, email);
+		CheckStatusResponse response = new CheckStatusResponse(memberId, roleType, socialType, username);
 
 		return ApiResponse.success(response);
 	}

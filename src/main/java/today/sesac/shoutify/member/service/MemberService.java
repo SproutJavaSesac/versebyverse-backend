@@ -20,10 +20,10 @@ public class MemberService {
 	/**
 	 * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기?
 	 */
-	public Member createMember(RoleType roleType, SocialType socialType, String nickname) {
-		log.info("MemberService - createMember: roleType = {}, socialType = {}, nickname = {}", roleType, socialType,
-			nickname);
-		Member member = Member.create(roleType, socialType, nickname);
+	public Member createMember(RoleType roleType, SocialType socialType, String username, String nickname) {
+		log.info("createMember: roleType = {}, socialType = {}, username = {}, nickname = {}",
+			roleType, socialType, username, nickname);
+		Member member = Member.create(roleType, socialType, username, nickname);
 		Member savedMember = memberRepository.save(member);
 		return savedMember;
 	}
@@ -39,6 +39,8 @@ public class MemberService {
 		Member member = memberRepository.findByUsername(username).orElseThrow(
 			() -> new MemberNotFoundException(String.valueOf(username), "해당 username을 가진 회원을 찾을 수 없습니다.")
 		);
+		log.info("findByUsername: roleType = {}, socialType = {}, username = {}, nickname = {}",
+			member.getRoleType(), member.getSocialType(), member.getUsername(), member.getNickname());
 		return member;
 	}
 
