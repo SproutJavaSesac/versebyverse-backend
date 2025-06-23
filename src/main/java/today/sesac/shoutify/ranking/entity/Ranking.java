@@ -27,7 +27,7 @@ import today.sesac.shoutify.member.entity.Member;
 @Entity
 @Table(name = "rankings",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"member_id", "category"})
+        @UniqueConstraint(columnNames = {"member_id", "category", "period_type"})
     }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
