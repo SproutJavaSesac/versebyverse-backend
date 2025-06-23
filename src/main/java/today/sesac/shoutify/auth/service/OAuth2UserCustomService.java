@@ -51,7 +51,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 		// TODO: 확인하고 없으면 새로 만들기
 		Member member;
 		try {
-			member = memberService.findByUsername(email);
+			member = memberService.findByEmailAndSocialType(email, socialType);
 		} catch (MemberNotFoundException e) {
 			member = memberService.createMember(roleType, socialType, email, nickname);
 		}
