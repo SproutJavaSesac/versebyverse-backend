@@ -105,4 +105,10 @@ public class Post extends BaseEntity {
         return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType,
                 conceptType);
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+
 }
