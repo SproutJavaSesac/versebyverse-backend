@@ -2,6 +2,7 @@ package today.sesac.shoutify.post;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +43,22 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity.ok(ApiResponse.success("삭제가 성공했습니다"));
     }
+
     /**
-     * 게시물 수정
+     * 게시물 숨기기
      */
+    @PatchMapping("/{postId}/hide")
+    public ResponseEntity<ApiResponse> hidePost(@PathVariable Long postId) {
+        postService.hidePost(postId);
+        return ResponseEntity.ok(ApiResponse.success("숨기기 성공"));
+    }
+
+    /**
+     * 게시물 숨김 해제
+     */
+    @PatchMapping("{postId}/unhide")
+    public ResponseEntity<ApiResponse> unhidePost(@PathVariable Long postId) {
+        postService.unhidePost(postId);
+        return ResponseEntity.ok(ApiResponse.success("숨김취소 성공"));
+    }
 }

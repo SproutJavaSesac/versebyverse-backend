@@ -110,5 +110,11 @@ public class Post extends BaseEntity {
         this.isDeleted = true;
     }
 
+    public void hide() {
+        this.isHidden = true;
+    }
 
+    public void unhide() {
+        this.isHidden = false;
+    }
 }

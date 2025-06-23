@@ -86,6 +86,32 @@ public class PostService {
     }
 
     /**
+     * 게시물 숨기기
+     */
+    public void hidePost(Long postId) {
+        Post post = validateExistedPost(postId);
+
+        //작성자 일치여부 추후 코드 변경 필요
+        Member author = getCurrentMember();
+        if (!post.getAuthor().equals(author.getId())) {
+            throw new RuntimeException("숨김 권한이 없습니다");
+        }
+
+        post.hide();
+        postRepository.save(post);
+    }
+
+    /**
+     * 게시물 숨김 해제
+     */
+    public void unhidePost(Long postId) {
+        Post post = validateExistedPost(postId);
+        post.unhide();
+        postRepository.save(post);
+    }
+
+
+    /**
      * member 임시 함수
      * 임시 데이터의 nickname을 찾아서 진행하도록 함
      * getMember() 생성시 추후 변경 예정
@@ -101,5 +127,14 @@ public class PostService {
      */
     private String processAI(String contents) {
         return contents;
+    }
+
+    /**
+     * 게시물 존재 유무 함수
+     */
+    private Post validateExistedPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 없습니다"));
+
     }
 }
