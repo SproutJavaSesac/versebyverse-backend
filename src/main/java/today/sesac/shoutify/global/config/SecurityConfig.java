@@ -1,4 +1,4 @@
-package today.sesac.shoutify.auth.config;
+package today.sesac.shoutify.global.config;
 
 import java.util.Arrays;
 import java.util.List;
