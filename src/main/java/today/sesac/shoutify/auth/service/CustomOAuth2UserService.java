@@ -19,7 +19,7 @@ import today.sesac.shoutify.member.service.MemberService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OAuth2UserCustomService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberService memberService;
 
@@ -55,6 +55,6 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
             member = memberService.createMember(roleType, socialType, email, nickname);
         }
 
-        return CurrentUser.create(member.getId(), roleType, socialType, email);
+        return UserPrincipal.create(member.getId(), roleType, socialType, email);
     }
 }

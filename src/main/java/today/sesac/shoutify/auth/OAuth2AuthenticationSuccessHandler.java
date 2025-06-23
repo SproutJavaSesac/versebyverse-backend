@@ -10,7 +10,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import today.sesac.shoutify.auth.service.CurrentUser;
+import today.sesac.shoutify.auth.service.UserPrincipal;
 import today.sesac.shoutify.member.entity.RoleType;
 import today.sesac.shoutify.member.entity.SocialType;
 
@@ -22,7 +22,7 @@ import today.sesac.shoutify.member.entity.SocialType;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     /**
-     * 로그인 성공 시 홈(/) 페이지로 리다이렉트
+     * 로그인 성공 시 홈(/) 페이지로 리다이렉트.
      * TODO: 원래 로그인하려던 페이지로 보내주기(프론트 구현 필요)
      */
     @Override
@@ -31,14 +31,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         //TODO: 팀원 확인용 로그 - 테스트코드 직성 이후 삭제하기
         boolean authenticated = authentication.isAuthenticated();
-        CurrentUser currentUser = (CurrentUser) authentication.getPrincipal();
-        Long memberId = currentUser.getMemberId();
-        RoleType roleType = currentUser.getRoleType();
-        SocialType socialType = currentUser.getSocialType();
-        String username = currentUser.getUsername();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        Long memberId = userPrincipal.getMemberId();
+        RoleType roleType = userPrincipal.getRoleType();
+        SocialType socialType = userPrincipal.getSocialType();
+        String email = userPrincipal.getEmail();
         log.info("authenticated = {}", authenticated);
-        log.info("memberId = {}, roleType = {}, socialType = {}, username = {}",
-                memberId, roleType, socialType, username);
+        log.info("memberId = {}, roleType = {}, socialType = {}, email = {}",
+                memberId, roleType, socialType, email);
         log.info("-----authentication success!!-----");
 
         //TODO: 소설 로그인 이후 새로 아이디 생성되었으면 201 반환, 아닐 경우 200 반환 구현하기

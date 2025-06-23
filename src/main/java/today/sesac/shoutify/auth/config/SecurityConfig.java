@@ -12,7 +12,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import today.sesac.shoutify.auth.OAuth2AuthenticationSuccessHandler;
-import today.sesac.shoutify.auth.service.OAuth2UserCustomService;
+import today.sesac.shoutify.auth.service.CustomOAuth2UserService;
 
 /**
  * TODO: SecurityConfig의 위치 도메인 패키지 안에서 config 패키지를 만들고 넣을지, 공통 패키지를 안에 config 패키지를 만들지 논의 필요
@@ -23,7 +23,7 @@ import today.sesac.shoutify.auth.service.OAuth2UserCustomService;
 public class SecurityConfig {
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2UserCustomService oAuth2UserCustomService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,7 +47,7 @@ public class SecurityConfig {
                                         .baseUri("/login/oauth2/code/*"))
                                 .userInfoEndpoint(userInfoEndpointConfig ->
                                         userInfoEndpointConfig
-                                                .userService(oAuth2UserCustomService))
+                                                .userService(customOAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                         //TODO: 실패 시 handler도 추가하기
                 )

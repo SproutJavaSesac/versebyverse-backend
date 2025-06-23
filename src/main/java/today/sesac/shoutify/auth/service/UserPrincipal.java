@@ -16,23 +16,23 @@ import today.sesac.shoutify.member.entity.SocialType;
  * TODO: 필드 값 종류와 메서드 고민하기. 스프링 시큐리티의 목적에 맞도록 설계할 것
  */
 @Getter
-public class CurrentUser implements OAuth2User {
+public class UserPrincipal implements OAuth2User {
 
     private final Long memberId;
     private final RoleType roleType;
     private final SocialType socialType;
-    private final String username;
+    private final String email;
 
-    CurrentUser(Long memberId, RoleType roleType, SocialType socialType, String username) {
+    UserPrincipal(Long memberId, RoleType roleType, SocialType socialType, String email) {
         this.memberId = memberId;
         this.roleType = roleType;
         this.socialType = socialType;
-        this.username = username;
+        this.email = email;
     }
 
-    public static CurrentUser create(Long memberId, RoleType roleType, SocialType socialType,
+    public static UserPrincipal create(Long memberId, RoleType roleType, SocialType socialType,
             String username) {
-        return new CurrentUser(memberId, roleType, socialType, username);
+        return new UserPrincipal(memberId, roleType, socialType, username);
     }
 
     @Override
@@ -45,6 +45,11 @@ public class CurrentUser implements OAuth2User {
         return Map.of();
     }
 
+    /**
+     * TODO: 권한 추가하기
+     *
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -52,6 +57,6 @@ public class CurrentUser implements OAuth2User {
 
     @Override
     public String getName() {
-        return this.username;
+        return this.email;
     }
 }
