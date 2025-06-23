@@ -85,7 +85,8 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
-    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
+    private Post(Member author, String beforeContents, String afterContents, String title,
+                 String imageUrl, Emotion emotionType, Concept conceptType) {
         this.author = author;
         this.beforeContents = beforeContents;
         this.afterContents = afterContents;
@@ -98,7 +99,10 @@ public class Post extends BaseEntity {
         this.conceptType = conceptType;
     }
 
-    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
-        return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType, conceptType);
+    public static Post createPost(Member author, String beforeContents, String afterContents,
+                                  String title, String imageUrl, Emotion emotionType,
+                                  Concept conceptType) {
+        return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType,
+                conceptType);
     }
 }
