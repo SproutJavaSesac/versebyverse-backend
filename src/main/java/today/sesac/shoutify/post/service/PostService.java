@@ -31,7 +31,7 @@ public class PostService {
         /**
          * 2.사용자가 작성한 원본내용 설정
          */
-        String beforeContents = request.getContents();
+        String beforeContents = request.getContent();
         /**
          * 3.ai 처리된 afterContents 생성
          */
@@ -70,6 +70,9 @@ public class PostService {
     /**
      * 게시물 삭제
      */
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
 
     /**
      * member 임시 함수
