@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.shoutify.global.response.ApiResponse;
 import today.sesac.shoutify.post.dto.request.PostCreateRequest;
 import today.sesac.shoutify.post.dto.response.PostCreateResponse;
 import today.sesac.shoutify.post.service.PostService;
@@ -20,9 +21,10 @@ public class PostController {
      * 게시물 작성
      */
     @PostMapping("/posts")
-    public ResponseEntity<PostCreateResponse> savePost(@RequestBody PostCreateRequest request) {
+    public ResponseEntity<ApiResponse<PostCreateResponse>> savePost(
+            @RequestBody PostCreateRequest request) {
         PostCreateResponse response = postService.savePost(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
     /**
      * 게시물삭제

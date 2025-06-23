@@ -68,6 +68,10 @@ public class PostService {
     }
 
     /**
+     * 게시물 삭제
+     */
+
+    /**
      * member 임시 함수
      */
     private Member getCurrentMember() {
