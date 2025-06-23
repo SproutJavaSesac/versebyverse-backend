@@ -10,8 +10,8 @@ import today.sesac.shoutify.member.entity.SocialType;
 @AllArgsConstructor
 public class CheckStatusResponse {
 
-	private Long memberId;
-	private RoleType roleType;
-	private SocialType socialType;
-	private String username;
+    private Long memberId;
+    private RoleType roleType;
+    private SocialType socialType;
+    private String username;
 }
