@@ -7,14 +7,14 @@ import lombok.Getter;
  */
 @Getter
 public enum RankingPeriodType {
-  DAILY("일간");
+    DAILY("일간");
 
-  /**
-   * 화면에 표시되는 이름입니다.
-   */
-  private final String displayName;
+    /**
+     * 화면에 표시되는 이름입니다.
+     */
+    private final String displayName;
 
-  RankingPeriodType(String displayName) {
-    this.displayName = displayName;
-  }
+    RankingPeriodType(String displayName) {
+        this.displayName = displayName;
+    }
 }

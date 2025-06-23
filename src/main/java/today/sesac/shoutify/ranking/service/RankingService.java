@@ -16,25 +16,25 @@ import today.sesac.shoutify.ranking.repository.RankingRepository;
 @RequiredArgsConstructor
 public class RankingService {
 
-  private final RankingRepository rankingRepository;
+    private final RankingRepository rankingRepository;
 
-  /**
-   * 순위(랭킹) 정보를 조회합니다.
-   * TODO 추후 RankingResponse로 변경 예정
-   *
-   * @param category 조회할 순위(랭킹) 카테고리
-   */
-  public List<Ranking> getRankingsByCategory(RankingCategory category) {
-    return List.of();
-  }
+    /**
+     * 순위(랭킹) 정보를 조회합니다.
+     * TODO 추후 RankingResponse로 변경 예정
+     *
+     * @param category 조회할 순위(랭킹) 카테고리
+     */
+    public List<Ranking> getRankingsByCategory(RankingCategory category) {
+        return List.of();
+    }
 
-  /**
-   * 내 순위(랭킹) 정보를 조회합니다.
-   *
-   * @param memberId 회원 ID
-   * @return 내 순위(랭킹) 정보
-   */
-  public Ranking getMyRankingByMemberId(Long memberId) {
-    return null;
-  }
+    /**
+     * 내 순위(랭킹) 정보를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 내 순위(랭킹) 정보
+     */
+    public Ranking getMyRankingByMemberId(Long memberId) {
+        return null;
+    }
 }
