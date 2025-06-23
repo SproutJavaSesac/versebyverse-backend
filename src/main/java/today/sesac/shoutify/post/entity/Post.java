@@ -1,11 +1,22 @@
 package today.sesac.shoutify.post.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import today.sesac.shoutify.global.Enum.Emoji;
 import today.sesac.shoutify.global.domain.BaseEntity;
+import today.sesac.shoutify.global.domain.Concept;
+import today.sesac.shoutify.global.domain.Emotion;
+import today.sesac.shoutify.member.entity.Member;
 
 /**
  * 게시판의 게시글을 관리하는 도메인입니다.
@@ -20,25 +31,26 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
     private Long id;
     /**
-     * 비속어 ai 수정 전 게시물 내용입니다.
+     * 게시물을 작성한 회원입니다
+     */
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Member author;
+    /**
+     * ai 수정 전 게시물 내용입니다.
+     */
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String beforeContents;
+    /**
+     * ai 수정 후 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContents;
     /**
-     * 게시물을 작성한 회원입니다
-     */
-//    @ManyToOne
-//    @JoinColumn(name = "author", nullable = false)
-//    private User author;
-    /**
      * 게시물의 제목입니다.
      */
+    @Column(nullable = false)
     private String title;
-    /**
-     * 게시물 작성후 ai로 판단되는 게시물에 대한 점수입니다.
-     */
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private int score = 0;
     /**
      * 게시물 내의 이미지 입니다. url로 저장됩니다.
      */
@@ -48,40 +60,45 @@ public class Post extends BaseEntity {
      * 게시글 신고 유무입니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean isReported = false;
+    private boolean isReported;
     /**
      * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
      * 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean isDeleted = false;
+    private boolean isDeleted;
     /**
      * 숨김 유무입니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean isHidden = false;
+    private boolean isHidden;
     /**
-     * 자신의 게시물에 등록하는 이모지 입니다.
+     * 자신의 게시물에 등록하는 반응 입니다.
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
-    private Emoji my_emoji;
+    private Emotion emotionType;
+    /**
+     * 글의 컨셉입니다.
+     * enum타입으로 총 5가지 입니다.
+     */
+    @Enumerated(EnumType.STRING)
+    private Concept conceptType;
 
-//    private Post(User author, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-//        this.author = author;
-//        this.afterContents = afterContents;
-//        this.title = title;
-//        this.score = score;
-//        this.imageUrl = imageUrl;
-//        this.isReported = false; //Boolean은 디폴트가 false
-//        this.isDeleted = false;
-//        this.isHidden = false;
-//        this.my_emoji = my_emoji;
-//    }
+    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
+        this.author = author;
+        this.beforeContents = beforeContents;
+        this.afterContents = afterContents;
+        this.title = title;
+        this.imageUrl = imageUrl;
+        this.isReported = false;
+        this.isDeleted = false;
+        this.isHidden = false;
+        this.emotionType = emotionType;
+        this.conceptType = conceptType;
+    }
 
-    // 팩토리 메소드
-//    public static Post create(User author, String afterContents, String title, Integer score, String imageUrl, String my_emoji) {
-//        return new Post(author,afterContents, title, score, imageUrl, my_emoji);
-//    }
-
+    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
+        return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType, conceptType);
+    }
 }
