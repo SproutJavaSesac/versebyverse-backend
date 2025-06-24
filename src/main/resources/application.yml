@@ -1,17 +1,21 @@
 spring:
   application:
     name: shoutify
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
     url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
+  sql:
+    init:
+      data-locations: classpath:data.sql # 초기 데이터 로딩을 위한 SQL 파일 위치
+      mode: always # 애플리케이션 시작 시 항상 초기 데이터를 로딩하도록 설정
   jpa:
     hibernate:
-      ddl-auto: create # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
+      ddl-auto: create-drop # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
+    defer-datasource-initialization: true # Hibernate가 생성한 스키마에 data.sql을 사용하고 싶다면 설정해야 함.
+
     properties:
       hibernate:
         format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
@@ -27,4 +31,8 @@ logging:
     root: INFO
     org:
       springframework: info # slf4j 로그 레벨 설정
-      hibernate.SQL: DEBUG # hibernate가 실행하는 SQL을 로그로 출력
+      hibernate:
+        SQL: DEBUG # hibernate가 실행하는 SQL을 로그로 출력
+        orm:
+          jdbc:
+            bind: TRACE # SQL 파라미터 바인딩 로그 레벨 설정
