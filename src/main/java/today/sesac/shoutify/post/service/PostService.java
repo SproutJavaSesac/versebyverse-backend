@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.global.domain.Emotion;
 import today.sesac.shoutify.member.entity.Member;
-import today.sesac.shoutify.member.entity.RoleType;
-import today.sesac.shoutify.member.entity.SocialType;
 import today.sesac.shoutify.member.repository.MemberRepository;
 import today.sesac.shoutify.post.dto.request.PostCreateRequest;
 import today.sesac.shoutify.post.dto.response.PostCreateResponse;
@@ -93,7 +91,7 @@ public class PostService {
 
         //작성자 일치여부 추후 코드 변경 필요
         Member author = getCurrentMember();
-        if (!post.getAuthor().equals(author.getId())) {
+        if (!post.getAuthor().getId().equals(author.getId())) {
             throw new RuntimeException("숨김 권한이 없습니다");
         }
 
@@ -117,9 +115,8 @@ public class PostService {
      * getMember() 생성시 추후 변경 예정
      */
     private Member getCurrentMember() {
-        return memberRepository.findByNickname("test_nick")
-                .orElseGet(() -> memberRepository.save(
-                        Member.create(RoleType.ROLE_USER, SocialType.GOOGLE, "test_nick")));
+        return memberRepository.findById(3L)
+                .orElseThrow(() -> new RuntimeException("회원 없음"));
     }
 
     /**
