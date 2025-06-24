@@ -78,4 +78,31 @@ public class CommentService {
 			.map(CommentResponse::from)
 			.toList();
 	}
+
+	/**
+	 * 댓글을 삭제합니다 (Soft Delete).
+	 *
+	 * @param postId    게시글 ID
+	 * @param commentId 삭제할 댓글 ID
+	 */
+	@Transactional
+	public void deleteComment(Long postId, Long commentId) {
+		// 게시글 존재 확인
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+		// 댓글 존재 확인 및 해당 게시글 댓글인지 확인
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+
+		if (!comment.getPost().getId().equals(postId)) {
+			throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다.");
+		}
+
+		// Soft Delete 실행
+		int updatedRows = commentRepository.softDeleteById(commentId);
+		if (updatedRows == 0) {
+			throw new IllegalArgumentException("댓글 삭제에 실패했습니다.");
+		}
+	}
 }

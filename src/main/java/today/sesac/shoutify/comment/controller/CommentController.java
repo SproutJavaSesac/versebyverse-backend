@@ -3,6 +3,7 @@ package today.sesac.shoutify.comment.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +60,22 @@ public class CommentController {
 		List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
 
 		return ResponseEntity.ok(ApiResponse.success(comments));
+	}
+
+	/**
+	 * 댓글을 삭제합니다.
+	 *
+	 * @param postId    게시글 ID
+	 * @param commentId 삭제할 댓글 ID
+	 * @return 삭제 성공 메시지
+	 */
+	@DeleteMapping("/{commentId}")
+	public ResponseEntity<ApiResponse<String>> deleteComment(
+		@PathVariable Long postId,
+		@PathVariable Long commentId
+	) {
+		commentService.deleteComment(postId, commentId);
+
+		return ResponseEntity.ok(ApiResponse.success("댓글이 삭제되었습니다."));
 	}
 }
