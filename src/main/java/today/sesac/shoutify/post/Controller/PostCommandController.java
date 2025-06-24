@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post;
+package today.sesac.shoutify.post.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,18 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.global.response.ApiResponse;
 import today.sesac.shoutify.post.dto.request.PostCreateRequest;
 import today.sesac.shoutify.post.dto.response.PostCreateResponse;
-import today.sesac.shoutify.post.repository.PostRepository;
-import today.sesac.shoutify.post.service.PostService;
+import today.sesac.shoutify.post.service.PostCommandService;
 
 @RestController
 @RequestMapping("/api/v1/posts")
-public class PostController {
-    private final PostService postService;
-    private final PostRepository postRepository;
+public class PostCommandController {
+    private final PostCommandService postCommandService;
 
-    public PostController(PostService postService, PostRepository postRepository) {
-        this.postService = postService;
-        this.postRepository = postRepository;
+    public PostCommandController(PostCommandService postCommandService) {
+        this.postCommandService = postCommandService;
     }
 
     /**
@@ -31,7 +28,8 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<ApiResponse<PostCreateResponse>> savePost(
             @RequestBody PostCreateRequest request) {
-        PostCreateResponse response = postService.savePost(request);
+        Long memberId = 1L;
+        PostCreateResponse response = postCommandService.savePost(request, memberId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -40,7 +38,7 @@ public class PostController {
      */
     @DeleteMapping("/{postId}")
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+        postCommandService.deletePost(postId);
         return ResponseEntity.ok(ApiResponse.success("삭제가 성공했습니다"));
     }
 
@@ -49,7 +47,7 @@ public class PostController {
      */
     @PatchMapping("/{postId}/hide")
     public ResponseEntity<ApiResponse> hidePost(@PathVariable Long postId) {
-        postService.hidePost(postId);
+        postCommandService.hidePost(postId);
         return ResponseEntity.ok(ApiResponse.success("숨기기 성공"));
     }
 
@@ -58,7 +56,7 @@ public class PostController {
      */
     @PatchMapping("{postId}/unhide")
     public ResponseEntity<ApiResponse> unhidePost(@PathVariable Long postId) {
-        postService.unhidePost(postId);
+        postCommandService.unhidePost(postId);
         return ResponseEntity.ok(ApiResponse.success("숨김취소 성공"));
     }
 }

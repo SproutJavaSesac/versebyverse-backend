@@ -15,14 +15,14 @@ import today.sesac.shoutify.post.repository.PostRepository;
 @Service
 @RequiredArgsConstructor
 @Getter
-public class PostService {
+public class PostCommandService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
     /**
      * 게시물 작성 api
      */
-    public PostCreateResponse savePost(PostCreateRequest request) {
+    public PostCreateResponse savePost(PostCreateRequest request, Long memberId) {
 
         /**
          * 1.작성자 정보 가져오기
