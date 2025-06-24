@@ -1,5 +1,7 @@
 package today.sesac.shoutify.comment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +56,26 @@ public class CommentService {
 
 		// 엔티티를 DTO로 변환해서 반환
 		return CommentResponse.from(savedComment);
+	}
+
+	/**
+	 * 특정 게시글의 댓글 목록을 조회합니다.
+	 *
+	 * @param postId 댓글을 조회할 게시글 ID
+	 * @return 댓글 목록
+	 */
+	@Transactional(readOnly = true)
+	public List<CommentResponse> getCommentsByPostId(Long postId) {
+		// 게시글 존재 확인
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+		// 댓글 목록 조회 (삭제되지 않은 댓글만, 생성일 순으로 정렬)
+		List<Comment> comments = commentRepository.findByPostId(postId);
+
+		// DTO로 변환해서 반환
+		return comments.stream()
+			.map(CommentResponse::from)
+			.toList();
 	}
 }

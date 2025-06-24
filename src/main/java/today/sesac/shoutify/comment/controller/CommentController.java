@@ -1,6 +1,9 @@
 package today.sesac.shoutify.comment.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,5 +44,20 @@ public class CommentController {
 		CommentResponse response = commentService.createComment(postId, authorId, request);
 
 		return ResponseEntity.ok(ApiResponse.success(response));
+	}
+
+	/**
+	 * 특정 게시글의 댓글 목록을 조회합니다.
+	 *
+	 * @param postId 댓글을 조회할 게시글의 ID
+	 * @return 댓글 목록
+	 */
+	@GetMapping
+	public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(
+		@PathVariable Long postId
+	) {
+		List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
+
+		return ResponseEntity.ok(ApiResponse.success(comments));
 	}
 }
