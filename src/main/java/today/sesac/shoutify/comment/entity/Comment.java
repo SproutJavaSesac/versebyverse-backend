@@ -35,13 +35,13 @@ public class Comment extends BaseEntity {
 	 * AI 변환 전 사용자가 입력한 원본 댓글
 	 */
 	@Column(length = 500, nullable = false)
-	private String beforeContents;
+	private String beforeContent;
 
 	/**
 	 * AI가 변환한 후의 댓글 내용
 	 */
 	@Column(length = 500, nullable = false)
-	private String afterContents;
+	private String afterContent;
 
 	/**
 	 * 댓글이 작성된 게시물
@@ -75,9 +75,9 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean isReported;
 
-	private Comment(String beforeContents, String afterContents, Post post, Member author) {
-		this.beforeContents = beforeContents;
-		this.afterContents = afterContents;
+	private Comment(String beforeContent, String afterContent, Post post, Member author) {
+		this.beforeContent = beforeContent;
+		this.afterContent = afterContent;
 		this.post = post;
 		this.author = author;
 		this.level = 0;
@@ -85,7 +85,7 @@ public class Comment extends BaseEntity {
 		this.isReported = false;
 	}
 
-	public static Comment create(String beforeContents, String afterContents, Post post, Member author) {
-		return new Comment(beforeContents, afterContents, post, author);
+	public static Comment create(String beforeContent, String afterContent, Post post, Member author) {
+		return new Comment(beforeContent, afterContent, post, author);
 	}
 }
