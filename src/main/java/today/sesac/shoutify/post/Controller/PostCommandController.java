@@ -28,7 +28,7 @@ public class PostCommandController {
     @PostMapping()
     public ResponseEntity<ApiResponse<PostCreateResponse>> savePost(
             @RequestBody PostCreateRequest request) {
-        Long memberId = 1L;
+        Long memberId = 1L; //현재 사용자 memberId 1로 하드코딩 추후 변경 예정
         PostCreateResponse response = postCommandService.savePost(request, memberId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }

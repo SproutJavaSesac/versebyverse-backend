@@ -25,9 +25,9 @@ public class PostCommandService {
     public PostCreateResponse savePost(PostCreateRequest request, Long memberId) {
 
         /**
-         * 1.작성자 정보 가져오기
+         * 1.작성자 정보 가져오기 (현재 사용자는 id=3으로 하드코딩)
          */
-        Member author = getCurrentMember();
+        Member author = getCurrentMember(memberId);
         /**
          * 2.사용자가 작성한 원본내용 설정
          */
@@ -90,7 +90,7 @@ public class PostCommandService {
         Post post = validateExistedPost(postId);
 
         //작성자 일치여부 추후 코드 변경 필요
-        Member author = getCurrentMember();
+        Member author = getCurrentMember(1L);
         if (!post.getAuthor().getId().equals(author.getId())) {
             throw new RuntimeException("숨김 권한이 없습니다");
         }
@@ -108,14 +108,13 @@ public class PostCommandService {
         postRepository.save(post);
     }
 
-
     /**
      * member 임시 함수
-     * 임시 데이터의 nickname을 찾아서 진행하도록 함
-     * getMember() 생성시 추후 변경 예정
+     * 현재 사용자의 id가 1이라고 하드코딩한 메서드
+     * 추후 변경 예정
      */
-    private Member getCurrentMember() {
-        return memberRepository.findById(3L)
+    private Member getCurrentMember(Long memberId) {
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("회원 없음"));
     }
 
