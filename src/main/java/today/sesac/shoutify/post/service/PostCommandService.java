@@ -40,6 +40,7 @@ public class PostCommandService {
         /**
          * 감정선택하지 않았을 경우 ai 처리후 string값을 객체 값으로 전환
          */
+        //TODO ai 코드로 수정 예정
 //        if (request.getEmotionType() == null) {
 //            ai 감정 선택 코드 호출
 //        }
@@ -75,7 +76,7 @@ public class PostCommandService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글이 없습니다"));
 
-        //작성자 권환 확인 필요( 현재 사용자 == 게시글 작성자 비교)
+        ///TODO 작성자 권환 확인 필요( 현재 사용자 == 게시글 작성자 비교)
 
         /**
          * soft deleted를 위한 함수

@@ -25,7 +25,7 @@ public class PostCommandController {
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
             @RequestBody PostCreateRequestDto postCreateRequestDto) {
-        Long memberId = 1L; //현재 사용자 memberId 1로 하드코딩 추후 변경 예정
+        Long memberId = 1L; //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
         PostCreateResponseDto postCreateResponseDto =
                 postCommandService.savePost(postCreateRequestDto, memberId);
         return ApiResponse.success(postCreateResponseDto);
