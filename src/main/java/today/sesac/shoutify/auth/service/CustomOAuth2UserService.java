@@ -50,8 +50,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member member;
         try {
             member = memberService.findByEmailAndSocialType(email, socialType);
+            log.info(
+                    "findByEmailAndSocialType: roleType = {}, socialType = {}, email = {}, nickname = {}",
+                    member.getRoleType(), member.getSocialType(), member.getEmail(),
+                    member.getNickname()); // TODO: 프론트 화면 구현 이후 로그 지우기
         } catch (MemberNotFoundException e) {
             member = memberService.createMember(roleType, socialType, email, nickname);
+            log.info("createMember: roleType = {}, socialType = {}, email = {}, nickname = {}",
+                    roleType, socialType, email, nickname);
         }
 
         return UserPrincipal.create(member.getId(), roleType, socialType, email);

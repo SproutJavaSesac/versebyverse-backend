@@ -10,7 +10,7 @@ import today.sesac.shoutify.member.exception.MemberNotFoundException;
 import today.sesac.shoutify.member.repository.MemberRepository;
 
 /**
- *
+ * TODO: 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
  */
 @Slf4j
 @Service
@@ -20,20 +20,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     /**
-     * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기?
-     *
-     * @param roleType
-     * @param socialType
-     * @param email
-     * @param nickname
-     * @return
+     * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
     public Member createMember(RoleType roleType, SocialType socialType, String email,
             String nickname) {
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
-        log.info("createMember: roleType = {}, socialType = {}, email = {}, nickname = {}",
-                roleType, socialType, email, nickname);
         return savedMember;
     }
 
@@ -47,9 +39,6 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
-        log.info("findById: roleType = {}, socialType = {}, email = {}, nickname = {}",
-                member.getRoleType(), member.getSocialType(), member.getEmail(),
-                member.getNickname());
         return member;
     }
 
@@ -58,10 +47,6 @@ public class MemberService {
                 () -> new MemberNotFoundException(email + ", " + socialType,
                         "해당 email을 가진 회원을 찾을 수 없습니다.")
         );
-        log.info(
-                "findByEmailAndSocialType: roleType = {}, socialType = {}, email = {}, nickname = {}",
-                member.getRoleType(), member.getSocialType(), member.getEmail(),
-                member.getNickname());
         return member;
     }
 
