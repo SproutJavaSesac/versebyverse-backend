@@ -1,5 +1,6 @@
 package today.sesac.shoutify.post.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,13 +15,10 @@ import today.sesac.shoutify.post.dto.response.PostCreateResponse;
 import today.sesac.shoutify.post.service.PostCommandService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
     private final PostCommandService postCommandService;
-
-    public PostCommandController(PostCommandService postCommandService) {
-        this.postCommandService = postCommandService;
-    }
 
     /**
      * 게시물 작성
