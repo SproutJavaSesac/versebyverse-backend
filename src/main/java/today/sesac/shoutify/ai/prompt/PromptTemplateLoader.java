@@ -10,13 +10,32 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 /**
- * 템플릿 파일을 읽어 PromptTemplate 객체로 변환하고, PromptType별로 매핑하여 제공하는 로더 클래스입니다.
+ * <p>
+ * PromptTemplateLoader는 템플릿 파일을 읽어 각 {@link PromptType} 별로 {@link PromptTemplate} 객체로 변환하고, 이를 매핑하여
+ * 제공하는 클래스입니다.
+ * </p>
+ * <ul>
+ *   <li>템플릿 파일은 resources/templates/ 디렉토리에 [프롬프트타입].md 형식으로 존재해야 합니다.</li>
+ *   <li>파일 내용은 "---" 구분자를 기준으로 role, condition, example 영역으로 분리되어야 합니다.</li>
+ * </ul>
+ *
+ * <pre>
+ * [role]
+ * ---
+ * [condition]
+ * ---
+ * [example]
+ * </pre>
  */
 @Component
 public class PromptTemplateLoader {
 
     private final Map<PromptType, PromptTemplate> templateMap = new EnumMap<>(PromptType.class);
 
+    /**
+     * 생성자.<br> 클래스패스 내 "templates/[promptType].md" 파일을 읽어들여 각 타입별 템플릿을 매핑합니다.<br> 파일 포맷이 잘못된 경우 또는
+     * 파일을 찾을 수 없을 경우 RuntimeException이 발생합니다.
+     */
     public PromptTemplateLoader() {
         for (PromptType type : PromptType.values()) {
             try {

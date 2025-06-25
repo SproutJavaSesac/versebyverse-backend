@@ -7,7 +7,27 @@ import lombok.Getter;
 import today.sesac.shoutify.ai.dto.request.AiRequestDto;
 
 /**
- * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다. 역할(role), 조건(condition), 예시(example)를 포함하며, 입력 객체는 동적으로 삽입됩니다.
+ * <p>
+ * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다.<br> 역할(role), 조건(condition), 예시(example)를 포함하며, 입력 객체는 동적으로
+ * 삽입됩니다.
+ * </p>
+ *
+ * <ul>
+ *     <li>주로 LLM 프롬프트 설계에 사용됩니다.</li>
+ *     <li>프롬프트의 각 영역은 템플릿 파일에서 분리하여 읽어올 수 있습니다.</li>
+ * </ul>
+ *
+ * <pre>
+ * {
+ *   "role": "...",
+ *   "condition": "...",
+ *   "example": "...",
+ *   "input": "{ ... }",
+ *   "output": {}
+ * }
+ * </pre>
+ *
+ * @see today.sesac.shoutify.ai.prompt.PromptTemplateLoader
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
@@ -23,7 +43,7 @@ public class PromptTemplate {
      *
      * @param inputDto 입력 DTO 객체 (예: PostRequestDto, CommentRequestDto 등)
      * @return 전체 프롬프트 문자열
-     * @throws IllegalArgumentException JSON 변환 실패 시
+     * @throws IllegalArgumentException 입력 객체의 JSON 변환에 실패한 경우
      */
     public String buildPromptMessage(AiRequestDto inputDto) {
         try {
