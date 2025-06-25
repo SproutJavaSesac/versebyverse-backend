@@ -23,7 +23,7 @@ public class PostCommandController {
     /**
      * 게시물 작성
      */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse<PostCreateResponse>> savePost(
             @RequestBody PostCreateRequest request) {
         Long memberId = 1L; //현재 사용자 memberId 1로 하드코딩 추후 변경 예정
