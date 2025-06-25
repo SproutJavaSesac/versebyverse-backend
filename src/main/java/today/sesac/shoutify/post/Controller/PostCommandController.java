@@ -18,6 +18,7 @@ import today.sesac.shoutify.post.service.PostCommandService;
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
     private final PostCommandService postCommandService;
+    Long memberId = 1L; //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
 
     /**
      * 게시물 작성
@@ -25,7 +26,6 @@ public class PostCommandController {
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
             @RequestBody PostCreateRequestDto postCreateRequestDto) {
-        Long memberId = 1L; //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
         PostCreateResponseDto postCreateResponseDto =
                 postCommandService.savePost(postCreateRequestDto, memberId);
         return ApiResponse.success(postCreateResponseDto);
@@ -36,7 +36,7 @@ public class PostCommandController {
      */
     @DeleteMapping("/{postId}")
     public ApiResponse deletePost(@PathVariable Long postId) {
-        postCommandService.deletePost(postId);
+        postCommandService.deletePost(postId, memberId);
         return ApiResponse.success("삭제가 성공했습니다");
     }
 
@@ -45,7 +45,7 @@ public class PostCommandController {
      */
     @PatchMapping("/{postId}/hide")
     public ApiResponse hidePost(@PathVariable Long postId) {
-        postCommandService.hidePost(postId);
+        postCommandService.hidePost(postId, memberId);
         return ApiResponse.success("숨기기 성공");
     }
 
@@ -54,7 +54,7 @@ public class PostCommandController {
      */
     @PatchMapping("{postId}/unhide")
     public ApiResponse unhidePost(@PathVariable Long postId) {
-        postCommandService.unhidePost(postId);
+        postCommandService.unhidePost(postId, memberId);
         return ApiResponse.success("숨김취소 성공");
     }
 }

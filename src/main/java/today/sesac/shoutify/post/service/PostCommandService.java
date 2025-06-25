@@ -72,12 +72,8 @@ public class PostCommandService {
     /**
      * 게시물 삭제
      */
-    public void deletePost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("게시글이 없습니다"));
-
-        ///TODO 작성자 권환 확인 필요( 현재 사용자 == 게시글 작성자 비교)
-
+    public void deletePost(Long postId, Long memberId) {
+        Post post = validateAuthor(postId, memberId);
         /**
          * soft deleted를 위한 함수
          */
@@ -88,15 +84,9 @@ public class PostCommandService {
     /**
      * 게시물 숨기기
      */
-    public void hidePost(Long postId) {
-        Post post = validateExistedPost(postId);
+    public void hidePost(Long postId, Long memberId) {
 
-        //작성자 일치여부 추후 코드 변경 필요
-        Member author = getCurrentMember(1L);
-        if (!post.getAuthor().getId().equals(author.getId())) {
-            throw new RuntimeException("숨김 권한이 없습니다");
-        }
-
+        Post post = validateAuthor(postId, memberId);
         post.hide();
         postRepository.save(post);
     }
@@ -104,8 +94,8 @@ public class PostCommandService {
     /**
      * 게시물 숨김 해제
      */
-    public void unhidePost(Long postId) {
-        Post post = validateExistedPost(postId);
+    public void unhidePost(Long postId, Long memberId) {
+        Post post = validateAuthor(postId, memberId);
         post.unhide();
         postRepository.save(post);
     }
@@ -128,11 +118,15 @@ public class PostCommandService {
     }
 
     /**
-     * 게시물 존재 유무 함수
+     * 작성자 일치 여부 (권환 확인) 함수
      */
-    private Post validateExistedPost(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("게시글이 없습니다"));
+    private Post validateAuthor(Long postId, Long memberId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 없습니다."));
 
+        if (!post.getAuthor().getId().equals(memberId)) {
+            throw new RuntimeException("권한이 없습니다");
+        }
+        return post;
     }
 }
