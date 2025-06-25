@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
-public class AiPromptRequestDtoForPost implements AiRequestDto {
+public class PostAiRequestDto implements AiRequestDto {
 
     private String title;
     private String conceptType;
