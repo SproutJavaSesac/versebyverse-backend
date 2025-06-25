@@ -7,8 +7,8 @@ import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.global.domain.Emotion;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.repository.MemberRepository;
-import today.sesac.shoutify.post.dto.request.PostCreateRequest;
-import today.sesac.shoutify.post.dto.response.PostCreateResponse;
+import today.sesac.shoutify.post.dto.request.PostCreateRequestDto;
+import today.sesac.shoutify.post.dto.response.PostCreateResponseDto;
 import today.sesac.shoutify.post.entity.Post;
 import today.sesac.shoutify.post.repository.PostRepository;
 
@@ -22,7 +22,8 @@ public class PostCommandService {
     /**
      * 게시물 작성 api
      */
-    public PostCreateResponse savePost(PostCreateRequest request, Long memberId) {
+    public PostCreateResponseDto savePost(PostCreateRequestDto postCreateRequestDto,
+                                          Long memberId) {
 
         /**
          * 1.작성자 정보 가져오기 (현재 사용자는 id=3으로 하드코딩)
@@ -31,7 +32,7 @@ public class PostCommandService {
         /**
          * 2.사용자가 작성한 원본내용 설정
          */
-        String beforeContents = request.getContent();
+        String beforeContents = postCreateRequestDto.getContent();
         /**
          * 3.ai 처리된 afterContents 생성
          */
@@ -42,8 +43,8 @@ public class PostCommandService {
 //        if (request.getEmotionType() == null) {
 //            ai 감정 선택 코드 호출
 //        }
-        Emotion emotionType = Emotion.valueOf(request.getEmotionType());
-        Concept conceptType = Concept.valueOf(request.getConceptType());
+        Emotion emotionType = Emotion.valueOf(postCreateRequestDto.getEmotionType());
+        Concept conceptType = Concept.valueOf(postCreateRequestDto.getConceptType());
 
         /**
          * 정적 팩토리 메서드
@@ -52,15 +53,15 @@ public class PostCommandService {
                 author,
                 beforeContents,
                 afterContents,
-                request.getTitle(),
-                request.getImageUrl(),
+                postCreateRequestDto.getTitle(),
+                postCreateRequestDto.getImageUrl(),
                 emotionType,
                 conceptType
         );
 
         Post savedPost = postRepository.save(post);
 
-        return PostCreateResponse.createSuccess(
+        return PostCreateResponseDto.createSuccess(
                 savedPost.getId(),
                 savedPost.getTitle(),
                 savedPost.getAfterContents()
