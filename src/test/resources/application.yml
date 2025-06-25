@@ -27,7 +27,9 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
-# log level 설정, 예: trace, debug, info, warn, error
+              - profile
+
+              # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:
     root: INFO

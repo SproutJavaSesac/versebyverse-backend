@@ -23,7 +23,7 @@ public class UserPrincipal implements OAuth2User {
     private final SocialType socialType;
     private final String email;
 
-    UserPrincipal(Long memberId, RoleType roleType, SocialType socialType, String email) {
+    private UserPrincipal(Long memberId, RoleType roleType, SocialType socialType, String email) {
         this.memberId = memberId;
         this.roleType = roleType;
         this.socialType = socialType;

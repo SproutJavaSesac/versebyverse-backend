@@ -26,9 +26,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("oAuth2User: {}", oAuth2User);
 
-        // 소셜 로그인 타입 확인
+        // 소셜 로그인 타입을 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         log.info("loadUser.registrationId: {}", registrationId); // ex.google
         SocialType socialType = null;
@@ -37,17 +36,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         log.info("socialType: {}", socialType);
 
-        // 사용자 정보 확인
+        // 사용자 정보를 가져옵니다.
         String email = oAuth2User.getAttribute("email");
         log.info("email: {}", email);
         String nickname = oAuth2User.getAttribute("name");
         log.info("nickname: {}", nickname); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
 
-        // 사용자 역할 확인
+        // 사용자 역할을 부여합니다.
         RoleType roleType = RoleType.ROLE_USER;
 
         // 사용자 정보가 없으면 db에 저장, 있으면 불러오기
-        // TODO: 확인하고 없으면 새로 만들기
+        // TODO: memberService 관련 기능 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 수정하기
         Member member;
         try {
             member = memberService.findByEmailAndSocialType(email, socialType);
