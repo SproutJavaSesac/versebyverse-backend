@@ -35,26 +35,26 @@ public class PostCommandController {
      * 게시물삭제
      */
     @DeleteMapping("/{postId}")
-    public ApiResponse deletePost(@PathVariable Long postId) {
+    public ApiResponse<String> deletePost(@PathVariable Long postId) {
         postCommandService.deletePost(postId, memberId);
-        return ApiResponse.success("삭제가 성공했습니다");
+        return ApiResponse.success("게시물 삭제가 성공했습니다");
     }
 
     /**
      * 게시물 숨기기
      */
     @PatchMapping("/{postId}/hide")
-    public ApiResponse hidePost(@PathVariable Long postId) {
+    public ApiResponse<String> hidePost(@PathVariable Long postId) {
         postCommandService.hidePost(postId, memberId);
-        return ApiResponse.success("숨기기 성공");
+        return ApiResponse.success("게시물 숨기기가 성공했습니다");
     }
 
     /**
      * 게시물 숨김 해제
      */
     @PatchMapping("{postId}/unhide")
-    public ApiResponse unhidePost(@PathVariable Long postId) {
+    public ApiResponse<String> unhidePost(@PathVariable Long postId) {
         postCommandService.unhidePost(postId, memberId);
-        return ApiResponse.success("숨김취소 성공");
+        return ApiResponse.success("게시물 숨기기가 취소됐습니다");
     }
 }

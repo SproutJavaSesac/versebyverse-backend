@@ -85,7 +85,6 @@ public class PostCommandService {
      * 게시물 숨기기
      */
     public void hidePost(Long postId, Long memberId) {
-
         Post post = validateAuthor(postId, memberId);
         post.hide();
         postRepository.save(post);
