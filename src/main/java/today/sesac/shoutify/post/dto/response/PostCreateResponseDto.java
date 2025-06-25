@@ -6,20 +6,20 @@ import lombok.Getter;
 public class PostCreateResponseDto {
     private final Long postId;
     private final String title;
-    private final String afterContents;
+    private final String afterContent;
 
-    public PostCreateResponseDto(Long postId, String title, String afterContents) {
+    public PostCreateResponseDto(Long postId, String title, String afterContent) {
         this.postId = postId;
         this.title = title;
-        this.afterContents = afterContents;
+        this.afterContent = afterContent;
     }
 
     /**
      * 성공응답
      */
     public static PostCreateResponseDto createSuccess(Long postId, String title,
-                                                      String afterContents) {
-        return new PostCreateResponseDto(postId, title, afterContents);
+                                                      String afterContent) {
+        return new PostCreateResponseDto(postId, title, afterContent);
     }
 
     /**
