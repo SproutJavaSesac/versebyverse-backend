@@ -20,7 +20,7 @@ spring:
 
   web:
     resources:
-      add-mappings: false
+      add-mappings: false # 404인 경우, static 리소스 참고하지 않고, 예외 핸들러에서 처리하도록 함.
 
   #vertex ai
   ai:
