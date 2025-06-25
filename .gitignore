@@ -39,3 +39,6 @@ out/
 
 ### secrets ###
 .env
+
+### docker - my sql ###
+/mysql-data/
