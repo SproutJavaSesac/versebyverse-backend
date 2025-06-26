@@ -1,6 +1,5 @@
 package today.sesac.shoutify.post.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.global.domain.Concept;
@@ -14,9 +13,9 @@ import today.sesac.shoutify.post.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
-@Getter
 public class PostCommandService {
     private final PostRepository postRepository;
+    // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
     private final MemberRepository memberRepository;
 
     /**
@@ -62,10 +61,10 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
-        return PostCreateResponseDto.createSuccess(
+        return PostCreateResponseDto.of(
                 savedPost.getId(),
                 savedPost.getTitle(),
-                savedPost.getAfterContents()
+                savedPost.getAfterContent()
         );
     }
 
