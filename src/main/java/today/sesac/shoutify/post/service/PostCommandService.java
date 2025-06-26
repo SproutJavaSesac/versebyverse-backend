@@ -2,11 +2,14 @@ package today.sesac.shoutify.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import today.sesac.shoutify.global.exception.PermissionRequiredException;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.repository.MemberRepository;
 import today.sesac.shoutify.post.dto.request.PostCreateRequestDto;
 import today.sesac.shoutify.post.dto.response.PostCreateResponseDto;
 import today.sesac.shoutify.post.entity.Post;
+import today.sesac.shoutify.post.exception.PostErrorCode;
+import today.sesac.shoutify.post.exception.PostException;
 import today.sesac.shoutify.post.repository.PostRepository;
 
 @Service
@@ -112,7 +115,8 @@ public class PostCommandService {
      */
     private Member getCurrentMember(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("회원 없음"));
+                .orElseThrow(
+                        () -> new PostException(PostErrorCode.POST_NOT_FOUND, memberId.toString()));
     }
 
     /**
@@ -127,10 +131,12 @@ public class PostCommandService {
      */
     private Post validateAuthor(Long postId, Long memberId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("게시글이 없습니다."));
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()
+                ));
 
         if (!post.getAuthor().getId().equals(memberId)) {
-            throw new RuntimeException("권한이 없습니다");
+            throw new PermissionRequiredException(memberId.toString(), "권한이 없습니다.") {
+            };
         }
         return post;
     }
