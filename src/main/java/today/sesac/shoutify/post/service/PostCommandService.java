@@ -1,5 +1,6 @@
 package today.sesac.shoutify.post.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.global.exception.PermissionRequiredException;
@@ -14,6 +15,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostCommandService {
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
@@ -77,6 +79,7 @@ public class PostCommandService {
      * @param postId   삭제할 게시물의 id
      * @param memberId 현재 로그인한 사용자의 id
      */
+    @Transactional
     public void deletePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
         //soft deleted
@@ -90,6 +93,7 @@ public class PostCommandService {
      * @param postId   숨길 게시물의 id
      * @param memberId 현재 로그인한 사용자의 id
      */
+    @Transactional
     public void hidePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
         post.hide();
@@ -102,6 +106,7 @@ public class PostCommandService {
      * @param postId   숨김 해제할
      * @param memberId 현재 로그인한 사용자의 id
      */
+    @Transactional
     public void unhidePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
         post.unhide();
