@@ -20,6 +20,10 @@ public class PostCommandService {
 
     /**
      * 게시물 작성 api
+     *
+     * @param postCreateRequestDto 게시물 작성 dto
+     * @param memberId             현재 로그인한 사용자의 id
+     * @return PostCreateResponseDto 게시물 작성 dto
      */
     public PostCreateResponseDto savePost(PostCreateRequestDto postCreateRequestDto,
                                           Long memberId) {
@@ -70,18 +74,22 @@ public class PostCommandService {
 
     /**
      * 게시물 삭제
+     *
+     * @param postId   삭제할 게시물의 id
+     * @param memberId 현재 로그인한 사용자의 id
      */
     public void deletePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
-        /**
-         * soft deleted를 위한 함수
-         */
+        //soft deleted
         post.delete();
         postRepository.save(post);
     }
 
     /**
      * 게시물 숨기기
+     *
+     * @param postId   숨길 게시물의 id
+     * @param memberId 현재 로그인한 사용자의 id
      */
     public void hidePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
@@ -91,6 +99,9 @@ public class PostCommandService {
 
     /**
      * 게시물 숨김 해제
+     *
+     * @param postId   숨김 해제할
+     * @param memberId 현재 로그인한 사용자의 id
      */
     public void unhidePost(Long postId, Long memberId) {
         Post post = validateAuthor(postId, memberId);
