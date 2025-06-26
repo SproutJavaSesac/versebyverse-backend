@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import today.sesac.shoutify.global.domain.Concept;
+import today.sesac.shoutify.global.domain.Emotion;
 
 @Data
 @AllArgsConstructor(staticName = "of")
@@ -19,13 +21,13 @@ public class PostCreateRequestDto {
      * 컨셉 타입
      */
     @NotNull
-    private String conceptType;
+    private Concept conceptType;
 
     /**
      * 감정 타입
      * null일 경우 ai가 감정 분석을 해줍니다.
      */
-    private String emotionType;
+    private Emotion emotionType;
 
     /**
      * 변환 전 사용자가 쓴 게시물 내용

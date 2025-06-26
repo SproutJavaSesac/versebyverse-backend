@@ -2,8 +2,6 @@ package today.sesac.shoutify.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import today.sesac.shoutify.global.domain.Concept;
-import today.sesac.shoutify.global.domain.Emotion;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.repository.MemberRepository;
 import today.sesac.shoutify.post.dto.request.PostCreateRequestDto;
@@ -47,8 +45,6 @@ public class PostCommandService {
 //        if (request.getEmotionType() == null) {
 //            ai 감정 선택 코드 호출
 //        }
-        Emotion emotionType = Emotion.valueOf(postCreateRequestDto.getEmotionType());
-        Concept conceptType = Concept.valueOf(postCreateRequestDto.getConceptType());
 
         /**
          * 정적 팩토리 메서드
@@ -59,8 +55,8 @@ public class PostCommandService {
                 afterContents,
                 postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getImageUrl(),
-                emotionType,
-                conceptType
+                postCreateRequestDto.getEmotionType(),
+                postCreateRequestDto.getConceptType()
         );
 
         Post savedPost = postRepository.save(post);
