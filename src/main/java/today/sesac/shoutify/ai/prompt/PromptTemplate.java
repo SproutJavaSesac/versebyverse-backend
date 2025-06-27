@@ -46,6 +46,8 @@ public class PromptTemplate {
      * @throws IllegalArgumentException 입력 객체의 JSON 변환에 실패한 경우
      */
     public String buildPromptMessage(AiRequestDto inputDto) {
+        // TODO : 커스텀 예외 처리 적용하기
+        // TODO : 예외 발생 시 처리 방법 고민하기
         try {
             String inputJson = objectMapper.writeValueAsString(inputDto);
             return """

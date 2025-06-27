@@ -1,7 +1,7 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 
@@ -9,56 +9,55 @@ group = 'today.sesac'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
+ext {
+    springAiVersion = "1.0.0"
+}
 repositories {
-	mavenCentral()
-//	// Spring Milestone 저장소 추가
-//	maven { url 'https://repo.spring.io/milestone' }
-//	// Spring Snapshot 저장소 추가
-//	maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// Spring AI Vertex AI Gemini
-	implementation platform('org.springframework.ai:spring-ai-bom:1.0.0')
-	implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
+    // Spring AI Vertex AI Gemini
+    implementation platform("org.springframework.ai:spring-ai-bom:$springAiVersion")
+    implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 
-	// gradle로 test를 실행할 때 .env 파일에 정의된 환경변수를 읽어와서 테스트 환경에 적용
-	def envFile = file('.env')
-	if (envFile.exists()) {
-		envFile.eachLine { line ->
-			if (line.trim() && !line.startsWith('#')) {
-				def (key, value) = line.split('=', 2)
-				if (key && value) {
-					// 환경 변수 설정
-					environment key, value.trim()
-				}
-			}
-		}
-	}
+    // gradle로 test를 실행할 때 .env 파일에 정의된 환경변수를 읽어와서 테스트 환경에 적용
+    def envFile = file('.env')
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            if (line.trim() && !line.startsWith('#')) {
+                def (key, value) = line.split('=', 2)
+                if (key && value) {
+                    // 환경 변수 설정
+                    environment key, value.trim()
+                }
+            }
+        }
+    }
 }
 

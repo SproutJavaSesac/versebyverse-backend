@@ -1,5 +1,5 @@
 package today.sesac.shoutify.ai.dto.response;
 
-public interface AiResponseDto {
+public abstract class AiResponseDto {
 
 }

@@ -1,5 +1,5 @@
 package today.sesac.shoutify.ai.dto.request;
 
-public interface AiRequestDto {
+public abstract class AiRequestDto {
 
 }
