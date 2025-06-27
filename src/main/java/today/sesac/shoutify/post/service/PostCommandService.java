@@ -32,7 +32,7 @@ public class PostCommandService {
                                           Long memberId) {
 
         //1.작성자 정보 가져오기 (현재 사용자는 id=3으로 하드코딩)
-        Member author = getCurrentMember(memberId);
+        Member author = getMemberId(memberId);
         //2.사용자가 작성한 원본내용 설정
         String beforeContents = postCreateRequestDto.getContent();
         //3.ai 처리된 afterContents 생성
@@ -112,7 +112,7 @@ public class PostCommandService {
      * 현재 사용자의 id가 1이라고 하드코딩한 메서드
      * 추후 변경 예정
      */
-    private Member getCurrentMember(Long memberId) {
+    private Member getMemberId(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new PostException(PostErrorCode.POST_NOT_FOUND, memberId.toString()));
