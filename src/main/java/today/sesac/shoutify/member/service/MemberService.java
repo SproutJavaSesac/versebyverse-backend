@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.repository.MemberRepository;
-import today.sesac.shoutify.post.exception.PostErrorCode;
-import today.sesac.shoutify.post.exception.PostException;
 
 @Service
 @RequiredArgsConstructor
@@ -15,8 +13,8 @@ public class MemberService {
 
     public Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
+                // TODO 에러코드 수정 예정
                 .orElseThrow(
-                        () -> new PostException(PostErrorCode.MEMBER_NOT_FOUND,
-                                memberId.toString()));
+                        () -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 }
