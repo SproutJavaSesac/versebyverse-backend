@@ -34,10 +34,10 @@ public class PostCommandService {
         //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);
         //2.사용자가 작성한 원본내용 설정
-        String beforeContents = postCreateRequestDto.getContent();
-        //3.ai 처리된 afterContents 생성
-        String afterContents = processAI(beforeContents);
-        //감정선택하지 않았을 경우 ai 처리후 string값을 객체 값으로 전환
+        String beforeContent = postCreateRequestDto.getContent();
+        //3.ai 처리된 afterContent 생성
+        String afterContent = processAI(beforeContent);
+        //감정선택하지 않았을 경우 ai 처리후 string 값을 객체 값으로 전환
         //TODO ai 코드로 수정 예정
 //        if (request.getEmotionType() == null) {
 //            ai 감정 선택 코드 호출
@@ -46,8 +46,8 @@ public class PostCommandService {
         //정적 팩토리 메서드
         Post post = Post.createPost(
                 author,
-                beforeContents,
-                afterContents,
+                beforeContent,
+                afterContent,
                 postCreateRequestDto.getTitle(),
                 postCreateRequestDto.getImageUrl(),
                 postCreateRequestDto.getEmotionType(),
@@ -110,8 +110,8 @@ public class PostCommandService {
     /**
      * 내용 변환 ai 호출 임시 함수
      */
-    private String processAI(String contents) {
-        return contents;
+    private String processAI(String content) {
+        return content;
     }
 
 
