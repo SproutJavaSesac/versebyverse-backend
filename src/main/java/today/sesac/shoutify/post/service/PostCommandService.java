@@ -71,7 +71,9 @@ public class PostCommandService {
      */
     @Transactional
     public void deletePost(Long postId, Long memberId) {
-        Post post = validateAuthor(postId, memberId);
+
+        Post post = getPostById(postId);
+        validatePostOwnership(post, memberId);
         //soft deleted
         post.delete();
         postRepository.save(post);
@@ -85,7 +87,8 @@ public class PostCommandService {
      */
     @Transactional
     public void hidePost(Long postId, Long memberId) {
-        Post post = validateAuthor(postId, memberId);
+        Post post = getPostById(postId);
+        validatePostOwnership(post, memberId);
         post.hide();
         postRepository.save(post);
     }
@@ -98,7 +101,8 @@ public class PostCommandService {
      */
     @Transactional
     public void unhidePost(Long postId, Long memberId) {
-        Post post = validateAuthor(postId, memberId);
+        Post post = getPostById(postId);
+        validatePostOwnership(post, memberId);
         post.unhide();
         postRepository.save(post);
     }
@@ -121,18 +125,22 @@ public class PostCommandService {
         return contents;
     }
 
-    /**
-     * 작성자 일치 여부 (권환 확인) 함수
-     */
-    private Post validateAuthor(Long postId, Long memberId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()
-                ));
 
+    /**
+     * 작성자 권환 확인
+     */
+    private void validatePostOwnership(Post post, Long memberId) {
         if (!post.getAuthor().getId().equals(memberId)) {
-            throw new PermissionRequiredException(memberId.toString(), "권한이 없습니다.") {
-            };
+            throw new PermissionRequiredException(memberId.toString(), "권한이 없습니다.");
         }
-        return post;
+    }
+
+    /**
+     * 게시글 존재 여부 확인
+     */
+    private Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(
+                        () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
     }
 }
