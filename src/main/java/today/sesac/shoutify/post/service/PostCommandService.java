@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.global.exception.PermissionRequiredException;
 import today.sesac.shoutify.member.entity.Member;
-import today.sesac.shoutify.member.repository.MemberRepository;
+import today.sesac.shoutify.member.service.MemberService;
 import today.sesac.shoutify.post.dto.request.PostCreateRequestDto;
 import today.sesac.shoutify.post.dto.response.PostCreateResponseDto;
 import today.sesac.shoutify.post.entity.Post;
@@ -19,7 +19,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
 public class PostCommandService {
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     /**
      * 게시물 작성 api
@@ -31,8 +31,8 @@ public class PostCommandService {
     public PostCreateResponseDto savePost(PostCreateRequestDto postCreateRequestDto,
                                           Long memberId) {
 
-        //1.작성자 정보 가져오기 (현재 사용자는 id=3으로 하드코딩)
-        Member author = getMemberId(memberId);
+        //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
+        Member author = memberService.getMember(memberId);
         //2.사용자가 작성한 원본내용 설정
         String beforeContents = postCreateRequestDto.getContent();
         //3.ai 처리된 afterContents 생성
@@ -105,17 +105,6 @@ public class PostCommandService {
         validatePostOwnership(post, memberId);
         post.unhide();
         postRepository.save(post);
-    }
-
-    /**
-     * member 임시 함수
-     * 현재 사용자의 id가 1이라고 하드코딩한 메서드
-     * 추후 변경 예정
-     */
-    private Member getMemberId(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(
-                        () -> new PostException(PostErrorCode.POST_NOT_FOUND, memberId.toString()));
     }
 
     /**
