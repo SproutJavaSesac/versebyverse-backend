@@ -7,7 +7,7 @@ import today.sesac.shoutify.global.exception.IErrorCode;
 @Getter
 public enum PostErrorCode implements IErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시물입니다."),
-    MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "회원이 존재하지 않습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),
     INVALID_CONCEPT_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 컨셉 타입입니다."),
     INVALID_EMOTION_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 감정 타입입니다.");
 
