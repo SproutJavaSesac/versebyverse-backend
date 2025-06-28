@@ -7,10 +7,8 @@ import lombok.Getter;
 import today.sesac.shoutify.ai.dto.request.AiRequestDto;
 
 /**
- * <p>
- * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다.<br> 역할(role), 조건(condition), 예시(example)를 포함하며, 입력 객체는 동적으로
- * 삽입됩니다.
- * </p>
+ * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다.
+ * <br>역할(role), 조건(condition), 예시(example)를 포함하며, 입력 객체는 동적으로삽입됩니다.
  *
  * <ul>
  *     <li>주로 LLM 프롬프트 설계에 사용됩니다.</li>
@@ -34,8 +32,11 @@ import today.sesac.shoutify.ai.dto.request.AiRequestDto;
 public class PromptTemplate {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
     private final String role;
+
     private final String condition;
+
     private final String example;
 
     /**
