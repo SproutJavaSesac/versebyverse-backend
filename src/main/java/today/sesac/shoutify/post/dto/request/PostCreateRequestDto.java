@@ -11,6 +11,7 @@ import today.sesac.shoutify.global.domain.Emotion;
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class PostCreateRequestDto {
+
     /**
      * 게시물 제목
      */
@@ -24,8 +25,7 @@ public class PostCreateRequestDto {
     private Concept conceptType;
 
     /**
-     * 감정 타입
-     * null일 경우 ai가 감정 분석을 해줍니다.
+     * 감정 타입 null일 경우 ai가 감정 분석을 해줍니다.
      */
     private Emotion emotionType;
 

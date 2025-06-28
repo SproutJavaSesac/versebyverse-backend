@@ -62,8 +62,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isReported;
     /**
-     * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
-     * 기본값 = 0
+     * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isDeleted;
@@ -73,20 +72,18 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isHidden;
     /**
-     * 자신의 게시물에 등록하는 반응 입니다.
-     * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
+     * 자신의 게시물에 등록하는 반응 입니다. null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
     private Emotion emotionType;
     /**
-     * 글의 컨셉입니다.
-     * enum타입으로 총 5가지 입니다.
+     * 글의 컨셉입니다. enum타입으로 총 5가지 입니다.
      */
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
     private Post(Member author, String beforeContent, String afterContent, String title,
-                 String imageUrl, Emotion emotionType, Concept conceptType) {
+            String imageUrl, Emotion emotionType, Concept conceptType) {
         this.author = author;
         this.beforeContent = beforeContent;
         this.afterContent = afterContent;
@@ -100,8 +97,8 @@ public class Post extends BaseEntity {
     }
 
     public static Post createPost(Member author, String beforeContent, String afterContent,
-                                  String title, String imageUrl, Emotion emotionType,
-                                  Concept conceptType) {
+            String title, String imageUrl, Emotion emotionType,
+            Concept conceptType) {
         return new Post(author, beforeContent, afterContent, title, imageUrl, emotionType,
                 conceptType);
     }

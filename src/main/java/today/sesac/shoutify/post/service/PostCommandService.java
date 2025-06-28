@@ -17,6 +17,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
 @RequiredArgsConstructor
 @Transactional
 public class PostCommandService {
+
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
     private final MemberService memberService;
@@ -29,7 +30,7 @@ public class PostCommandService {
      * @return PostCreateResponseDto 게시물 작성 dto
      */
     public PostCreateResponseDto savePost(PostCreateRequestDto postCreateRequestDto,
-                                          Long memberId) {
+            Long memberId) {
 
         //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);

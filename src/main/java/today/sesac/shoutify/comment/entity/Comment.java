@@ -86,7 +86,7 @@ public class Comment extends BaseEntity {
     }
 
     public static Comment create(String beforeContent, String afterContent, Post post,
-                                 Member author) {
+            Member author) {
         return new Comment(beforeContent, afterContent, post, author);
     }
 }
