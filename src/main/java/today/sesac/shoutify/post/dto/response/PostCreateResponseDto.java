@@ -12,7 +12,7 @@ public class PostCreateResponseDto {
     private final Long postId;
 
     @NotNull
-    private final String title;
+    private final String afterTitle;
 
     @NotNull
     private final String afterContent;

@@ -12,7 +12,7 @@ import today.sesac.shoutify.global.domain.Emotion;
 @AllArgsConstructor(staticName = "of")
 public class PostCreateRequestDto {
     /**
-     * 사용자가 작성하는 게시물 제목
+     * 변환 전 사용자가 작성하는 게시물 제목
      */
     @NotBlank
     private String title;
