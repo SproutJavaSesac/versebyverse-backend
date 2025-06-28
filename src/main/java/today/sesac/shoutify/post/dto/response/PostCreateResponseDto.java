@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * post 응답 dto.
+ */
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class PostCreateResponseDto {

@@ -13,16 +13,20 @@ import today.sesac.shoutify.post.exception.PostErrorCode;
 import today.sesac.shoutify.post.exception.PostException;
 import today.sesac.shoutify.post.repository.PostRepository;
 
+/**
+ * 게시글 생성, 삭제, 숨김 service.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PostCommandService {
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
+
     private final MemberService memberService;
 
     /**
-     * 게시물 작성 api
+     * 게시물 작성 api.
      *
      * @param postCreateRequestDto 게시물 작성 dto
      * @param memberId             현재 로그인한 사용자의 id
@@ -70,7 +74,7 @@ public class PostCommandService {
     }
 
     /**
-     * 게시물 삭제
+     * 게시물 삭제.
      *
      * @param postId   삭제할 게시물의 id
      * @param memberId 현재 로그인한 사용자의 id
@@ -86,7 +90,7 @@ public class PostCommandService {
     }
 
     /**
-     * 게시물 숨기기
+     * 게시물 숨기기.
      *
      * @param postId   숨길 게시물의 id
      * @param memberId 현재 로그인한 사용자의 id
@@ -100,7 +104,7 @@ public class PostCommandService {
     }
 
     /**
-     * 게시물 숨김 해제
+     * 게시물 숨김 해제.
      *
      * @param postId   숨김 해제할
      * @param memberId 현재 로그인한 사용자의 id
@@ -114,7 +118,7 @@ public class PostCommandService {
     }
 
     /**
-     * 내용 변환 ai 호출 임시 함수
+     * 내용 변환 ai 호출 임시 함수.
      */
     private String processAI(String content) {
         return content;
@@ -122,7 +126,7 @@ public class PostCommandService {
 
 
     /**
-     * 작성자 권환 확인
+     * 작성자 권환 확인.
      */
     private void validatePostOwnership(Post post, Long memberId) {
         if (!post.getAuthor().getId().equals(memberId)) {
@@ -131,7 +135,7 @@ public class PostCommandService {
     }
 
     /**
-     * 게시글 존재 여부 확인
+     * 게시글 존재 여부 확인.
      */
     private Post getPostById(Long postId) {
         return postRepository.findById(postId)

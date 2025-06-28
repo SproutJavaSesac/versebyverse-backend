@@ -8,17 +8,20 @@ import org.hibernate.validator.constraints.Length;
 import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.global.domain.Emotion;
 
+/**
+ * 게시글 작성 요청 dto.
+ */
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class PostCreateRequestDto {
     /**
-     * 변환 전 사용자가 작성하는 게시물 제목
+     * 변환 전 사용자가 작성하는 게시물 제목입니다.
      */
     @NotBlank
     private String title;
 
     /**
-     * 컨셉 타입
+     * 게시물의 컨셉타입입니다.
      */
     @NotNull
     private Concept conceptType;
@@ -30,14 +33,14 @@ public class PostCreateRequestDto {
     private Emotion emotionType;
 
     /**
-     * 변환 전 사용자가 쓴 게시물 내용
+     * 변환 전 사용자가 쓴 게시물 내용입니다.
      */
     @NotBlank
     @Length(max = 1000)
     private String content;
 
     /**
-     * 이미지 URL
+     * 이미지 URL입니다.
      */
     private String imageUrl;
 }
