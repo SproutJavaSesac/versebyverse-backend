@@ -47,10 +47,15 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContent;
     /**
-     * 게시물의 제목입니다.
+     * 게시물 ai 변환 전 제목입니다.
      */
     @Column(nullable = false)
-    private String title;
+    private String beforeTitle;
+    /**
+     * 게시물 ai 변환 후 제목입니다.
+     */
+    @Column(nullable = false)
+    private String afterTitle;
     /**
      * 게시물 내의 이미지 입니다. url로 저장됩니다.
      */
@@ -85,12 +90,14 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
-    private Post(Member author, String beforeContent, String afterContent, String title,
+    private Post(Member author, String beforeContent, String afterContent, String beforeTitle,
+                 String afterTitle,
                  String imageUrl, Emotion emotionType, Concept conceptType) {
         this.author = author;
         this.beforeContent = beforeContent;
         this.afterContent = afterContent;
-        this.title = title;
+        this.beforeTitle = beforeTitle;
+        this.afterTitle = afterTitle;
         this.imageUrl = imageUrl;
         this.isReported = false;
         this.isDeleted = false;
@@ -100,10 +107,11 @@ public class Post extends BaseEntity {
     }
 
     public static Post createPost(Member author, String beforeContent, String afterContent,
-                                  String title, String imageUrl, Emotion emotionType,
+                                  String beforeTitle, String afterTitle, String imageUrl,
+                                  Emotion emotionType,
                                   Concept conceptType) {
-        return new Post(author, beforeContent, afterContent, title, imageUrl, emotionType,
-                conceptType);
+        return new Post(author, beforeContent, afterContent, beforeTitle, afterTitle, imageUrl,
+                emotionType, conceptType);
     }
 
     public void delete() {
