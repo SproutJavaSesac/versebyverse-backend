@@ -41,3 +41,6 @@ out/
 
 ### vertex ai 서비스 계정 키 ###
 *.json
+
+### docker - my sql ###
+/mysql-data/
