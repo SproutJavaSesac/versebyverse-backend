@@ -50,4 +50,11 @@ public class MemberService {
         return member;
     }
 
+
+    public Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                // TODO 에러코드 수정 예정
+                .orElseThrow(
+                        () -> new RuntimeException("회원이 존재하지 않습니다."));
+    }
 }
