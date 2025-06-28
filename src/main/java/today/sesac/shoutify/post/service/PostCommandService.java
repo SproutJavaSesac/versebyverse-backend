@@ -37,6 +37,11 @@ public class PostCommandService {
         String beforeContent = postCreateRequestDto.getContent();
         //3.ai 처리된 afterContent 생성
         String afterContent = processAI(beforeContent);
+        //4. 사용자가 작성한 제목
+        String beforeTitle = postCreateRequestDto.getTitle();
+        //5. ai 처리된 afterTitle 생성
+        String afterTitle = processAI(beforeTitle);
+
         //감정선택하지 않았을 경우 ai 처리후 string 값을 객체 값으로 전환
         //TODO ai 코드로 수정 예정
 //        if (request.getEmotionType() == null) {
@@ -48,7 +53,8 @@ public class PostCommandService {
                 author,
                 beforeContent,
                 afterContent,
-                postCreateRequestDto.getTitle(),
+                beforeTitle,
+                afterTitle,
                 postCreateRequestDto.getImageUrl(),
                 postCreateRequestDto.getEmotionType(),
                 postCreateRequestDto.getConceptType()
@@ -58,7 +64,7 @@ public class PostCommandService {
 
         return PostCreateResponseDto.of(
                 savedPost.getId(),
-                savedPost.getTitle(),
+                savedPost.getAfterTitle(),
                 savedPost.getAfterContent()
         );
     }
