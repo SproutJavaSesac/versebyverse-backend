@@ -30,66 +30,80 @@ public class Post extends BaseEntity {
     @Id //기본키
     @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment
     private Long id;
+
     /**
-     * 게시물을 작성한 회원입니다
+     * 게시물을 작성한 회원입니다.
      */
     @ManyToOne
     @JoinColumn(nullable = false)
     private Member author;
+
     /**
      * ai 수정 전 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String beforeContent;
+
     /**
      * ai 수정 후 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContent;
+
     /**
      * 게시물 ai 변환 전 제목입니다.
      */
     @Column(nullable = false)
     private String beforeTitle;
+
     /**
      * 게시물 ai 변환 후 제목입니다.
      */
     @Column(nullable = false)
     private String afterTitle;
+
     /**
      * 게시물 내의 이미지 입니다. url로 저장됩니다.
      */
     @Column(length = 500)
     private String imageUrl;
+
     /**
      * 게시글 신고 유무입니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isReported;
+
     /**
      * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
      * 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isDeleted;
+
     /**
      * 숨김 유무입니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isHidden;
+
     /**
      * 자신의 게시물에 등록하는 반응 입니다.
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
     private Emotion emotionType;
+
     /**
      * 글의 컨셉입니다.
-     * enum타입으로 총 5가지 입니다.
+     * enum 타입으로 총 5가지 입니다.
      */
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
+    /**
+     * Post 생성자입니다.
+     */
     private Post(Member author, String beforeContent, String afterContent, String beforeTitle,
                  String afterTitle,
                  String imageUrl, Emotion emotionType, Concept conceptType) {
@@ -106,6 +120,9 @@ public class Post extends BaseEntity {
         this.conceptType = conceptType;
     }
 
+    /**
+     * Post 팩토리 메서드입니다.
+     */
     public static Post createPost(Member author, String beforeContent, String afterContent,
                                   String beforeTitle, String afterTitle, String imageUrl,
                                   Emotion emotionType,
@@ -114,14 +131,23 @@ public class Post extends BaseEntity {
                 emotionType, conceptType);
     }
 
+    /**
+     * 게시글 삭제를 true로 전환합니다.
+     */
     public void delete() {
         this.isDeleted = true;
     }
 
+    /**
+     * 게시글 숨김을 true로 전환합니다.
+     */
     public void hide() {
         this.isHidden = true;
     }
 
+    /**
+     * 게시글 숨김을 false로 전환합니다.
+     */
     public void unhide() {
         this.isHidden = false;
     }
