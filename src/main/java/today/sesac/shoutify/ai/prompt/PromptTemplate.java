@@ -49,6 +49,7 @@ public class PromptTemplate {
     public String buildPromptMessage(AiRequestDto inputDto) {
         // TODO : 커스텀 예외 처리 적용하기
         // TODO : 예외 발생 시 처리 방법 고민하기
+        // TODO : prompt .md파일 형식 변경 고민
         try {
             String inputJson = objectMapper.writeValueAsString(inputDto);
             return """
