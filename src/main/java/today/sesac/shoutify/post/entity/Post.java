@@ -37,7 +37,6 @@ public class Post extends BaseEntity {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Member author;
-
     /**
      * ai 수정 전 게시물 내용입니다.
      */

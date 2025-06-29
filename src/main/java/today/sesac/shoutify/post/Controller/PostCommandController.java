@@ -20,6 +20,7 @@ import today.sesac.shoutify.post.service.PostCommandService;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
+
     private final PostCommandService postCommandService;
     //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
 

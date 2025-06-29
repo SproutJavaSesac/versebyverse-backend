@@ -1,8 +1,9 @@
 package today.sesac.shoutify.member.entity;
 
-import lombok.Getter;
-
+/**
+ * 소셜 로그인 타입입니다.
+ */
 public enum SocialType {
 
-    KAKAO, GOOGLE;
+    KAKAO, GOOGLE
 }

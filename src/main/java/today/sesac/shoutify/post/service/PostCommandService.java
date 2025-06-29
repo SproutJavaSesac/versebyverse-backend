@@ -20,6 +20,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
 @RequiredArgsConstructor
 @Transactional
 public class PostCommandService {
+
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
 

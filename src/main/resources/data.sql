@@ -1,17 +1,17 @@
 -- === Member 10명 생성 (반드시 Post보다 먼저 실행되어야 합니다) ===
 -- RoleType: ROLE_USER, ROLE_ADMIN
 -- SocialType: KAKAO, GOOGLE
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (1, 'ROLE_USER', 'KAKAO', '행복한 코알라', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (2, 'ROLE_USER', 'GOOGLE', '슬기로운 미어캣', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (3, 'ROLE_USER', 'KAKAO', '용감한 펭귄', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (4, 'ROLE_USER', 'GOOGLE', '신비로운 유니콘', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (5, 'ROLE_USER', 'KAKAO', '춤추는 알파카', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (6, 'ROLE_USER', 'GOOGLE', '고요한 나무늘보', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (7, 'ROLE_USER', 'KAKAO', '씩씩한 햄스터', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (8, 'ROLE_USER', 'GOOGLE', '자유로운 돌고래', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (9, 'ROLE_USER', 'KAKAO', '어쩌구 저쩌구', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (10, 'ROLE_USER', 'GOOGLE', '명상하는 여우', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, nickname, created_at, updated_at) VALUES (11, 'ROLE_ADMIN', 'KAKAO', '관리자쿼카', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (1, 'ROLE_USER', 'KAKAO', 'sesac1@gmail.com', '행복한 코알라', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (2, 'ROLE_USER', 'GOOGLE', 'sesac2@gmail.com', '슬기로운 미어캣', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (3, 'ROLE_USER', 'KAKAO', 'sesac3@gmail.com', '용감한 펭귄', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (4, 'ROLE_USER', 'GOOGLE', 'sesac4@gmail.com', '신비로운 유니콘', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (5, 'ROLE_USER', 'KAKAO', 'sesac5@gmail.com', '춤추는 알파카', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (6, 'ROLE_USER', 'GOOGLE', 'sesac6@gmail.com', '고요한 나무늘보', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (7, 'ROLE_USER', 'KAKAO', 'sesac7@gmail.com', '씩씩한 햄스터', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (8, 'ROLE_USER', 'GOOGLE', 'sesac8@gmail.com', '자유로운 돌고래', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (9, 'ROLE_USER', 'KAKAO', 'sesac9@gmail.com', '어쩌구 저쩌구', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (10, 'ROLE_USER', 'GOOGLE', 'sesac10@gmail.com', '명상하는 여우', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at) VALUES (11, 'ROLE_ADMIN', 'KAKAO', 'sesac11@gmail.com', '관리자쿼카', NOW(), NOW());
 
 -- === Post 200개 생성 (회원별 개수 차등) ===
 -- Post의 author_id는 위에서 생성한 Member의 id를 참조합니다.
@@ -52,7 +52,7 @@ INSERT INTO posts(id, author_id, before_content, after_content, before_title, af
 INSERT INTO posts(id, author_id, before_content, after_content, before_title, after_title, image_url, is_reported, is_deleted, is_hidden, emotion_type, concept_type, created_at, updated_at) SELECT 133+n, 8, concat('내용 ', 133+n), concat('수정된 내용 ', 133+n), concat('제목 ', 133+n), concat('다듬어진 제목 ', 133+n), concat('https://placehold.co/600x400?text=Post+', 133+n), false, false, false, ELT(MOD(n,6)+1, 'HAPPY','SAD','ANGRY','EXCITED','CONFUSED','PROUD'), ELT(MOD(n,5)+1, 'CLASSICAL_POETRY','POETRY','NOVEL','DRAMA','ESSAY'), NOW(), NOW() FROM (SELECT (n1.n + n10.n*10) as n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n1, (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) n10) nums WHERE n BETWEEN 1 AND 37;
 
 -- Member 9 (author_id=9): 15개
-INSERT INTO posts(id, author_id, before_content, after_content, before_title, after_title, image_url, is_reported, is_deleted, is_hidden, emotion_type, concept_type, created_at, updated_at) SELECT 170+n, 9, concat('내용 ', 170+n), concat('수정된 내용 ', 170+n), concat('제목 ', 170+n), concat('다듬어진 제목 ', 170+n), concat('https://placehold.co/600x400?text=Post+', 170+n), false, false, false, ELT(MOD(n,6)+1, 'HAPPY','SAD','ANGRY','EXCITED','CONFUSED','PROUD'), ELT(MOD(n,5)+1, 'CLASSICAL_POETRY','POETRY','NOVEL','DRAMA','ESSAY'), NOW(), NOW() FROM (SELECT (n1.n + n10.n*10) as n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n1, (SELECT 0 as n UNION ALL SELECT 1) n10) nums WHERE n BETWEEN 1 AND 15;
+INSERT INTO posts(id, author_id, before_content, after_content, title, image_url, is_reported, is_deleted, is_hidden, emotion_type, concept_type, created_at, updated_at) SELECT 170+n, 9, concat('내용 ', 170+n), concat('수정된 내용 ', 170+n), concat('제목 ', 170+n), concat('https://placehold.co/600x400?text=Post+', 170+n), false, false, false, ELT(MOD(n,6)+1, 'HAPPY','SAD','ANGRY','EXCITED','CONFUSED','PROUD'), ELT(MOD(n,5)+1, 'CLASSICAL_POETRY','POETRY','NOVEL','DRAMA','ESSAY'), NOW(), NOW() FROM (SELECT (n1.n + n10.n*10) as n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n1, (SELECT 0 as n UNION ALL SELECT 1) n10) nums WHERE n BETWEEN 1 AND 15;
 
 -- Member 10 (author_id=10): 15개
 INSERT INTO posts(id, author_id, before_content, after_content, before_title, after_title, image_url, is_reported, is_deleted, is_hidden, emotion_type, concept_type, created_at, updated_at) SELECT 185+n, 10, concat('내용 ', 185+n), concat('수정된 내용 ', 185+n), concat('제목 ', 185+n), concat('다듬어진 제목 ', 185+n), concat('https://placehold.co/600x400?text=Post+', 185+n), false, false, false, ELT(MOD(n,6)+1, 'HAPPY','SAD','ANGRY','EXCITED','CONFUSED','PROUD'), ELT(MOD(n,5)+1, 'CLASSICAL_POETRY','POETRY','NOVEL','DRAMA','ESSAY'), NOW(), NOW() FROM (SELECT (n1.n + n10.n*10) as n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n1, (SELECT 0 as n UNION ALL SELECT 1) n10) nums WHERE n BETWEEN 1 AND 15;
@@ -108,3 +108,4 @@ FROM
                                        (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n10
     ) nums
 WHERE n BETWEEN 1 AND 100;
+
