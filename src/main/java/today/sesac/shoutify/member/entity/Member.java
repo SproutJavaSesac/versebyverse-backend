@@ -54,7 +54,7 @@ public class Member extends BaseEntity {
     }
 
     public static Member create(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
+                                String nickname) {
         return new Member(roleType, socialType, email, nickname);
     }
 }

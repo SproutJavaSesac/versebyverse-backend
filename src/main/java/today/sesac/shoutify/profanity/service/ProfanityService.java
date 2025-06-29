@@ -13,9 +13,9 @@ import today.sesac.shoutify.profanity.repository.ProfanityRepository;
 @RequiredArgsConstructor
 public class ProfanityService {
 
-  /**
-   * 데이터베이스와 상호작용을 위해 ProfanityRepository를 의존성 주입받습니다.
-   */
-  private final ProfanityRepository profanityRepository;
+    /**
+     * 데이터베이스와 상호작용을 위해 ProfanityRepository를 의존성 주입받습니다.
+     */
+    private final ProfanityRepository profanityRepository;
 
 }

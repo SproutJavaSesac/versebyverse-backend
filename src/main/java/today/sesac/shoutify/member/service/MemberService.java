@@ -23,7 +23,7 @@ public class MemberService {
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
     public Member createMember(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
+                               String nickname) {
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
         return savedMember;

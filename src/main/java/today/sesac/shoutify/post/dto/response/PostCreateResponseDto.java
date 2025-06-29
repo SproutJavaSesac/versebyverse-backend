@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * post 응답 dto.
+ */
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class PostCreateResponseDto {
@@ -12,7 +15,7 @@ public class PostCreateResponseDto {
     private final Long postId;
 
     @NotNull
-    private final String title;
+    private final String afterTitle;
 
     @NotNull
     private final String afterContent;
