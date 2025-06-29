@@ -24,68 +24,69 @@ import today.sesac.shoutify.post.entity.Post;
 @Table(name = "comments")
 public class Comment extends BaseEntity {
 
-	/**
-	 * 댓글 고유 식별자
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    /**
+     * 댓글 고유 식별자
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	/**
-	 * AI 변환 전 사용자가 입력한 원본 댓글
-	 */
-	@Column(length = 500, nullable = false)
-	private String beforeContents;
+    /**
+     * AI 변환 전 사용자가 입력한 원본 댓글
+     */
+    @Column(length = 500, nullable = false)
+    private String beforeContent;
 
-	/**
-	 * AI가 변환한 후의 댓글 내용
-	 */
-	@Column(length = 500, nullable = false)
-	private String afterContents;
+    /**
+     * AI가 변환한 후의 댓글 내용
+     */
+    @Column(length = 500, nullable = false)
+    private String afterContent;
 
-	/**
-	 * 댓글이 작성된 게시물
-	 */
-	@ManyToOne
-	@JoinColumn(name = "post_id", nullable = false)
-	private Post post;
+    /**
+     * 댓글이 작성된 게시물
+     */
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-	/**
-	 * 댓글 작성자
-	 */
-	@ManyToOne
-	@JoinColumn(name = "author_id", nullable = false)
-	private Member author;
+    /**
+     * 댓글 작성자
+     */
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Member author;
 
-	/**
-	 * 대댓글 기능 추가시 사용 예정
-	 */
-	@Column(nullable = false)
-	private int level;
+    /**
+     * 대댓글 기능 추가시 사용 예정
+     */
+    @Column(nullable = false)
+    private int level;
 
-	/**
-	 * 댓글 삭제 여부
-	 */
-	@Column(nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean isDeleted;
+    /**
+     * 댓글 삭제 여부
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isDeleted;
 
-	/**
-	 * 댓글 신고 여부
-	 */
-	@Column(nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean isReported;
+    /**
+     * 댓글 신고 여부
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isReported;
 
-	private Comment(String beforeContents, String afterContents, Post post, Member author) {
-		this.beforeContents = beforeContents;
-		this.afterContents = afterContents;
-		this.post = post;
-		this.author = author;
-		this.level = 0;
-		this.isDeleted = false;
-		this.isReported = false;
-	}
+    private Comment(String beforeContent, String afterContent, Post post, Member author) {
+        this.beforeContent = beforeContent;
+        this.afterContent = afterContent;
+        this.post = post;
+        this.author = author;
+        this.level = 0;
+        this.isDeleted = false;
+        this.isReported = false;
+    }
 
-	public static Comment create(String beforeContents, String afterContents, Post post, Member author) {
-		return new Comment(beforeContents, afterContents, post, author);
-	}
+    public static Comment create(String beforeContent, String afterContent, Post post,
+            Member author) {
+        return new Comment(beforeContent, afterContent, post, author);
+    }
 }

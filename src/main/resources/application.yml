@@ -25,6 +25,31 @@ spring:
     resources:
       add-mappings: false # 404인 경우, static 리소스 참고하지 않고, 예외 핸들러에서 처리하도록 함.
 
+  #vertex ai
+  ai:
+    vertex:
+      ai:
+        gemini:
+          project-id: ${AI_PROJECT_ID}
+          location: us-central1
+          credentials-uri: classpath:${AI_KEY_PATH}
+          chat:
+            options:
+              model: gemini-2.0-flash
+              temperature: 0.5
+          transport: rest
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:

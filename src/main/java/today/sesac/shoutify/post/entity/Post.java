@@ -40,12 +40,12 @@ public class Post extends BaseEntity {
      * ai 수정 전 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String beforeContents;
+    private String beforeContent;
     /**
      * ai 수정 후 게시물 내용입니다.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String afterContents;
+    private String afterContent;
     /**
      * 게시물의 제목입니다.
      */
@@ -62,8 +62,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isReported;
     /**
-     * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
-     * 기본값 = 0
+     * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isDeleted;
@@ -73,22 +72,21 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isHidden;
     /**
-     * 자신의 게시물에 등록하는 반응 입니다.
-     * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
+     * 자신의 게시물에 등록하는 반응 입니다. null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
     private Emotion emotionType;
     /**
-     * 글의 컨셉입니다.
-     * enum타입으로 총 5가지 입니다.
+     * 글의 컨셉입니다. enum타입으로 총 5가지 입니다.
      */
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
-    private Post(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
+    private Post(Member author, String beforeContent, String afterContent, String title,
+            String imageUrl, Emotion emotionType, Concept conceptType) {
         this.author = author;
-        this.beforeContents = beforeContents;
-        this.afterContents = afterContents;
+        this.beforeContent = beforeContent;
+        this.afterContent = afterContent;
         this.title = title;
         this.imageUrl = imageUrl;
         this.isReported = false;
@@ -98,7 +96,22 @@ public class Post extends BaseEntity {
         this.conceptType = conceptType;
     }
 
-    public static Post createPost(Member author, String beforeContents, String afterContents, String title, String imageUrl, Emotion emotionType, Concept conceptType) {
-        return new Post(author, beforeContents, afterContents, title, imageUrl, emotionType, conceptType);
+    public static Post createPost(Member author, String beforeContent, String afterContent,
+            String title, String imageUrl, Emotion emotionType,
+            Concept conceptType) {
+        return new Post(author, beforeContent, afterContent, title, imageUrl, emotionType,
+                conceptType);
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
+
+    public void hide() {
+        this.isHidden = true;
+    }
+
+    public void unhide() {
+        this.isHidden = false;
     }
 }

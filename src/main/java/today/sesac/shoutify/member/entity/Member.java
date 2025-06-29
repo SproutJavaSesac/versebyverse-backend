@@ -1,15 +1,29 @@
 package today.sesac.shoutify.member.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.shoutify.global.domain.BaseEntity;
 
+/**
+ * 회원을 관리하는 도메인입니다.
+ */
 @Entity
 @Getter
-@Table(name = "members")
+@Table(name = "members",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"social_type", "email"})
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -26,16 +40,21 @@ public class Member extends BaseEntity {
     private SocialType socialType;
 
     @NotNull
+    private String email;
+
+    @NotNull
     @Column(length = 50)
     private String nickname;
 
-    private Member(RoleType roleType, SocialType socialType, String nickname) {
+    private Member(RoleType roleType, SocialType socialType, String email, String nickname) {
         this.roleType = roleType;
         this.socialType = socialType;
+        this.email = email;
         this.nickname = nickname;
     }
 
-    public static Member create(RoleType roleType, SocialType socialType, String nickname) {
-        return new Member(roleType, socialType, nickname);
+    public static Member create(RoleType roleType, SocialType socialType, String email,
+            String nickname) {
+        return new Member(roleType, socialType, email, nickname);
     }
 }
