@@ -150,4 +150,13 @@ public class Post extends BaseEntity {
     public void unhide() {
         this.isHidden = false;
     }
+
+    /**
+     * 현재 로그인된 사용자와 게시글 작성자가 일치할 시
+     * true가 되며 삭제 버튼이 활성화.
+     * false일 시 삭제 버튼 없음.
+     */
+    public boolean isMine(Long memberId) {
+        return memberId.equals(this.getAuthor().getId());
+    }
 }

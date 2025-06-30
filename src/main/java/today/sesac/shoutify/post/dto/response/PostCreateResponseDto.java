@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * post 응답 dto.
+ * 게시글 작성 응답 dto.
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
