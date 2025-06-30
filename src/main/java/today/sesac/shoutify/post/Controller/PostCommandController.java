@@ -27,7 +27,7 @@ public class PostCommandController {
     Long memberId = 1L;
 
     /**
-     * 게시물 작성
+     * 게시물 작성.
      */
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
@@ -38,7 +38,7 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 작성.
+     * 게시물 삭제.
      */
     @DeleteMapping("/{postId}")
     public ApiResponse<String> deletePost(@PathVariable Long postId) {
@@ -47,7 +47,7 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 숨기기.
+     * 게시물 숨김.
      */
     @PatchMapping("/{postId}/hide")
     public ApiResponse<String> hidePost(@PathVariable Long postId) {
