@@ -5,7 +5,11 @@ package today.sesac.shoutify.ai.prompt;
  */
 public enum PromptType {
     /**
-     * 욕설 순화. PROFANITY_REFINE, /** 감정 분석.
+     * 욕설 순화.
+     */
+    PROFANITY_REFINE,
+    /**
+     * 감정 분석.
      */
     EMOTION_ANALYSIS,
     /**
