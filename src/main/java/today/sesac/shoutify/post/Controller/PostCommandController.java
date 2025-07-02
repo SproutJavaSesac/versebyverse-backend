@@ -13,13 +13,18 @@ import today.sesac.shoutify.post.dto.request.PostCreateRequestDto;
 import today.sesac.shoutify.post.dto.response.PostCreateResponseDto;
 import today.sesac.shoutify.post.service.PostCommandService;
 
+/**
+ * 게시물 생성, 삭제 , 숨김 기능 controller.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
 
     private final PostCommandService postCommandService;
-    Long memberId = 1L; //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
+    //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
+
+    Long memberId = 1L;
 
     /**
      * 게시물 작성
@@ -33,7 +38,7 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물삭제
+     * 게시물 작성.
      */
     @DeleteMapping("/{postId}")
     public ApiResponse<String> deletePost(@PathVariable Long postId) {
@@ -42,7 +47,7 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 숨기기
+     * 게시물 숨기기.
      */
     @PatchMapping("/{postId}/hide")
     public ApiResponse<String> hidePost(@PathVariable Long postId) {
@@ -51,7 +56,7 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 숨김 해제
+     * 게시물 숨김 해제.
      */
     @PatchMapping("{postId}/unhide")
     public ApiResponse<String> unhidePost(@PathVariable Long postId) {
