@@ -1,7 +1,9 @@
 package today.sesac.shoutify.post.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import today.sesac.shoutify.post.service.PostCommandService;
  */
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
 
@@ -41,7 +44,7 @@ public class PostCommandController {
      * 게시물 삭제.
      */
     @DeleteMapping("/{postId}")
-    public ApiResponse<String> deletePost(@PathVariable Long postId) {
+    public ApiResponse<String> deletePost(@PathVariable @NotNull Long postId) {
         Long memberId = 1L;
         postCommandService.deletePost(postId, memberId);
         return ApiResponse.success("게시물 삭제가 성공했습니다");
@@ -51,7 +54,7 @@ public class PostCommandController {
      * 게시물 숨김.
      */
     @PatchMapping("/{postId}/hide")
-    public ApiResponse<String> hidePost(@PathVariable Long postId) {
+    public ApiResponse<String> hidePost(@PathVariable @NotNull Long postId) {
         Long memberId = 1L;
         postCommandService.hidePost(postId, memberId);
         return ApiResponse.success("게시물 숨기기가 성공했습니다");
@@ -61,7 +64,7 @@ public class PostCommandController {
      * 게시물 숨김 해제.
      */
     @PatchMapping("{postId}/unhide")
-    public ApiResponse<String> unhidePost(@PathVariable Long postId) {
+    public ApiResponse<String> unhidePost(@PathVariable @NotNull Long postId) {
         Long memberId = 1L;
         postCommandService.unhidePost(postId, memberId);
         return ApiResponse.success("게시물 숨기기가 취소됐습니다");
