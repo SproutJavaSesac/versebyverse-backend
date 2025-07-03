@@ -1,6 +1,6 @@
 package today.sesac.shoutify.post.Controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import today.sesac.shoutify.post.service.PostQueryService;
  * 게시글 조회 관련 controller.
  */
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("api/v1/posts")
 public class PostQueryController {
     private final PostQueryService postQueryService;
