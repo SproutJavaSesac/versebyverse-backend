@@ -25,9 +25,10 @@ public class PostQueryController {
      * 게시글 단건 상세 조회.
      */
     @GetMapping("/{postId}")
-    public ApiResponse<PostSingleQueryResponseDto> findById(@PathVariable("postId") Long postId) {
+    public ApiResponse<PostSingleQueryResponseDto> getSinglePostDetail(
+            @PathVariable("postId") Long postId) {
         PostSingleQueryResponseDto postSingleQueryResponseDto =
-                postQueryService.findById(postId, memberId);
+                postQueryService.getPostDetail(postId, memberId);
         return ApiResponse.success(postSingleQueryResponseDto);
     }
 }

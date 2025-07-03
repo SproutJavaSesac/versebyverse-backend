@@ -25,7 +25,7 @@ public class PostQueryService {
      * @param memberId 작성자id
      * @return postSingleQueryResponseDto
      */
-    public PostSingleQueryResponseDto findById(Long postId, Long memberId) {
+    public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
 
