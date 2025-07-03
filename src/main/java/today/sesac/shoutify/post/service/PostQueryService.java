@@ -1,8 +1,8 @@
 package today.sesac.shoutify.post.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import today.sesac.shoutify.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.shoutify.post.entity.Post;
 import today.sesac.shoutify.post.exception.PostErrorCode;
@@ -14,7 +14,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PostQueryService {
     private final PostRepository postRepository;
 
