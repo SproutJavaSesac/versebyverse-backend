@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post.Controller;
+package today.sesac.shoutify.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,6 @@ public class PostQueryController {
     private final PostQueryService postQueryService;
 
     //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
-    private final Long memberId = 1L;
 
     /**
      * 게시글 단건 상세 조회.
@@ -27,6 +26,7 @@ public class PostQueryController {
     @GetMapping("/{postId}")
     public ApiResponse<PostSingleQueryResponseDto> getSinglePostDetail(
             @PathVariable("postId") Long postId) {
+        Long memberId = 1L;
         PostSingleQueryResponseDto postSingleQueryResponseDto =
                 postQueryService.getPostDetail(postId, memberId);
         return ApiResponse.success(postSingleQueryResponseDto);
