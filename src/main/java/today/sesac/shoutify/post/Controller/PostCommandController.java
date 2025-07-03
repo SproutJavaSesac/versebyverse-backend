@@ -1,5 +1,6 @@
 package today.sesac.shoutify.post.Controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,7 +32,7 @@ public class PostCommandController {
      */
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
-            @RequestBody PostCreateRequestDto postCreateRequestDto) {
+            @Valid @RequestBody PostCreateRequestDto postCreateRequestDto) {
         PostCreateResponseDto postCreateResponseDto =
                 postCommandService.savePost(postCreateRequestDto, memberId);
         return ApiResponse.success(postCreateResponseDto);
