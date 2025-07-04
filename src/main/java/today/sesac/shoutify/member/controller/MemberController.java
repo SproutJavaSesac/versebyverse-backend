@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.auth.service.UserPrincipal;
 import today.sesac.shoutify.global.response.ApiResponse;
 import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
+import today.sesac.shoutify.member.dto.MyInfoGetResponseDto;
 import today.sesac.shoutify.member.dto.MyPostListResponseDto;
 import today.sesac.shoutify.member.service.MemberService;
 
@@ -49,5 +50,16 @@ public class MemberController {
                 memberId, page, size);
 
         return ApiResponse.success(myCommentListResponseDto);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<MyInfoGetResponseDto> getMemberInformation(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        Long memberId = userPrincipal.getMemberId();
+
+        MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMemberInformation(memberId);
+
+        return ApiResponse.success(myInfoGetResponseDto);
     }
 }

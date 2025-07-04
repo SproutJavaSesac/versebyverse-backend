@@ -10,6 +10,7 @@ import today.sesac.shoutify.comment.entity.Comment;
 import today.sesac.shoutify.comment.repository.CommentRepository;
 import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
 import today.sesac.shoutify.member.dto.MyCommentSummary;
+import today.sesac.shoutify.member.dto.MyInfoGetResponseDto;
 import today.sesac.shoutify.member.dto.MyPostListResponseDto;
 import today.sesac.shoutify.member.dto.MyPostSummary;
 import today.sesac.shoutify.member.entity.Member;
@@ -71,6 +72,39 @@ public class MemberService {
                         () -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 
+    public MyInfoGetResponseDto getMemberInformation(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(String.valueOf(memberId),
+                        "해당 id를 가진 회원을 찾을 수 없습니다.")
+        );
+
+        MyInfoGetResponseDto myInfoGetResponseDto = convertMemberToInfo(member);
+
+        return myInfoGetResponseDto;
+    }
+
+    private MyInfoGetResponseDto convertMemberToInfo(Member member) {
+        MyInfoGetResponseDto myInfoGetResponseDto = new MyInfoGetResponseDto();
+        myInfoGetResponseDto.setMemberId(member.getId());
+        myInfoGetResponseDto.setNickname(member.getNickname());
+        myInfoGetResponseDto.setEmail(member.getEmail());
+        myInfoGetResponseDto.setProfileImageUrl(null);
+
+        List<Post> memberPosts = postRepository.findAll().stream()
+                .filter(post -> post.getAuthor().getId().equals(member.getId()))
+                .collect(Collectors.toList());
+        List<Comment> memberComments = commentRepository.findAll().stream()
+                .filter(comment -> comment.getAuthor().getId().equals(member.getId()))
+                .collect(Collectors.toList());
+
+        myInfoGetResponseDto.setPostCount(memberPosts.size());
+        myInfoGetResponseDto.setReactionCount(
+                (int) (Math.random() * 20) + 1); //TODO: 프론트 테스트 - 회원이 받은 총 리액션 개수 하드코딩
+        myInfoGetResponseDto.setCommentCount(memberComments.size());
+
+        return myInfoGetResponseDto;
+    }
+
     //TODO: 프론트 테스트 - 수정할 것
     public MyPostListResponseDto getMemberPosts(Long memberId, int page, int size) {
 
@@ -91,7 +125,7 @@ public class MemberService {
                 : new ArrayList<>();
 
         List<MyPostSummary> postSummaries = pagedPosts.stream()
-                .map(this::convertToSummary)
+                .map(this::convertPostToSummary)
                 .collect(Collectors.toList());
 
         MyPostListResponseDto response = new MyPostListResponseDto();
@@ -139,7 +173,7 @@ public class MemberService {
         return response;
     }
 
-    private MyPostSummary convertToSummary(Post post) {
+    private MyPostSummary convertPostToSummary(Post post) {
         MyPostSummary summary = new MyPostSummary();
 
         summary.setPostId(post.getId());
