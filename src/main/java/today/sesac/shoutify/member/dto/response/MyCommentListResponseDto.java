@@ -1,4 +1,4 @@
-package today.sesac.shoutify.member.dto;
+package today.sesac.shoutify.member.dto.response;
 
 import java.util.List;
 import lombok.Getter;
@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MyPostListResponseDto {
+public class MyCommentListResponseDto {
 
-    private List<MyPostSummary> posts;
+    private List<MyCommentSummary> comments;
     private int currentPage;
     private int totalPage;
     private int totalCount;

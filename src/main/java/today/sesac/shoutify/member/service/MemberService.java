@@ -8,11 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.comment.entity.Comment;
 import today.sesac.shoutify.comment.repository.CommentRepository;
-import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
-import today.sesac.shoutify.member.dto.MyCommentSummary;
-import today.sesac.shoutify.member.dto.MyInfoGetResponseDto;
-import today.sesac.shoutify.member.dto.MyPostListResponseDto;
-import today.sesac.shoutify.member.dto.MyPostSummary;
+import today.sesac.shoutify.member.dto.response.MyCommentListResponseDto;
+import today.sesac.shoutify.member.dto.response.MyCommentSummary;
+import today.sesac.shoutify.member.dto.response.MyInfoEditResponseDto;
+import today.sesac.shoutify.member.dto.response.MyInfoGetResponseDto;
+import today.sesac.shoutify.member.dto.response.MyPostListResponseDto;
+import today.sesac.shoutify.member.dto.response.MyPostSummary;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.entity.RoleType;
 import today.sesac.shoutify.member.entity.SocialType;
@@ -22,7 +23,7 @@ import today.sesac.shoutify.post.entity.Post;
 import today.sesac.shoutify.post.repository.PostRepository;
 
 /**
- * TODO: 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
+ * TODO: 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가.
  */
 @Slf4j
 @Service
@@ -30,7 +31,9 @@ import today.sesac.shoutify.post.repository.PostRepository;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
     private final PostRepository postRepository;
+
     private final CommentRepository commentRepository;
 
     /**
@@ -63,7 +66,6 @@ public class MemberService {
         );
         return member;
     }
-
 
     public Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
@@ -103,6 +105,24 @@ public class MemberService {
         myInfoGetResponseDto.setCommentCount(memberComments.size());
 
         return myInfoGetResponseDto;
+    }
+
+    public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(String.valueOf(memberId),
+                        "해당 id를 가진 회원을 찾을 수 없습니다.")
+        );
+        member.editProfile(nickname);
+        memberRepository.save(member);
+
+        MyInfoEditResponseDto myInfoEditResponseDto = new MyInfoEditResponseDto();
+        myInfoEditResponseDto.setMemberId(member.getId());
+        myInfoEditResponseDto.setNickname(member.getNickname());
+        myInfoEditResponseDto.setEmail(member.getEmail());
+        myInfoEditResponseDto.setProfileImageUrl(null);
+
+        return myInfoEditResponseDto;
     }
 
     //TODO: 프론트 테스트 - 수정할 것

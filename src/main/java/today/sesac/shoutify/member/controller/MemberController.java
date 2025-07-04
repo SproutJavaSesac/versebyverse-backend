@@ -4,14 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.auth.service.UserPrincipal;
 import today.sesac.shoutify.global.response.ApiResponse;
-import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
-import today.sesac.shoutify.member.dto.MyInfoGetResponseDto;
-import today.sesac.shoutify.member.dto.MyPostListResponseDto;
+import today.sesac.shoutify.member.dto.request.MyInfoEditRequestDto;
+import today.sesac.shoutify.member.dto.response.MyCommentListResponseDto;
+import today.sesac.shoutify.member.dto.response.MyInfoEditResponseDto;
+import today.sesac.shoutify.member.dto.response.MyInfoGetResponseDto;
+import today.sesac.shoutify.member.dto.response.MyPostListResponseDto;
 import today.sesac.shoutify.member.service.MemberService;
 
 @Slf4j
@@ -61,5 +65,17 @@ public class MemberController {
         MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMemberInformation(memberId);
 
         return ApiResponse.success(myInfoGetResponseDto);
+    }
+
+    @PutMapping("/edit")
+    public ApiResponse<MyInfoEditResponseDto> editMemberInformation(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
+    ) {
+        Long memberId = userPrincipal.getMemberId();
+
+        MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMemberInformation(memberId,
+                myInfoEditRequestDto.getNickname());
+        return ApiResponse.success(myInfoEditResponseDto);
     }
 }

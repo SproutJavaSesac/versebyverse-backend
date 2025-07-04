@@ -1,4 +1,4 @@
-package today.sesac.shoutify.member.dto;
+package today.sesac.shoutify.member.dto.response;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
