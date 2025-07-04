@@ -1,9 +1,9 @@
 package today.sesac.shoutify.post.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,103 +11,94 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.global.response.ApiResponse;
 
-/**
- * 게시물 조회 관련 컨트롤러.
- */
 @RestController
 @RequestMapping("/api/v1/posts")
-@RequiredArgsConstructor
 public class PostQueryController {
 
-    /**
-     * 게시물 단건 조회.
-     */
-    @GetMapping("/{postId}")
-    public ApiResponse<Object> getPost(@PathVariable Long postId) {
-        Object response = Map.of(
-                "postId", postId,
-                "nickname", "작성자닉네임",
-                "afterTitle", "변환된 제목",
-                "afterContent", "변환된 내용",
-                "createdAt", LocalDateTime.now(),
-                "conceptType", "컨셉타입",
-                "reactionCount", 10,
-                "commentCount", 5,
-                "imageUrl", "https://example.com/image.jpg"
-        );
-        return ApiResponse.success(response);
+    @GetMapping
+    public ApiResponse<Map<String, Object>> getAllPosts(
+            @RequestParam(name = "sort") String sort,
+            @RequestParam(name = "concept", required = false) String concept,
+            @RequestParam(name = "cursor", required = false) Integer cursor,
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "limit", defaultValue = "10") int limit,
+            @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        List<Map<String, Object>> allPosts = new ArrayList<>();
+        for (int i = 1; i <= 20; i++) {
+            allPosts.add(Map.of(
+                    "postId", i,
+                    "nickname", "사용자" + i,
+                    "afterTitle", i + "번째 글",
+                    "afterContent", "내용 " + i,
+                    "createdAt", LocalDateTime.now().minusDays(i),
+                    "reactionCount", i * 2,
+                    "commentCount", i,
+                    "conceptType", (i % 2 == 0) ? "poetry" : "novel",
+                    "imageUrl", "https://example.com/image" + i + ".jpg"
+            ));
+        }
+
+        List<Map<String, Object>> filtered = new ArrayList<>(allPosts);
+
+        if (concept != null && !concept.isEmpty()) {
+            filtered.removeIf(post -> !concept.equals(post.get("conceptType")));
+
+            int pageNum = (page != null) ? page : 1;
+            int start = (pageNum - 1) * limit;
+            int end = Math.min(start + limit, filtered.size());
+
+            List<Map<String, Object>> paged =
+                    (start < filtered.size()) ? filtered.subList(start, end) : List.of();
+            int totalCount = filtered.size();
+            int totalPages = (int) Math.ceil((double) totalCount / limit);
+
+            return ApiResponse.success(Map.of(
+                    "posts", paged,
+                    "currentPage", pageNum,
+                    "totalPages", totalPages,
+                    "totalCount", totalCount,
+                    "hasNext", pageNum < totalPages,
+                    "hasPrevious", pageNum > 1
+            ));
+        } else {
+            if (cursor != null) {
+                filtered.removeIf(post -> (Integer) post.get("postId") >= cursor);
+            }
+
+            filtered = filtered.stream().sorted((a, b) -> ((Integer) b.get("postId")).compareTo(
+                    (Integer) a.get("postId"))).toList();
+            List<Map<String, Object>> sliced = filtered.stream().limit(limit).toList();
+            Integer nextCursor =
+                    sliced.isEmpty() ? null : (Integer) sliced.get(sliced.size() - 1).get("postId");
+
+            return ApiResponse.success(Map.of(
+                    "posts", sliced,
+                    "currentPage", 1,
+                    "totalPages", 1,
+                    "totalCount", filtered.size(),
+                    "hasNext", sliced.size() == limit,
+                    "hasPrevious", false,
+                    "nextCursor", nextCursor
+            ));
+        }
     }
 
-    /**
-     * 게시물 목록 조회.
-     */
-    @GetMapping
-    public ApiResponse<Object> getPosts(
-            @RequestParam String sort,
-            @RequestParam(required = false) String concept,
-            @RequestParam(required = false) Integer cursor,
-            @RequestParam(required = false) Integer page,
-            @RequestParam Integer limit,
-            @RequestParam(required = false) String keyword) {
-
-        // sort에 따라 다른 정렬 데이터
-        List<Object> posts;
-
-        if ("reactions".equals(sort)) {
-            // 반응 많은 순
-            posts = List.of(
-                    Map.of("postId", 10L, "nickname", "인기왕", "afterTitle", "대박 반응글", "afterContent",
-                            "모두가 좋아하는 글",
-                            "createdAt", LocalDateTime.now().minusHours(3), "reactionCount", 100,
-                            "commentCount", 15),
-                    Map.of("postId", 11L, "nickname", "핫한사람", "afterTitle", "인기글2", "afterContent",
-                            "반응 폭발",
-                            "createdAt", LocalDateTime.now().minusHours(5), "reactionCount", 80,
-                            "commentCount", 12),
-                    Map.of("postId", 12L, "nickname", "좋아요킹", "afterTitle", "반응좋은글", "afterContent",
-                            "많은 반응",
-                            "createdAt", LocalDateTime.now().minusHours(2), "reactionCount", 60,
-                            "commentCount", 8)
-            );
-        } else if ("comments".equals(sort)) {
-            // 댓글 많은 순
-            posts = List.of(
-                    Map.of("postId", 20L, "nickname", "토론왕", "afterTitle", "댓글폭발글", "afterContent",
-                            "논란의 중심",
-                            "createdAt", LocalDateTime.now().minusHours(4), "reactionCount", 30,
-                            "commentCount", 50),
-                    Map.of("postId", 21L, "nickname", "대화킹", "afterTitle", "댓글많은글", "afterContent",
-                            "활발한 토론",
-                            "createdAt", LocalDateTime.now().minusHours(6), "reactionCount", 25,
-                            "commentCount", 45),
-                    Map.of("postId", 22L, "nickname", "소통러", "afterTitle", "댓글천국", "afterContent",
-                            "소통 좋아요",
-                            "createdAt", LocalDateTime.now().minusHours(1), "reactionCount", 20,
-                            "commentCount", 40)
-            );
-        } else { // latest (최신순)
-            posts = List.of(
-                    Map.of("postId", 1L, "nickname", "방금작성자", "afterTitle", "방금 올린 글",
-                            "afterContent", "따끈따끈 새글",
-                            "createdAt", LocalDateTime.now(), "reactionCount", 5, "commentCount",
-                            2),
-                    Map.of("postId", 2L, "nickname", "최근작성자", "afterTitle", "1시간전 글",
-                            "afterContent", "비교적 최신",
-                            "createdAt", LocalDateTime.now().minusHours(1), "reactionCount", 8,
-                            "commentCount", 4),
-                    Map.of("postId", 3L, "nickname", "어제작성자", "afterTitle", "어제 올린 글",
-                            "afterContent", "하루 전 글",
-                            "createdAt", LocalDateTime.now().minusDays(1), "reactionCount", 12,
-                            "commentCount", 6)
-            );
-        }
-
-        // limit만큼만 잘라서 반환 (페이지네이션/무한스크롤용)
-        if (limit != null && limit < posts.size()) {
-            posts = posts.subList(0, limit);
-        }
-
-        Object response = Map.of("posts", posts);
-        return ApiResponse.success(response);
+    @GetMapping("/{postId}")
+    public ApiResponse<Map<String, Object>> getPostDetail(@PathVariable Long postId) {
+        Map<String, Object> post = Map.of(
+                "postId", postId,
+                "nickname", "행복한고양이",
+                "afterTitle", "오늘 날씨가 너무 좋네요!",
+                "afterContent", "창문을 열고 있으니 바람이 시원하게 불어와서 기분이 정말 좋습니다. 이런 날에는 산책을 나가고 싶어지네요...",
+                "createdAt", "2025-06-18T14:30:25.000Z",
+                "conceptType", "daily",
+                "reactionCount", 23,
+                "reactionDetails",
+                Map.of("happy", 15, "sad", 5, "angry", 2, "excited", 0, "confused", 1, "proud", 1),
+                "commentCount", 8,
+                "imageUrl", "https://my-bucket.s3.amazonaws.com/images/post-1-20250618.jpg"
+        );
+        return ApiResponse.success(post);
     }
 }

@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post.Controller;
+package today.sesac.shoutify.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
