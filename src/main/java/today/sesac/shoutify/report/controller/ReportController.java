@@ -63,7 +63,7 @@ public class ReportController {
      * @param reportRequestDto 요청 dto
      * @return 응답
      */
-    @PostMapping("/reports/comment/{commentId}")
+    @PostMapping("/reports/comments/{commentId}")
     public ApiResponse<?> commentReport(@PathVariable("commentId") int commentId,
             @RequestBody ReportRequestDto reportRequestDto) {
         CommentReportResponseDto commentReportResponseDto = CommentReportResponseDto.builder()
@@ -95,7 +95,7 @@ public class ReportController {
 
         // 더미 리스트
         List<AdminReportResponseDto> reports = new ArrayList<>();
-        String reportType = "";
+        String reportType = " ";
         for (int i = 1; i <= size; i++) {
             if (i % 2 == 0) {
                 reportType = "COMMENT";
