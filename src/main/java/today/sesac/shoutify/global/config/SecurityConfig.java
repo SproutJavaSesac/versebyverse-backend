@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import today.sesac.shoutify.auth.CustomLogoutSuccessHandler;
 import today.sesac.shoutify.auth.OAuth2AuthenticationSuccessHandler;
 import today.sesac.shoutify.auth.service.CustomOAuth2UserService;
 
@@ -24,6 +25,7 @@ public class SecurityConfig {
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,6 +57,7 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .clearAuthentication(true)
+                        .logoutSuccessHandler(customLogoutSuccessHandler)
                 )
         ;
 
