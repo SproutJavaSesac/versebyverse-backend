@@ -50,6 +50,11 @@ public class SecurityConfig {
                                                 .userService(customOAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                         //TODO: 실패 시 handler도 추가하기
+                ).logout(logout -> logout   // TODO: 프론트 테스트를 위한 임시 로그아웃 구현 -> 수정 필요
+                        .logoutUrl("/api/v1/auth/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
                 )
         ;
 
