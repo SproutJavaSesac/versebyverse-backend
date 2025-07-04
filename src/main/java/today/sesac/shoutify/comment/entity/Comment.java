@@ -15,18 +15,21 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import today.sesac.shoutify.global.domain.BaseEntity;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.post.entity.Post;
 
 /**
  * 댓글 엔티티.
+ * TODO {@code @softdelete}와 비교해 보기.
  *
  * <p>정적 메서드 {@link #createFirstLevelComment(String, String, Post, Member)}를 통해 생성합니다.</p>
  */
 @Getter
 @Entity
 @Table(name = "comments")
+@SQLDelete(sql = "UPDATE comments SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
@@ -76,7 +79,7 @@ public class Comment extends BaseEntity {
     /**
      * 댓글 삭제 여부.
      */
-    @Column(nullable = false, insertable = false, updatable = false, columnDefinition = "TINYINT(1)")
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isDeleted;
 
     /**

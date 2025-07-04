@@ -3,6 +3,7 @@ package today.sesac.shoutify.comment.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,8 +55,7 @@ public class CommentController {
      * @return 댓글 목록 응답 DTO
      */
     @GetMapping
-    public ApiResponse<CommentListResponseDto>
-    getComments(@PathVariable("postId") Long postId,
+    public ApiResponse<CommentListResponseDto> getComments(@PathVariable("postId") Long postId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
@@ -63,5 +63,19 @@ public class CommentController {
                 PageRequest.of(page, size));
 
         return ApiResponse.success(commentListResponseDto);
+    }
+
+    /**
+     * 특정 댓글을 삭제합니다.
+     *
+     * @param commentId 삭제할 댓글의 ID
+     * @return 성공 메시지
+     */
+    @DeleteMapping("/{commentId}")
+    public ApiResponse<String> deleteComment(
+            @PathVariable("commentId") Long commentId) {
+
+        commentService.deleteComment(commentId);
+        return ApiResponse.success("성공적으로 댓글을 삭제했습니다.");
     }
 }

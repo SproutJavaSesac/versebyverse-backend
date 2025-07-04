@@ -63,7 +63,7 @@ public class CommentService {
      * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
-     * @todo 검증 로직, 페이지 중간에 계층이 걸리는 경우, 삭제/신고인 경우 내용 변경
+     * TODO 검증 로직, 페이지 중간에 계층이 걸리는 경우, 삭제/신고인 경우 내용 변경
      */
     public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
 
@@ -77,5 +77,17 @@ public class CommentService {
                 postId,
                 pageByPostIdWithPageable
         );
+    }
+
+    /**
+     * 댓글을 삭제합니다.
+     * TODO 이미 삭제된 댓글에 예외를 보낼지, 삭제 성공 알림만 줄지 고려
+     *
+     * @param commentId 삭제할 댓글 ID
+     */
+    @Transactional
+    public void deleteComment(Long commentId) {
+
+        commentRepository.deleteById(commentId);
     }
 }
