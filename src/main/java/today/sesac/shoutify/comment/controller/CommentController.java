@@ -2,13 +2,17 @@ package today.sesac.shoutify.comment.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.shoutify.comment.dto.response.CommentCreateResponseDto;
+import today.sesac.shoutify.comment.dto.response.CommentListResponseDto;
 import today.sesac.shoutify.comment.service.CommentService;
 import today.sesac.shoutify.global.response.ApiResponse;
 
@@ -39,5 +43,25 @@ public class CommentController {
                 commentCreateRequestDto, memberId, postId);
 
         return ApiResponse.success(commentCreateResponseDto);
+    }
+
+    /**
+     * 게시글의 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param postId 게시글 ID
+     * @param page   페이지 번호 (0부터 시작)
+     * @param size   페이지 크기 (기본값: 10)
+     * @return 댓글 목록 응답 DTO
+     */
+    @GetMapping
+    public ApiResponse<CommentListResponseDto>
+    getComments(@PathVariable("postId") Long postId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        CommentListResponseDto commentListResponseDto = commentService.getCommentsByPostId(postId,
+                PageRequest.of(page, size));
+
+        return ApiResponse.success(commentListResponseDto);
     }
 }

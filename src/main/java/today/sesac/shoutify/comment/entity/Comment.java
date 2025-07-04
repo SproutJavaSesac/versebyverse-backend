@@ -85,6 +85,9 @@ public class Comment extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isReported;
 
+    /**
+     * 댓글에 대한 답글 목록.
+     */
     @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
     private List<Comment> replies = new ArrayList<>();
 

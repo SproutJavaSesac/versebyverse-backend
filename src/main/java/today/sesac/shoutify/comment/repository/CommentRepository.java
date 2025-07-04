@@ -1,10 +1,37 @@
 package today.sesac.shoutify.comment.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import today.sesac.shoutify.comment.entity.Comment;
 
+/**
+ * 댓글 레포지토리 인터페이스.
+ */
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
+    /**
+     * 게시물 ID로 댓글 목록을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param postId   게시물 ID
+     * @param pageable 페이지네이션 정보
+     * @return 댓글 목록 페이지
+     */
+    @Query("""
+            SELECT c FROM Comment c join fetch c.commenter commenter
+            WHERE c.post.id = :postId  ORDER BY c.createdAt ASC
+            """)
+    Page<Comment> findPageByPostIdWithPageable(Long postId, Pageable pageable);
+
+    /**
+     * 게시글의 총 댓글 개수를 조회합니다.
+     *
+     * @param postId 게시글 ID
+     * @return 댓글 개수
+     */
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
+    int countByPostId(Long postId);
 }
