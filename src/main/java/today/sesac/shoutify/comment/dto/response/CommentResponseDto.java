@@ -1,7 +1,6 @@
 package today.sesac.shoutify.comment.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,10 @@ public class CommentResponseDto {
 
     private final Long parentId;
 
+    private final int order;
+
+    private final int level;
+
     private final String content;
 
     private final int reactionCount;
@@ -35,10 +38,6 @@ public class CommentResponseDto {
     private final boolean isDeleted;
 
     private final boolean isReported;
-
-    private final int level;
-
-    private final List<CommentResponseDto> replies;
 
     private final LocalDateTime createdAt;
 
@@ -50,18 +49,15 @@ public class CommentResponseDto {
      * @param comment 변환할 Comment 객체
      * @return 변환된 CommentResponseDto 객체
      */
-    public static CommentResponseDto of(Comment comment) {
-
-        // 재귀적으로 모든 Comment 객체를 CommentResponseDto로 변환
-        List<CommentResponseDto> replies = comment.getReplies().stream()
-                .map(CommentResponseDto::of)
-                .toList();
+    public static CommentResponseDto of(Comment comment, int order) {
 
         return new CommentResponseDto(
                 comment.getId(),
                 comment.getDisplayCommenterId(),
                 comment.getDisplayCommenterNickname(),
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
+                order,
+                comment.getLevel(),
                 comment.getDisplayContent(),
                 6, // TODO: reactionCount 필드 구현 필요
                 Map.of(
@@ -72,8 +68,6 @@ public class CommentResponseDto {
                 ), // TODO: reactions 필드 구현 필요
                 comment.isDeleted(),
                 comment.isReported(),
-                comment.getLevel(),
-                replies,
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );

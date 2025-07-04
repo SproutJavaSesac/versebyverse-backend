@@ -14,17 +14,16 @@ import today.sesac.shoutify.comment.entity.Comment;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     /**
-     * 게시물 ID로 댓글 목록을 페이지네이션 방식으로 조회합니다.
+     * 게시글 ID로 조회하고, path로 정렬해 댓글 목록을 페이지네이션 방식으로 조회합니다.
      *
-     * @param postId   게시물 ID
+     * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
-     * @return 댓글 목록 페이지
      */
     @Query("""
             SELECT c FROM Comment c join fetch c.commenter commenter
-            WHERE c.post.id = :postId  ORDER BY c.createdAt ASC
+            WHERE c.post.id = :postId ORDER BY c.path ASC
             """)
-    Page<Comment> findPageByPostIdWithPageable(Long postId, Pageable pageable);
+    Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
 
     /**
      * 게시글의 총 댓글 개수를 조회합니다.
@@ -32,6 +31,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param postId 게시글 ID
      * @return 댓글 개수
      */
-    @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
+    @Query(""" 
+            SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId
+            """)
     int countByPostId(Long postId);
 }

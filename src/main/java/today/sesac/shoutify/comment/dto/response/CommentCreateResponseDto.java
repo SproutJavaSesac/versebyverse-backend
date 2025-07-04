@@ -1,7 +1,6 @@
 package today.sesac.shoutify.comment.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +28,6 @@ public class CommentCreateResponseDto {
 
     private final int level;
 
-    private final List<CommentCreateResponseDto> replies;
-
     private final int reactionTotalCount;
 
     private final Map<Emotion, Integer> reactions; // TODO: 리액션 기능 추가 예정
@@ -45,10 +42,6 @@ public class CommentCreateResponseDto {
      */
     public static CommentCreateResponseDto createFirstCommentFrom(Comment comment) {
 
-//        List<CommentCreateResponseDto> replies = comment.getReplies().stream()
-//                .map(CommentCreateResponseDto::createFirstCommentFrom)
-//                .toList();
-
         return new CommentCreateResponseDto(
                 comment.getId(),
                 comment.getPost().getId(),
@@ -57,7 +50,6 @@ public class CommentCreateResponseDto {
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
                 comment.getAfterContent(),
                 comment.getLevel(),
-                List.of(), // TODO replies 로직 검토 후 대체 필요
                 6, // comment.getReactions().size(),
                 Map.of(), // TODO: 리액션 기능 추가 예정
                 comment.getCreatedAt()

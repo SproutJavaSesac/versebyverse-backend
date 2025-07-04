@@ -2,16 +2,12 @@ package today.sesac.shoutify.comment.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +28,8 @@ import today.sesac.shoutify.post.entity.Post;
 @SQLDelete(sql = "UPDATE comments SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
+
+    static final int MAX_REPLY_LEVEL = 2;
 
     /**
      * 댓글 고유 식별자.
@@ -76,6 +74,9 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private int level;
 
+    @Column(length = 30, nullable = false)
+    private String path;
+
     /**
      * 댓글 삭제 여부.
      */
@@ -88,15 +89,9 @@ public class Comment extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isReported;
 
-    /**
-     * 댓글에 대한 답글 목록.
-     */
-    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
-    private List<Comment> replies = new ArrayList<>();
-
-    private Comment(String beforeContent, String afterContent, int level, Post post,
-            Comment parentComment,
-            Member commenter) {
+    private Comment(
+            String beforeContent, String afterContent, int level,
+            Post post, Comment parentComment, Member commenter) {
 
         this.beforeContent = beforeContent;
         this.afterContent = afterContent;
@@ -117,11 +112,29 @@ public class Comment extends BaseEntity {
      * @param commenter     댓글 작성자
      * @return 새로운 첫 번째 레벨 댓글 엔티티
      */
-    public static Comment createFirstLevelComment(String beforeContent, String afterContent,
-            Post post,
-            Member commenter) {
+    public static Comment createFirstLevelComment(
+            String beforeContent, String afterContent, Post post, Member commenter) {
 
         return new Comment(beforeContent, afterContent, 0, post, null, commenter);
+    }
+
+    /**
+     * 댓글의 경로를 업데이트합니다.
+     * TODO postpersist, entitylistener(pathlistener)를 사용하여 경로 자동 업데이트하는 방법 고려.
+     *
+     * <p>댓글이 최상위 댓글인 경우, 경로는 댓글 ID만 포함됩니다.
+     * 답글인 경우, 부모 댓글의 경로에 현재 댓글 ID를 추가하여 경로를 생성합니다.</p>
+     *
+     * @return 업데이트된 경로
+     */
+    public String updatePath() {
+
+        if (parentComment == null) {
+            this.path = String.valueOf(id);
+        } else {
+            this.path = parentComment.getPath() + "-" + id;
+        }
+        return this.path;
     }
 
     /**

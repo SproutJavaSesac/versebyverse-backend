@@ -1,7 +1,6 @@
 package today.sesac.shoutify.comment.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +31,7 @@ public class CommentService {
 
     /**
      * 댓글을 작성합니다.
+     * TODO 생성 로직 수정, 검증 로직 추가
      *
      * @param commentCreateRequestDto 댓글 작성 요청 DTO
      * @param commenterId             댓글 작성자 회원 ID
@@ -50,7 +50,6 @@ public class CommentService {
                 commentCreateRequestDto.parentId(),
                 commentCreateRequestDto.content(),
                 0,
-                List.of(),
                 0,
                 Map.of(),
                 LocalDateTime.now()
@@ -59,7 +58,7 @@ public class CommentService {
 
     /**
      * 게시글 ID에 해당하는 댓글 목록을 페이지네이션 방식으로 조회합니다.
-     * TODO 검증 로직, 페이지 중간에 계층이 걸리는 경우
+     * TODO 검증 로직
      *
      * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
@@ -67,10 +66,8 @@ public class CommentService {
      */
     public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
 
-        // 삭제인 경우, 삭제된 내용입니다, 신고인 경우 신고된 내용입니다. 내용 변경
-        // COMMENTER도 null로 설정
         Page<Comment> pageByPostIdWithPageable = commentRepository
-                .findPageByPostIdWithPageable(postId, pageable);
+                .findByPostIdOrderByPathAsc(postId, pageable);
 
         int totalCommentCount = commentRepository.countByPostId(postId);
 

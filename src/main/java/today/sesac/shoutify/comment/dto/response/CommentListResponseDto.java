@@ -1,6 +1,7 @@
 package today.sesac.shoutify.comment.dto.response;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import today.sesac.shoutify.comment.entity.Comment;
 
@@ -34,8 +35,9 @@ public record CommentListResponseDto(
         this(
                 totalCount,
                 postId,
-                pageComments.getContent().stream()
-                        .map(CommentResponseDto::of)
+                IntStream.range(0, pageComments.getContent().size())
+                        .mapToObj(i ->
+                                CommentResponseDto.of(pageComments.getContent().get(i), i + 1))
                         .toList(),
                 new PaginationDto(
                         pageComments.getNumber() + 1, // 페이지는 0부터 시작하므로 +1
