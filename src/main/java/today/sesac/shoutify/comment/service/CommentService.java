@@ -59,16 +59,18 @@ public class CommentService {
 
     /**
      * 게시글 ID에 해당하는 댓글 목록을 페이지네이션 방식으로 조회합니다.
+     * TODO 검증 로직, 페이지 중간에 계층이 걸리는 경우
      *
      * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
-     * TODO 검증 로직, 페이지 중간에 계층이 걸리는 경우, 삭제/신고인 경우 내용 변경
      */
     public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
 
-        Page<Comment> pageByPostIdWithPageable = commentRepository.findPageByPostIdWithPageable(
-                postId, pageable);
+        // 삭제인 경우, 삭제된 내용입니다, 신고인 경우 신고된 내용입니다. 내용 변경
+        // COMMENTER도 null로 설정
+        Page<Comment> pageByPostIdWithPageable = commentRepository
+                .findPageByPostIdWithPageable(postId, pageable);
 
         int totalCommentCount = commentRepository.countByPostId(postId);
 

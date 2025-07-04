@@ -123,4 +123,43 @@ public class Comment extends BaseEntity {
 
         return new Comment(beforeContent, afterContent, 0, post, null, commenter);
     }
+
+    /**
+     * 화면에 표시할 내용을 반환합니다.
+     */
+    public String getDisplayContent() {
+
+        if (isDeleted) {
+            return "삭제된 내용입니다";
+        }
+        if (isReported) {
+            return "신고된 내용입니다";
+        }
+        return afterContent;
+    }
+
+    /**
+     * 화면에 표시할 작성자 ID를 반환합니다.
+     */
+    public Long getDisplayCommenterId() {
+
+        if (isDeleted || isReported) {
+            return null;
+        }
+        return commenter.getId();
+    }
+
+    /**
+     * 화면에 표시할 작성자 닉네임을 반환합니다.
+     */
+    public String getDisplayCommenterNickname() {
+
+        if (isDeleted) {
+            return "알 수 없음";
+        }
+        if (isReported) {
+            return "신고된 사용자";
+        }
+        return commenter.getNickname();
+    }
 }

@@ -59,10 +59,10 @@ public class CommentResponseDto {
 
         return new CommentResponseDto(
                 comment.getId(),
-                comment.getCommenter().getId(),
-                comment.getCommenter().getNickname(),
+                comment.getDisplayCommenterId(),
+                comment.getDisplayCommenterNickname(),
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
-                comment.getAfterContent(),
+                comment.getDisplayContent(),
                 6, // TODO: reactionCount 필드 구현 필요
                 Map.of(
                         Emotion.HAPPY, 3,
