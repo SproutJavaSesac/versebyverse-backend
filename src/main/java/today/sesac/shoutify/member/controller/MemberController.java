@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.auth.service.UserPrincipal;
 import today.sesac.shoutify.global.response.ApiResponse;
+import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
 import today.sesac.shoutify.member.dto.MyPostListResponseDto;
 import today.sesac.shoutify.member.service.MemberService;
 
@@ -20,7 +21,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    // TODO: 프론트 테스트를 위한 로그인 상태 확인용 임시 메서드 - 수정 예정
+    // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
     @GetMapping("/posts")
     public ApiResponse<?> getMemberPosts(
             @RequestParam(defaultValue = "1") int page,
@@ -33,5 +34,20 @@ public class MemberController {
                 size);
 
         return ApiResponse.success(myPostListResponseDto);
+    }
+
+    // TODO: 프론트 테스트를 위한 임시 마이페이지 댓글 확인 메서드 - 수정하기
+    @GetMapping("/comments")
+    public ApiResponse<?> getMemberComments(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        Long memberId = userPrincipal.getMemberId();
+
+        MyCommentListResponseDto myCommentListResponseDto = memberService.getMemberComments(
+                memberId, page, size);
+
+        return ApiResponse.success(myCommentListResponseDto);
     }
 }

@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import today.sesac.shoutify.comment.entity.Comment;
+import today.sesac.shoutify.comment.repository.CommentRepository;
+import today.sesac.shoutify.member.dto.MyCommentListResponseDto;
+import today.sesac.shoutify.member.dto.MyCommentSummary;
 import today.sesac.shoutify.member.dto.MyPostListResponseDto;
 import today.sesac.shoutify.member.dto.MyPostSummary;
 import today.sesac.shoutify.member.entity.Member;
@@ -26,6 +30,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
@@ -101,6 +106,39 @@ public class MemberService {
         return response;
     }
 
+    public MyCommentListResponseDto getMemberComments(Long memberId, int page, int size) {
+        // TODO: 프론트 테스트할 때, CommentRepository 수정하지 않기 위해 comment 전부 불러옴. 수정 필수!!
+        List<Comment> memberComments = commentRepository.findAll().stream()
+                .filter(comment -> comment.getAuthor().getId().equals(memberId))
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .collect(Collectors.toList());
+
+        int totalCount = memberComments.size();
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, totalCount);
+
+        List<Comment> pagedComments = fromIndex < totalCount
+                ? memberComments.subList(fromIndex, toIndex)
+                : new ArrayList<>();
+
+        List<MyCommentSummary> commentSummaries = pagedComments.stream()
+                .map(this::convertCommentToSummary)
+                .collect(Collectors.toList());
+
+        MyCommentListResponseDto response = new MyCommentListResponseDto();
+        response.setComments(commentSummaries);
+        response.setCurrentPage(page);
+        response.setTotalPage(totalPages);
+        response.setTotalCount(totalCount);
+        response.setPageSize(size);
+        response.setHasNext(page < totalPages);
+        response.setHasPrev(page > 1);
+
+        return response;
+    }
+
     private MyPostSummary convertToSummary(Post post) {
         MyPostSummary summary = new MyPostSummary();
 
@@ -112,10 +150,27 @@ public class MemberService {
         summary.setCreatedAt(post.getCreatedAt());
         summary.setEmotionType(post.getEmotionType());
         summary.setConceptType(post.getConceptType());
-        summary.setReactionCount(15);    // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수하드코딩
-        summary.setCommentCount(13);    // TODO: 프론트 테스트 - 댓글 개수 하드코딩
+        summary.setReactionCount(
+                (int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수 하드코딩
+        summary.setCommentCount((int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 댓글 개수 하드코딩
         summary.setImageUrl(post.getImageUrl());
         summary.setHidden(post.isHidden());
+
+        return summary;
+    }
+
+    private MyCommentSummary convertCommentToSummary(Comment comment) {
+        MyCommentSummary summary = new MyCommentSummary();
+
+        summary.setId(comment.getId());
+        summary.setPostId(comment.getPost().getId());
+        summary.setPostTitle(comment.getPost().getAfterTitle());
+        summary.setBeforeContent(comment.getBeforeContent());
+        summary.setAfterContent(comment.getAfterContent());
+        summary.setCreatedAt(comment.getCreatedAt());
+
+        // TODO: 프론트 테스트 - 리액션 개수 하드코딩
+        summary.setReactionCount((int) (Math.random() * 20) + 1);
 
         return summary;
     }
