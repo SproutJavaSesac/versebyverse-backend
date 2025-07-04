@@ -1,0 +1,37 @@
+package today.sesac.shoutify.member.controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import today.sesac.shoutify.auth.service.UserPrincipal;
+import today.sesac.shoutify.global.response.ApiResponse;
+import today.sesac.shoutify.member.dto.MyPostListResponseDto;
+import today.sesac.shoutify.member.service.MemberService;
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/members")
+public class MemberController {
+
+    private final MemberService memberService;
+
+    // TODO: 프론트 테스트를 위한 로그인 상태 확인용 임시 메서드 - 수정 예정
+    @GetMapping("/posts")
+    public ApiResponse<?> getMemberPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        Long memberId = userPrincipal.getMemberId();
+
+        MyPostListResponseDto myPostListResponseDto = memberService.getMemberPosts(memberId, page,
+                size);
+
+        return ApiResponse.success(myPostListResponseDto);
+    }
+}
