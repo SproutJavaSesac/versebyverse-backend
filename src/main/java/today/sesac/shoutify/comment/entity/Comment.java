@@ -12,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import today.sesac.shoutify.comment.exception.CommentErrorCode;
+import today.sesac.shoutify.comment.exception.CommentException;
 import today.sesac.shoutify.global.domain.BaseEntity;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.post.entity.Post;
@@ -20,7 +22,7 @@ import today.sesac.shoutify.post.entity.Post;
  * 댓글 엔티티.
  * TODO {@code @softdelete}와 비교해 보기.
  *
- * <p>정적 메서드 {@link #createFirstLevelComment(String, String, Post, Member)}를 통해 생성합니다.</p>
+ * <p>정적 메서드 {@link #createRootLevelComment(String, String, Post, Member)}를 통해 생성합니다.</p>
  */
 @Getter
 @Entity
@@ -74,7 +76,10 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private int level;
 
-    @Column(length = 30, nullable = false)
+    /**
+     * 댓글 경로.
+     */
+    @Column(length = 30, unique = true)
     private String path;
 
     /**
@@ -104,18 +109,43 @@ public class Comment extends BaseEntity {
     }
 
     /**
-     * 첫 번째 레벨 댓글을 생성합니다.
+     * 최상위 레벨 댓글을 생성합니다.
      *
      * @param beforeContent AI 변환 전 사용자가 입력한 원본 댓글 내용
      * @param afterContent  AI가 변환한 후의 댓글 내용
      * @param post          댓글 다는 게시물
      * @param commenter     댓글 작성자
-     * @return 새로운 첫 번째 레벨 댓글 엔티티
+     * @return 새로운 최상위 레벨 댓글 엔티티
      */
-    public static Comment createFirstLevelComment(
+    public static Comment createRootLevelComment(
             String beforeContent, String afterContent, Post post, Member commenter) {
 
         return new Comment(beforeContent, afterContent, 0, post, null, commenter);
+    }
+
+    /**
+     * 답글 댓글을 생성합니다.
+     *
+     * @param beforeContent AI 변환 전 사용자가 입력한 원본 댓글 내용
+     * @param afterContent  AI가 변환한 후의 댓글 내용
+     * @param post          댓글 다는 게시물
+     * @param parentComment 부모 댓글
+     * @param commenter     댓글 작성자
+     * @return 새로운 답글 댓글 엔티티
+     * @throws CommentException 최대 레벨 초과 시 예외 발생
+     */
+    public static Comment createReplyComment(
+            String beforeContent, String afterContent,
+            Post post, Comment parentComment, Member commenter) {
+
+        int level = parentComment.getLevel() + 1;
+
+        if (level > MAX_REPLY_LEVEL) {
+            throw new CommentException(
+                    CommentErrorCode.MAX_LEVEL_EXCEEDED, "parentId");
+        }
+
+        return new Comment(beforeContent, afterContent, level, post, parentComment, commenter);
     }
 
     /**
@@ -124,17 +154,14 @@ public class Comment extends BaseEntity {
      *
      * <p>댓글이 최상위 댓글인 경우, 경로는 댓글 ID만 포함됩니다.
      * 답글인 경우, 부모 댓글의 경로에 현재 댓글 ID를 추가하여 경로를 생성합니다.</p>
-     *
-     * @return 업데이트된 경로
      */
-    public String updatePath() {
+    public void updatePath() {
 
         if (parentComment == null) {
             this.path = String.valueOf(id);
         } else {
             this.path = parentComment.getPath() + "-" + id;
         }
-        return this.path;
     }
 
     /**
