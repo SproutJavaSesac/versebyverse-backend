@@ -1,5 +1,6 @@
 package today.sesac.shoutify.post.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,14 +25,13 @@ public class PostCommandController {
     private final PostCommandService postCommandService;
     //TODO 현재 사용자 memberId 1로 하드코딩 추후 변경 예정
 
-    Long memberId = 1L;
-
     /**
      * 게시물 작성.
      */
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
-            @RequestBody PostCreateRequestDto postCreateRequestDto) {
+            @Valid @RequestBody PostCreateRequestDto postCreateRequestDto) {
+        Long memberId = 1L;
         PostCreateResponseDto postCreateResponseDto =
                 postCommandService.savePost(postCreateRequestDto, memberId);
         return ApiResponse.success(postCreateResponseDto);
@@ -42,15 +42,17 @@ public class PostCommandController {
      */
     @DeleteMapping("/{postId}")
     public ApiResponse<String> deletePost(@PathVariable Long postId) {
+        Long memberId = 1L;
         postCommandService.deletePost(postId, memberId);
         return ApiResponse.success("게시물 삭제가 성공했습니다");
     }
 
     /**
-     * 게시물 숨기기.
+     * 게시물 숨김.
      */
     @PatchMapping("/{postId}/hide")
     public ApiResponse<String> hidePost(@PathVariable Long postId) {
+        Long memberId = 1L;
         postCommandService.hidePost(postId, memberId);
         return ApiResponse.success("게시물 숨기기가 성공했습니다");
     }
@@ -60,6 +62,7 @@ public class PostCommandController {
      */
     @PatchMapping("{postId}/unhide")
     public ApiResponse<String> unhidePost(@PathVariable Long postId) {
+        Long memberId = 1L;
         postCommandService.unhidePost(postId, memberId);
         return ApiResponse.success("게시물 숨기기가 취소됐습니다");
     }
