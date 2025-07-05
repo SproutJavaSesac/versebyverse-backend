@@ -6,12 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.global.response.ApiResponse;
-import today.sesac.shoutify.post.dto.response.PostDetailDto;
 import today.sesac.shoutify.post.dto.response.PostSummaryResponseDto;
 
 @RestController
@@ -85,21 +83,21 @@ public class PostQueryController {
             ));
         }
     }
-
-    @GetMapping("/{postId}")
-    public ApiResponse<PostDetailDto> getPostDetail(@PathVariable Long postId) {
-        return ApiResponse.success(new PostDetailDto(
-                postId,
-                "행복한고양이",
-                "오늘 날씨가 너무 좋네요!",
-                "창문을 열고 있으니 바람이 시원하게 불어와서 기분이 정말 좋습니다. 이런 날에는 산책을 나가고 싶어지네요...",
-                "daily",
-                LocalDateTime.parse("2025-06-18T14:30:25.000"),
-                23,
-                Map.of("happy", 15, "sad", 5, "angry", 2, "excited", 0, "confused", 1, "proud", 1),
-                8,
-                "https://my-bucket.s3.amazonaws.com/images/post-1-20250618.jpg",
-                true
-        ));
-    }
+//
+//    @GetMapping("/{postId}")
+//    public ApiResponse<PostDetailDto> getPostDetail(@PathVariable Long postId) {
+//        return ApiResponse.success(new PostDetailDto(
+//                postId,
+//                "행복한고양이",
+//                "오늘 날씨가 너무 좋네요!",
+//                "창문을 열고 있으니 바람이 시원하게 불어와서 기분이 정말 좋습니다. 이런 날에는 산책을 나가고 싶어지네요...",
+//                "daily",
+//                LocalDateTime.parse("2025-06-18T14:30:25.000"),
+//                23,
+//                Map.of("happy", 15, "sad", 5, "angry", 2, "excited", 0, "confused", 1, "proud", 1),
+//                8,
+//                "https://my-bucket.s3.amazonaws.com/images/post-1-20250618.jpg",
+//                true
+//        ));
+//    }
 }
