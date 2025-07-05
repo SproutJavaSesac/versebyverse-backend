@@ -2,11 +2,13 @@ package today.sesac.shoutify.post.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import today.sesac.shoutify.post.entity.Post;
 
 /**
- * 게시물에 대한 CRUD 작업을 수행하는 레포지토리 인터페이스입니다. 이 인터페이스는 Spring Data JPA를 사용하여 데이터베이스와 상호작용합니다.
+ * 게시글 repository.
  */
+@Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     /**
