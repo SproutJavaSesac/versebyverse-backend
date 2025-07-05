@@ -25,7 +25,7 @@ public class PostSingleQueryResponseDto {
 
     private final String conceptType;
 
-    private final boolean isMine;
+    private final Boolean isMine;
 
     // TODO comment와 reaction 부분 연결 필요
 //    private final int commentCount;
