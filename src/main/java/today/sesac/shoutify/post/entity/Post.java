@@ -157,7 +157,7 @@ public class Post extends BaseEntity {
      * @param memberId 사용자 id
      * @return 작성자가 맞으면 true, 틀리면 false
      */
-    public boolean isMine(Long memberId) {
+    public Boolean isMine(Long memberId) {
         return memberId.equals(this.getAuthor().getId());
     }
 }
