@@ -1,6 +1,5 @@
 package today.sesac.shoutify.post.controller;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,7 @@ public class PostQueryController {
      */
     @GetMapping("/{postId}")
     public ApiResponse<PostSingleQueryResponseDto> getSinglePostDetail(
-            @PathVariable("postId") @NotNull Long postId) {
+            @PathVariable("postId") Long postId) {
         Long memberId = 1L;
         PostSingleQueryResponseDto postSingleQueryResponseDto =
                 postQueryService.getPostDetail(postId, memberId);
