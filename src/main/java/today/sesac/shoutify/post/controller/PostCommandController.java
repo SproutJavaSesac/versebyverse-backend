@@ -19,7 +19,6 @@ import today.sesac.shoutify.post.service.PostCommandService;
  */
 @RestController
 @RequiredArgsConstructor
-@Valid
 @RequestMapping("/api/v1/posts")
 public class PostCommandController {
 
