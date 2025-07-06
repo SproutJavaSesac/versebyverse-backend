@@ -7,10 +7,10 @@ package today.sesac.shoutify.comment.dto.response;
  */
 public record PaginationDto(
         int currentPage,
-        int totalPage,
+        int totalPages,
         int pageSize,
-        boolean hasNextPage,
-        boolean hasPreviousPage
+        boolean hasNext,
+        boolean hasPrevious
 ) {
 
 }
