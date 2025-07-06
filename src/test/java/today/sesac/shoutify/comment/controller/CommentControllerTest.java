@@ -143,12 +143,12 @@ class CommentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.result.postId").value(postId))
-                .andExpect(jsonPath("$.result.totalCount").value(totalCount))
                 .andExpect(
                         jsonPath("$.result.comments").isEmpty())
                 .andExpect(jsonPath("$.result.pagination.currentPage").value(page))
                 .andExpect(
                         jsonPath("$.result.pagination.totalPages").value(totalPages))
+                .andExpect(jsonPath("$.result.pagination.totalCount").value(totalCount))
                 .andExpect(jsonPath("$.result.pagination.pageSize").value(size))
                 .andExpect(jsonPath("$.result.pagination.hasNext").value(hasNext))
                 .andExpect(jsonPath("$.result.pagination.hasPrevious").value(hasPrevious));
