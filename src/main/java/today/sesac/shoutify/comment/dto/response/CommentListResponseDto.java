@@ -37,7 +37,7 @@ public record CommentListResponseDto(
                 postId,
                 IntStream.range(0, pageComments.getContent().size())
                         .mapToObj(i ->
-                                CommentResponseDto.of(pageComments.getContent().get(i), i + 1))
+                                CommentResponseDto.of(pageComments.getContent().get(i), i))
                         .toList(),
                 new PaginationDto(
                         pageComments.getNumber(),
