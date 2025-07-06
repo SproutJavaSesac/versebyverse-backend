@@ -41,12 +41,12 @@ public class ProfanityController {
      * @return 응답
      */
     @GetMapping
-    public ApiResponse<?> profanity(@RequestParam(name = "page", defaultValue = "1") int page,
+    public ApiResponse<?> profanity(@RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
             @RequestParam(name = "sort", defaultValue = "latest") String sort) {
         List<ProfanityResponseDto> profanities = new ArrayList<>();
         for (int i = 1; i <= size; i++) {
-            int id = ((page - 1) * size) + i;
+            int id = ((page) * size) + i;
             profanities.add(
                     ProfanityResponseDto.builder()
                             .profanityId(id)
@@ -64,7 +64,7 @@ public class ProfanityController {
                 1000,
                 (int) Math.ceil(1000.0 / size),
                 page * size < 1000,
-                page > 1
+                page > 0
         );
 
         ProfanityListResponseWrapperDto response = ProfanityListResponseWrapperDto.builder()
