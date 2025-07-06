@@ -32,76 +32,76 @@ public class Post extends BaseEntity {
     private Long id;
 
     /**
-     * 게시물을 작성한 회원입니다.
+     * 게시물을 작성한 회원.
      */
     @ManyToOne
     @JoinColumn(nullable = false)
     private Member author;
     /**
-     * ai 수정 전 게시물 내용입니다.
+     * ai 수정 전 게시물 내용.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String beforeContent;
 
     /**
-     * ai 수정 후 게시물 내용입니다.
+     * ai 수정 후 게시물 내용.
      */
     @Column(nullable = false, columnDefinition = "TEXT")
     private String afterContent;
 
     /**
-     * 게시물 ai 변환 전 제목입니다.
+     * 게시물 ai 변환 전 제목.
      */
     @Column(nullable = false)
     private String beforeTitle;
 
     /**
-     * 게시물 ai 변환 후 제목입니다.
+     * 게시물 ai 변환 후 제목.
      */
     @Column(nullable = false)
     private String afterTitle;
 
     /**
-     * 게시물 내의 이미지 입니다. url로 저장됩니다.
+     * 게시물 내의 이미지. url로 저장.
      */
     @Column(length = 500)
     private String imageUrl;
 
     /**
-     * 게시글 신고 유무입니다. 기본값 = 0
+     * 게시글 신고 유무. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isReported;
 
     /**
-     * 게시글 삭제 유무입니다. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
+     * 게시글 삭제 유무. soft deleted이므로 삭제되어도 db에는 존재하게됩니다.
      * 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isDeleted;
 
     /**
-     * 숨김 유무입니다. 기본값 = 0
+     * 숨김 유무. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isHidden;
 
     /**
-     * 자신의 게시물에 등록하는 반응 입니다.
+     * 자신의 게시물에 등록하는 반응.
      * null일 경우(작성자가 선택하지 않았을 경우) ai가 글의 이모지를 선택해줍니다.
      */
     @Enumerated(EnumType.STRING)
     private Emotion emotionType;
 
     /**
-     * 글의 컨셉입니다.
+     * 글의 컨셉.
      * enum 타입으로 총 5가지 입니다.
      */
     @Enumerated(EnumType.STRING)
     private Concept conceptType;
 
     /**
-     * Post 생성자입니다.
+     * Post 생성자.
      */
     private Post(Member author, String beforeContent, String afterContent, String beforeTitle,
                  String afterTitle,
@@ -120,7 +120,7 @@ public class Post extends BaseEntity {
     }
 
     /**
-     * Post 팩토리 메서드입니다.
+     * Post 팩토리 메서드.
      */
     public static Post createPost(Member author, String beforeContent, String afterContent,
                                   String beforeTitle, String afterTitle, String imageUrl,
@@ -131,23 +131,33 @@ public class Post extends BaseEntity {
     }
 
     /**
-     * 게시글 삭제를 true로 전환합니다.
+     * 게시글 삭제를 true로 전환.
      */
     public void delete() {
         this.isDeleted = true;
     }
 
     /**
-     * 게시글 숨김을 true로 전환합니다.
+     * 게시글 숨김을 true로 전환.
      */
     public void hide() {
         this.isHidden = true;
     }
 
     /**
-     * 게시글 숨김을 false로 전환합니다.
+     * 게시글 숨김을 false로 전환.
      */
     public void unhide() {
         this.isHidden = false;
+    }
+
+    /**
+     * 게시글 삭제 버튼을 위한 boolean값.
+     *
+     * @param memberId 사용자 id
+     * @return 작성자가 맞으면 true, 틀리면 false
+     */
+    public boolean isMine(Long memberId) {
+        return memberId.equals(this.getAuthor().getId());
     }
 }
