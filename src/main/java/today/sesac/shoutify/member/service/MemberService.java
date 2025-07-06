@@ -151,11 +151,11 @@ public class MemberService {
         MyPostListResponseDto response = new MyPostListResponseDto();
         response.setPosts(postSummaries);
         response.setCurrentPage(page);
-        response.setTotalPage(totalPages);
+        response.setTotalPages(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
         response.setHasNext(page < totalPages);
-        response.setHasPrev(page > 0);
+        response.setHasPrevious(page > 0);
 
         return response;
     }
@@ -184,11 +184,11 @@ public class MemberService {
         MyCommentListResponseDto response = new MyCommentListResponseDto();
         response.setComments(commentSummaries);
         response.setCurrentPage(page);
-        response.setTotalPage(totalPages);
+        response.setTotalPages(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
         response.setHasNext(page < totalPages);
-        response.setHasPrev(page > 0);
+        response.setHasPrevious(page > 0);
 
         return response;
     }

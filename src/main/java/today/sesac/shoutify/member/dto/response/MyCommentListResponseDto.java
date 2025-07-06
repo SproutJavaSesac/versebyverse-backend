@@ -12,9 +12,9 @@ public class MyCommentListResponseDto {
 
     private List<MyCommentSummary> comments;
     private int currentPage;
-    private int totalPage;
+    private int totalPages;
     private int totalCount;
     private int pageSize;
     private boolean hasNext;
-    private boolean hasPrev;
+    private boolean hasPrevious;
 }
