@@ -135,7 +135,7 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         int totalCount = memberPosts.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        int totalPages = (int) Math.ceil((double) totalCount / size) - 1;
 
         int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
@@ -150,7 +150,7 @@ public class MemberService {
 
         MyPostListResponseDto response = new MyPostListResponseDto();
         response.setPosts(postSummaries);
-        response.setCurrentPage(page + 1);  // 실제 페이지 넘버 반환
+        response.setCurrentPage(page);
         response.setTotalPage(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
@@ -168,7 +168,7 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         int totalCount = memberComments.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        int totalPages = (int) Math.ceil((double) totalCount / size) - 1;
 
         int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
@@ -183,7 +183,7 @@ public class MemberService {
 
         MyCommentListResponseDto response = new MyCommentListResponseDto();
         response.setComments(commentSummaries);
-        response.setCurrentPage(page + 1);  // 실제 페이지 넘버 반환
+        response.setCurrentPage(page);
         response.setTotalPage(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
