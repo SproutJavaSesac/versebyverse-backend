@@ -208,7 +208,7 @@ public class MemberService {
                 (int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수 하드코딩
         summary.setCommentCount((int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 댓글 개수 하드코딩
         summary.setImageUrl(post.getImageUrl());
-        summary.setHidden(post.isHidden());
+        summary.setIsHidden(post.isHidden());
 
         return summary;
     }

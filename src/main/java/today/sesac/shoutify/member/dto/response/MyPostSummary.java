@@ -23,5 +23,5 @@ public class MyPostSummary {
     private int reactionCount;
     private int commentCount;
     private String imageUrl;
-    private boolean isHidden;
+    private Boolean isHidden;
 }
