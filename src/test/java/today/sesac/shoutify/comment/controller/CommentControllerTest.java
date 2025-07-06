@@ -24,12 +24,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import today.sesac.shoutify.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.shoutify.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.shoutify.comment.dto.response.CommentListResponseDto;
-import today.sesac.shoutify.comment.dto.response.PaginationDto;
 import today.sesac.shoutify.comment.entity.Comment;
 import today.sesac.shoutify.comment.service.CommentService;
 import today.sesac.shoutify.global.config.TestSecurityConfig;
 import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.global.domain.Emotion;
+import today.sesac.shoutify.global.response.PaginationDto;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.entity.RoleType;
 import today.sesac.shoutify.member.entity.SocialType;
@@ -108,7 +108,7 @@ class CommentControllerTest {
     @DisplayName("[정상] 댓글 전체 조회 테스트 - 댓글 없음")
     void getComments() throws Exception {
 
-        int totalCount = 0; // 전체 댓글 수
+        long totalCount = 0; // 전체 댓글 수
         long postId = 1L; // 게시글 ID
 
         // pagination
@@ -120,7 +120,6 @@ class CommentControllerTest {
 
         // CommentListResponseDto를 직접 생성하지 말고 Service에서 반환할 완성된 객체 Mock
         CommentListResponseDto mockResponse = mock(CommentListResponseDto.class);
-        when(mockResponse.totalCount()).thenReturn(0);
         when(mockResponse.postId()).thenReturn(postId);
         when(mockResponse.comments()).thenReturn(List.of());
 
@@ -128,6 +127,7 @@ class CommentControllerTest {
         PaginationDto mockPagination = mock(PaginationDto.class);
         when(mockPagination.currentPage()).thenReturn(page);
         when(mockPagination.totalPages()).thenReturn(totalPages);
+        when(mockPagination.totalCount()).thenReturn(totalCount);
         when(mockPagination.pageSize()).thenReturn(size);
         when(mockPagination.hasNext()).thenReturn(hasNext);
         when(mockPagination.hasPrevious()).thenReturn(hasPrevious);

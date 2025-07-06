@@ -72,10 +72,7 @@ public class CommentService {
         Page<Comment> pageByPostIdWithPageable = commentRepository
                 .findByPostIdOrderByPathAsc(postId, pageable);
 
-        int totalCommentCount = commentRepository.countByPostId(postId);
-
         return new CommentListResponseDto(
-                totalCommentCount,
                 postId,
                 pageByPostIdWithPageable
         );

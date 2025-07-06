@@ -24,15 +24,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.post.id = :postId ORDER BY c.path ASC
             """)
     Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
-
-    /**
-     * 게시글의 총 댓글 개수를 조회합니다.
-     *
-     * @param postId 게시글 ID
-     * @return 댓글 개수
-     */
-    @Query(""" 
-            SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId
-            """)
-    int countByPostId(Long postId);
 }
