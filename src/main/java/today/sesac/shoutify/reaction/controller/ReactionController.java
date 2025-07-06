@@ -55,12 +55,12 @@ public class ReactionController {
     private Map<String, Integer> getReactionDetails(String emotion, String action) {
         //반응별 고정 갯수
         Map<String, Integer> details = new HashMap<>();
-        details.put("happy", 15);
-        details.put("sad", 5);
-        details.put("angry", 2);
-        details.put("excited", 0);
-        details.put("confused", 1);
-        details.put("proud", 1);
+        details.put("HAPPY", 15);
+        details.put("SAD", 5);
+        details.put("ANGRY", 2);
+        details.put("EXCITED", 0);
+        details.put("CONFUSED", 1);
+        details.put("PROUD", 1);
 
         // 해당 이모티콘 카운트 조정, change의 경우
         if (action.equals("add")) {
@@ -111,12 +111,12 @@ public class ReactionController {
     private Map<String, Integer> getCommentReactionDetails(String emotion, String action) {
         Map<String, Integer> details = new HashMap<>();
         // 댓글 반응은 게시물보다 적게 설정
-        details.put("happy", 8);
-        details.put("sad", 2);
-        details.put("angry", 1);
-        details.put("excited", 0);
-        details.put("confused", 0);
-        details.put("proud", 1);
+        details.put("HAPPY", 8);
+        details.put("SAD", 2);
+        details.put("ANGRY", 1);
+        details.put("EXCITED", 0);
+        details.put("CONFUSED", 0);
+        details.put("PROUD", 1);
 
         // 해당 이모티콘 카운트 조정
         if (action.equals("add")) {
