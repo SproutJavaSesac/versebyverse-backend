@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MyCommentSummary {
 
-    private Long id;
+    private Long commentId;
     private Long postId;
     private String postTitle;
     private String beforeContent;

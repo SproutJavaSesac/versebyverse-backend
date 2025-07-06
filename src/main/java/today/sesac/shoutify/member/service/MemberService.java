@@ -216,7 +216,7 @@ public class MemberService {
     private MyCommentSummary convertCommentToSummary(Comment comment) {
         MyCommentSummary summary = new MyCommentSummary();
 
-        summary.setId(comment.getId());
+        summary.setCommentId(comment.getId());
         summary.setPostId(comment.getPost().getId());
         summary.setPostTitle(comment.getPost().getAfterTitle());
         summary.setBeforeContent(comment.getBeforeContent());
