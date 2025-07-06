@@ -135,7 +135,7 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         int totalCount = memberPosts.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size) - 1;
+        int totalPages = (int) Math.ceil((double) totalCount / size);
 
         int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
@@ -154,7 +154,7 @@ public class MemberService {
         response.setTotalPages(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
-        response.setHasNext(page < totalPages);
+        response.setHasNext(page + 1 < totalPages);
         response.setHasPrevious(page > 0);
 
         return response;
@@ -168,7 +168,7 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         int totalCount = memberComments.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size) - 1;
+        int totalPages = (int) Math.ceil((double) totalCount / size);
 
         int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
@@ -187,7 +187,7 @@ public class MemberService {
         response.setTotalPages(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
-        response.setHasNext(page < totalPages);
+        response.setHasNext(page + 1 < totalPages);
         response.setHasPrevious(page > 0);
 
         return response;
