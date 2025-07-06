@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import today.sesac.shoutify.comment.entity.Comment;
 import today.sesac.shoutify.comment.repository.CommentRepository;
+import today.sesac.shoutify.global.response.PaginationDto;
 import today.sesac.shoutify.member.dto.response.MyCommentListResponseDto;
 import today.sesac.shoutify.member.dto.response.MyCommentSummary;
 import today.sesac.shoutify.member.dto.response.MyInfoEditResponseDto;
@@ -149,13 +150,11 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         MyPostListResponseDto response = new MyPostListResponseDto();
+        PaginationDto paginationDto = new PaginationDto(page, totalPages, (long) totalCount, size,
+                page + 1 < totalPages, page > 0);
+
         response.setPosts(postSummaries);
-        response.setCurrentPage(page);
-        response.setTotalPages(totalPages);
-        response.setTotalCount(totalCount);
-        response.setPageSize(size);
-        response.setHasNext(page + 1 < totalPages);
-        response.setHasPrevious(page > 0);
+        response.setPagination(paginationDto);
 
         return response;
     }
@@ -182,13 +181,11 @@ public class MemberService {
                 .collect(Collectors.toList());
 
         MyCommentListResponseDto response = new MyCommentListResponseDto();
+        PaginationDto paginationDto = new PaginationDto(page, totalPages, (long) totalCount, size,
+                page + 1 < totalPages, page > 0);
+
         response.setComments(commentSummaries);
-        response.setCurrentPage(page);
-        response.setTotalPages(totalPages);
-        response.setTotalCount(totalCount);
-        response.setPageSize(size);
-        response.setHasNext(page + 1 < totalPages);
-        response.setHasPrevious(page > 0);
+        response.setPagination(paginationDto);
 
         return response;
     }

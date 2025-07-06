@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import today.sesac.shoutify.global.response.PaginationDto;
 
 @Getter
 @Setter
@@ -11,10 +12,6 @@ import lombok.Setter;
 public class MyPostListResponseDto {
 
     private List<MyPostSummary> posts;
-    private int currentPage;
-    private int totalPages;
-    private int totalCount;
-    private int pageSize;
-    private boolean hasNext;
-    private boolean hasPrevious;
+
+    private PaginationDto pagination;
 }
