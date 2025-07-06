@@ -40,7 +40,7 @@ public record CommentListResponseDto(
                                 CommentResponseDto.of(pageComments.getContent().get(i), i + 1))
                         .toList(),
                 new PaginationDto(
-                        pageComments.getNumber() + 1, // 페이지는 0부터 시작하므로 +1
+                        pageComments.getNumber(),
                         pageComments.getTotalPages(),
                         pageComments.getSize(),
                         pageComments.hasNext(),
