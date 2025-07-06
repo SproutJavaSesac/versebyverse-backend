@@ -29,7 +29,7 @@ public class MemberController {
     // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
     @GetMapping("/me/posts")
     public ApiResponse<?> getMemberPosts(
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -44,7 +44,7 @@ public class MemberController {
     // TODO: 프론트 테스트를 위한 임시 마이페이지 댓글 확인 메서드 - 수정하기
     @GetMapping("/me/comments")
     public ApiResponse<?> getMemberComments(
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {

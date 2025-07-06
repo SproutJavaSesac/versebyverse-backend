@@ -137,7 +137,7 @@ public class MemberService {
         int totalCount = memberPosts.size();
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        int fromIndex = (page - 1) * size;
+        int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
 
         List<Post> pagedPosts = fromIndex < totalCount
@@ -150,12 +150,12 @@ public class MemberService {
 
         MyPostListResponseDto response = new MyPostListResponseDto();
         response.setPosts(postSummaries);
-        response.setCurrentPage(page);
+        response.setCurrentPage(page + 1);  // 실제 페이지 넘버 반환
         response.setTotalPage(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
         response.setHasNext(page < totalPages);
-        response.setHasPrev(page > 1);
+        response.setHasPrev(page > 0);
 
         return response;
     }
@@ -170,7 +170,7 @@ public class MemberService {
         int totalCount = memberComments.size();
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        int fromIndex = (page - 1) * size;
+        int fromIndex = page * size;
         int toIndex = Math.min(fromIndex + size, totalCount);
 
         List<Comment> pagedComments = fromIndex < totalCount
@@ -183,12 +183,12 @@ public class MemberService {
 
         MyCommentListResponseDto response = new MyCommentListResponseDto();
         response.setComments(commentSummaries);
-        response.setCurrentPage(page);
+        response.setCurrentPage(page + 1);  // 실제 페이지 넘버 반환
         response.setTotalPage(totalPages);
         response.setTotalCount(totalCount);
         response.setPageSize(size);
         response.setHasNext(page < totalPages);
-        response.setHasPrev(page > 1);
+        response.setHasPrev(page > 0);
 
         return response;
     }
