@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.global.response.ApiResponse;
+import today.sesac.shoutify.global.response.PaginationDto;
 import today.sesac.shoutify.profanity.dto.request.ProfanityRegisterRequestDto;
 import today.sesac.shoutify.profanity.dto.request.ProfanityUpdateRequestDto;
 import today.sesac.shoutify.profanity.dto.response.ProfanityListResponseWrapperDto;
 import today.sesac.shoutify.profanity.dto.response.ProfanityResponseDto;
 import today.sesac.shoutify.profanity.service.ProfanityService;
-import today.sesac.shoutify.temp.PaginationDto;
 
 /**
  * 비속어 관련 API 컨트롤러.
@@ -58,14 +58,14 @@ public class ProfanityController {
             );
         }
 
-        PaginationDto pagination = PaginationDto.builder()
-                .currentPage(page)
-                .pageSize(size)
-                .totalCount(1000)
-                .totalPage((int) Math.ceil(1000.0 / size))
-                .hasNext(page * size < 1000)
-                .hasPrev(page > 1)
-                .build();
+        PaginationDto pagination = new PaginationDto(
+                page,
+                size,
+                1000,
+                (int) Math.ceil(1000.0 / size),
+                page * size < 1000,
+                page > 1
+        );
 
         ProfanityListResponseWrapperDto response = ProfanityListResponseWrapperDto.builder()
                 .profanities(profanities)
