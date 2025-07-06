@@ -42,7 +42,7 @@ public class CommentService {
     public CommentCreateResponseDto createComment(CommentCreateRequestDto commentCreateRequestDto,
             Long commenterId, Long postId) {
 
-        return CommentCreateResponseDto.of(
+        return CommentCreateResponseDto.testOf(
                 1L,
                 postId,
                 commenterId,
@@ -52,6 +52,9 @@ public class CommentService {
                 0,
                 0,
                 Map.of(),
+                false,
+                false,
+                LocalDateTime.now(),
                 LocalDateTime.now()
         );
     }

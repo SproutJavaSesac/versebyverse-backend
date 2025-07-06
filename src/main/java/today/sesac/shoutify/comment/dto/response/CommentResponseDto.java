@@ -35,9 +35,9 @@ public class CommentResponseDto {
 
     private final Map<Emotion, Integer> reactions;
 
-    private final boolean isDeleted;
+    private final Boolean isDeleted;
 
-    private final boolean isReported;
+    private final Boolean isReported;
 
     private final LocalDateTime createdAt;
 

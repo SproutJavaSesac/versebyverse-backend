@@ -2,7 +2,6 @@ package today.sesac.shoutify.comment.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.shoutify.comment.entity.Comment;
@@ -12,7 +11,8 @@ import today.sesac.shoutify.global.domain.Emotion;
  * 댓글 작성 응답 DTO.
  */
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+//@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "testOf")
 public class CommentCreateResponseDto {
 
     private final Long id;
@@ -32,6 +32,10 @@ public class CommentCreateResponseDto {
     private final int reactionTotalCount;
 
     private final Map<Emotion, Integer> reactions; // TODO: 리액션 기능 추가 예정
+
+    private final Boolean isDeleted;
+
+    private final Boolean isReported;
 
     private final LocalDateTime createdAt;
 
@@ -55,6 +59,8 @@ public class CommentCreateResponseDto {
                 comment.getLevel(),
                 6, // TODO comment.getReactions().size(),
                 Map.of(), // TODO: 리액션 기능 추가 예정
+                comment.isDeleted(),
+                comment.isReported(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
