@@ -17,7 +17,7 @@ import today.sesac.shoutify.global.domain.Emotion;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentResponseDto {
 
-    private final Long id;
+    private final Long commentId;
 
     private final Long commenterId;
 

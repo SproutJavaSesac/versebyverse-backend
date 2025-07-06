@@ -15,7 +15,7 @@ import today.sesac.shoutify.global.domain.Emotion;
 @AllArgsConstructor(staticName = "testOf")
 public class CommentCreateResponseDto {
 
-    private final Long id;
+    private final Long commentId;
 
     private final Long postId;
 
