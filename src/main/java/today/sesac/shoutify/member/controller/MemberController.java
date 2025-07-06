@@ -56,7 +56,7 @@ public class MemberController {
         return ApiResponse.success(myCommentListResponseDto);
     }
 
-    @GetMapping("/me/profile")
+    @GetMapping("/me")
     public ApiResponse<MyInfoGetResponseDto> getMemberInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -67,7 +67,7 @@ public class MemberController {
         return ApiResponse.success(myInfoGetResponseDto);
     }
 
-    @PutMapping("/me/profile")
+    @PutMapping("/me")
     public ApiResponse<MyInfoEditResponseDto> editMemberInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
