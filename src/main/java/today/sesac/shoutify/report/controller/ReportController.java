@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.shoutify.global.response.ApiResponse;
+import today.sesac.shoutify.global.response.PaginationDto;
 import today.sesac.shoutify.report.dto.request.ReportActionRequestDto;
 import today.sesac.shoutify.report.dto.request.ReportRequestDto;
 import today.sesac.shoutify.report.dto.response.AdminReportResponseDto;
@@ -21,7 +22,6 @@ import today.sesac.shoutify.report.dto.response.CommentReportResponseDto;
 import today.sesac.shoutify.report.dto.response.PostReportResponseDto;
 import today.sesac.shoutify.report.dto.response.ReportActionResponseDto;
 import today.sesac.shoutify.report.dto.response.ReportListResponseWrapperDto;
-import today.sesac.shoutify.temp.PaginationDto;
 
 
 /**
@@ -89,13 +89,13 @@ public class ReportController {
      */
     @GetMapping("/admin/reports")
     public ApiResponse<?> getReportList(@RequestParam String statusType,
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(defaultValue = "latest") String sort) {
 
         // 더미 리스트
         List<AdminReportResponseDto> reports = new ArrayList<>();
-        String reportType = " ";
+        String reportType = "";
         for (int i = 1; i <= size; i++) {
             if (i % 2 == 0) {
                 reportType = "COMMENT";
@@ -115,18 +115,11 @@ public class ReportController {
                             .build()
             );
         }
-        PaginationDto pagination = PaginationDto.builder()
-                .currentPage(page)
-                .pageSize(size)
-                .totalCount(1000)
-                .totalPage((int) Math.ceil(1000.0 / size))
-                .hasNext(page * size < 1000)
-                .hasPrev(page > 1)
-                .build();
+        PaginationDto pagination = new PaginationDto(page, (int) Math.ceil(1000.0 / size),
+                1000, size, page * size < 1000, page > 1);
 
         return ApiResponse.success(
                 ReportListResponseWrapperDto.builder().reports(reports).pagination(pagination)
-                        .sort(sort)
                         .build());
     }
 

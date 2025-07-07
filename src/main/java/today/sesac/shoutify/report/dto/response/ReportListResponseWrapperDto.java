@@ -3,7 +3,7 @@ package today.sesac.shoutify.report.dto.response;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-import today.sesac.shoutify.temp.PaginationDto;
+import today.sesac.shoutify.global.response.PaginationDto;
 
 /**
  * 신고 목록 응달 dto.
@@ -22,9 +22,4 @@ public class ReportListResponseWrapperDto {
      * 페이지네이션 정보.
      */
     private PaginationDto pagination;
-
-    /**
-     * 정렬 기준 (latest / oldest).
-     */
-    private String sort;
 }
