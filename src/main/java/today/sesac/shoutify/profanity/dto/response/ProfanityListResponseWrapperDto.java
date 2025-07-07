@@ -21,9 +21,5 @@ public class ProfanityListResponseWrapperDto {
      * 페이지네이션 정보.
      */
     private PaginationDto pagination;
-
-    /**
-     * 정렬 기준 (latest / oldest).
-     */
-    private String sort;
+    
 }

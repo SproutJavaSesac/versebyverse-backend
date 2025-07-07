@@ -70,7 +70,6 @@ public class ProfanityController {
         ProfanityListResponseWrapperDto response = ProfanityListResponseWrapperDto.builder()
                 .profanities(profanities)
                 .pagination(pagination)
-                .sort(sort)
                 .build();
 
         return ApiResponse.success(response);
