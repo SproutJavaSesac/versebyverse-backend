@@ -33,6 +33,7 @@ import today.sesac.shoutify.report.dto.response.ReportListResponseWrapperDto;
 @RequiredArgsConstructor
 public class ReportController {
 
+    private String reportType = "";
 
     /**
      * 게시글 신고.
@@ -44,10 +45,11 @@ public class ReportController {
     @PostMapping("/reports/posts/{postId}")
     public ApiResponse<?> postReport(@PathVariable("postId") int postId,
             @RequestBody ReportRequestDto reportRequestDto) {
+        reportType = "POST";
         PostReportResponseDto postReportResponseDto = PostReportResponseDto.builder()
                 .reportId((int) (Math.random() * 10) + 1)
                 .postId(postId)
-                .reportType("POST")
+                .reportType(reportType)
                 .reasonType(reportRequestDto.getReasonType())
                 .reasonDetail(reportRequestDto.getReasonDetail())
                 .statusType("PENDING")
@@ -66,10 +68,11 @@ public class ReportController {
     @PostMapping("/reports/comments/{commentId}")
     public ApiResponse<?> commentReport(@PathVariable("commentId") int commentId,
             @RequestBody ReportRequestDto reportRequestDto) {
+        reportType = "COMMENT";
         CommentReportResponseDto commentReportResponseDto = CommentReportResponseDto.builder()
                 .reportId((int) (Math.random() * 10) + 1)
                 .commentId(commentId)
-                .reportType("POST")
+                .reportType(reportType)
                 .reasonType(reportRequestDto.getReasonType())
                 .reasonDetail(reportRequestDto.getReasonDetail())
                 .statusType("PENDING")
@@ -95,7 +98,6 @@ public class ReportController {
 
         // 더미 리스트
         List<AdminReportResponseDto> reports = new ArrayList<>();
-        String reportType = "";
         for (int i = 1; i <= size; i++) {
             if (i % 2 == 0) {
                 reportType = "COMMENT";
