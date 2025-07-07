@@ -95,9 +95,11 @@ public class MemberService {
 
         List<Post> memberPosts = postRepository.findAll().stream()
                 .filter(post -> post.getAuthor().getId().equals(member.getId()))
+                .filter(post -> !post.isDeleted())
                 .collect(Collectors.toList());
         List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getAuthor().getId().equals(member.getId()))
+                .filter(comment -> comment.getCommenter().getId().equals(member.getId()))
+                .filter(comment -> !comment.isDeleted())
                 .collect(Collectors.toList());
 
         myInfoGetResponseDto.setPostCount(memberPosts.size());
@@ -132,6 +134,7 @@ public class MemberService {
         // TODO: 프론트 테스트할 때, PostRepository 수정하지 않기 위해 post 전부 불러옴. 수정 필수!!
         List<Post> memberPosts = postRepository.findAll().stream()
                 .filter(post -> post.getAuthor().getId().equals(memberId))
+                .filter(post -> !post.isDeleted())
                 .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
                 .collect(Collectors.toList());
 
@@ -162,7 +165,8 @@ public class MemberService {
     public MyCommentListResponseDto getMemberComments(Long memberId, int page, int size) {
         // TODO: 프론트 테스트할 때, CommentRepository 수정하지 않기 위해 comment 전부 불러옴. 수정 필수!!
         List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getAuthor().getId().equals(memberId))
+                .filter(comment -> comment.getCommenter().getId().equals(memberId))
+                .filter(comment -> !comment.isDeleted())
                 .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
                 .collect(Collectors.toList());
 
