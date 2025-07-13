@@ -2,6 +2,8 @@ package today.sesac.shoutify.ai.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.shoutify.global.domain.Concept;
+import today.sesac.shoutify.global.domain.Emotion;
 
 /**
  * 게시글 AI 요청 데이터 전송 객체(DTO)입니다.
@@ -22,14 +24,14 @@ public class PostAiRequestDto extends AiRequestDto {
     private String title;
 
     /**
-     * 게시글 컨셉 타입 (예: 공식적, 친근한, 전문적 등).
+     * 게시글 컨셉 타입.
      */
-    private String conceptType;
+    private Concept conceptType;
 
     /**
      * 게시글 감정 타입.
      */
-    private String emotionType;
+    private Emotion emotionType;
 
     /**
      * 게시글 내용.

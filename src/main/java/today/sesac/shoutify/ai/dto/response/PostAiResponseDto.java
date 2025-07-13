@@ -2,6 +2,7 @@ package today.sesac.shoutify.ai.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.shoutify.ai.dto.request.PostAiRequestDto;
 
 /**
  * 게시글 AI 응답 데이터 전송 객체(DTO)입니다.
@@ -14,7 +15,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class PostAiResponseDto extends AiResponseDto {
+public class PostAiResponseDto extends AiResponseDto<PostAiRequestDto> {
 
     /**
      * AI가 처리한 게시글 제목.

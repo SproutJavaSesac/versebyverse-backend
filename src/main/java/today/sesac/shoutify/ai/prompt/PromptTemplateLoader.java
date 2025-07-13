@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component;
  * </ul>
  *
  * <pre>
- * [role]
- * ---
- * [condition]
- * ---
- * [example]
+ * ## role
+ *
+ * ## condition
+ *
+ * ## example
  * </pre>
  */
 @Component
@@ -55,8 +55,7 @@ public class PromptTemplateLoader {
      * <p>파일이 없거나 포맷이 잘못된 경우 RuntimeException 또는 IllegalArgumentException이 발생합니다.</p>
      *
      * @param type 프롬프트 타입
-     * @return 파싱된 {@link PromptTemplate} 인스턴스
-     * TODO : 로직 메서드로 분리하기
+     * @return 파싱된 {@link PromptTemplate} 인스턴스 //TODO : 로직 메서드로 분리하기
      */
     private PromptTemplate loadTemplate(PromptType type) {
         String filePath = TEMPLATE_PATH + type.name().toLowerCase() + ".md";
@@ -64,7 +63,7 @@ public class PromptTemplateLoader {
                 new InputStreamReader(new ClassPathResource(filePath).getInputStream(),
                         StandardCharsets.UTF_8))) {
             String content = reader.lines().collect(Collectors.joining("\n"));
-            String[] parts = content.split("---", 3);
+            String[] parts = content.split("##", 3);
 
             if (parts.length < 3) {
                 throw new IllegalArgumentException("Invalid format in: " + filePath);

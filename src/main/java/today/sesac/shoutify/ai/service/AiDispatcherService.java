@@ -13,17 +13,30 @@ import today.sesac.shoutify.ai.prompt.PromptTemplate;
 import today.sesac.shoutify.ai.prompt.PromptTemplateLoader;
 import today.sesac.shoutify.ai.prompt.PromptType;
 
+/**
+ * AI 요청 타입을 처리하고, 프롬프트 템플릿을 통해 ChatClient로 요청을 전송한 후 응답을 파싱하여 반환하는 서비스입니다.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AiDispatcherService {
 
     private final ChatClient chatClient;
+
     private final PromptTemplateLoader loader;
+
     private final ObjectMapper objectMapper;
 
-    public <Req extends AiRequestDto<Resp>, Resp extends AiResponseDto> Resp process(
-            Req requestDto, Class<Resp> responseType,
+    /**
+     * AI 요청을 처리하고 지정된 Dto로 응답을 반환합니다.
+     *
+     * @param <T>          응답 DTO 타입, AiResponseDto를 상속해야 함.
+     * @param requestDto   AI 요청 데이터를 담은 DTO 객체
+     * @param responseType 응답으로 받을 클래스 타입
+     * @param promptType   사용할 프롬프트 템플릿 타입
+     */
+    public <T extends AiResponseDto<?>> T process(
+            AiRequestDto requestDto, Class<T> responseType,
             PromptType promptType) {
         try {
             PromptTemplate template = loader.getTemplate(promptType);

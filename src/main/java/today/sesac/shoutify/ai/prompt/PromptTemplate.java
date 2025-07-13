@@ -65,5 +65,4 @@ public class PromptTemplate {
             throw new IllegalArgumentException("프롬프트 입력 객체를 JSON으로 변환하는 데 실패했습니다.", e);
         }
     }
-
 }

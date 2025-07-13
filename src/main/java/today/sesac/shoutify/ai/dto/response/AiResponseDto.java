@@ -1,5 +1,7 @@
 package today.sesac.shoutify.ai.dto.response;
 
+import today.sesac.shoutify.ai.dto.request.AiRequestDto;
+
 /**
  * AI 응답 데이터 전송 객체(DTO)의 추상 기본 클래스입니다.
  *
@@ -16,6 +18,6 @@ package today.sesac.shoutify.ai.dto.response;
  * @see CommentAiResponseDto
  * @see PostAiResponseDto
  */
-public abstract class AiResponseDto {
+public abstract class AiResponseDto<T extends AiRequestDto> {
 
 }
