@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import today.sesac.shoutify.comment.entity.Comment;
 
@@ -24,4 +25,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.post.id = :postId ORDER BY c.path ASC
             """)
     Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
+
+    /**
+     * 게시글 ID 별로 댓글의 갯수를 조회.
+     *
+     * @param postId 게시글 Id
+     */
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
+    int countByPostId(@Param("postId") Long postId);
 }
