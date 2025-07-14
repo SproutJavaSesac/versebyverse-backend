@@ -42,6 +42,7 @@ public class MemberService {
      */
     public Member createMember(RoleType roleType, SocialType socialType, String email,
             String nickname) {
+
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
         return savedMember;
@@ -54,6 +55,7 @@ public class MemberService {
      * @return Member 객체
      */
     public Member findById(Long memberId) {
+
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
@@ -61,6 +63,7 @@ public class MemberService {
     }
 
     public Member findByEmailAndSocialType(String email, SocialType socialType) {
+
         Member member = memberRepository.findByEmailAndSocialType(email, socialType).orElseThrow(
                 () -> new MemberNotFoundException(email + ", " + socialType,
                         "해당 email을 가진 회원을 찾을 수 없습니다.")
@@ -69,6 +72,7 @@ public class MemberService {
     }
 
     public Member getMember(Long memberId) {
+
         return memberRepository.findById(memberId)
                 // TODO 에러코드 수정 예정
                 .orElseThrow(
@@ -76,6 +80,7 @@ public class MemberService {
     }
 
     public MyInfoGetResponseDto getMemberInformation(Long memberId) {
+
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
@@ -87,6 +92,7 @@ public class MemberService {
     }
 
     private MyInfoGetResponseDto convertMemberToInfo(Member member) {
+
         MyInfoGetResponseDto myInfoGetResponseDto = new MyInfoGetResponseDto();
         myInfoGetResponseDto.setMemberId(member.getId());
         myInfoGetResponseDto.setNickname(member.getNickname());
@@ -194,7 +200,22 @@ public class MemberService {
         return response;
     }
 
+    /**
+     * 주어진 memberId로 활성화된 회원을 조회합니다. 회원이 존재하지 않거나 삭제된 경우 MemberNotFoundException을 발생시킵니다.
+     *
+     * @param memberId 조회할 회원의 ID
+     * @return 활성화된 회원 객체
+     * @throws MemberNotFoundException 회원이 존재하지 않거나 삭제된 경우
+     */
+    public Member getActiveMemberOrThrow(Long memberId) {
+
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(null,
+                        String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
+    }
+
     private MyPostSummary convertPostToSummary(Post post) {
+
         MyPostSummary summary = new MyPostSummary();
 
         summary.setPostId(post.getId());
@@ -215,6 +236,7 @@ public class MemberService {
     }
 
     private MyCommentSummary convertCommentToSummary(Comment comment) {
+
         MyCommentSummary summary = new MyCommentSummary();
 
         summary.setCommentId(comment.getId());
