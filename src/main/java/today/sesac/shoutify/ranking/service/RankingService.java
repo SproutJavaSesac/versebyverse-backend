@@ -87,8 +87,8 @@ public class RankingService {
     private void saveRankingNewOrWithPrevious(Member member, int postCount, int rank,
             LocalDateTime startDateTime, LocalDateTime endDateTime, RankingPeriodType periodType) {
 
-        Optional<Ranking> existingRanking = rankingRepository.findByMemberAndCategoryAndPeriodTypeAndCreatedAtBetween(
-                member, RankingCategory.POST,
+        Optional<Ranking> existingRanking = rankingRepository.findByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
+                member.getId(), RankingCategory.POST,
                 periodType,
                 startDateTime, endDateTime
         );
