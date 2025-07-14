@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.shoutify.comment.repository.CommentRepository;
+import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.shoutify.post.dto.response.PostSummaryResponseDto;
 import today.sesac.shoutify.post.entity.Post;
@@ -28,34 +29,53 @@ public class PostQueryService {
     /**
      * 게시글 목록 리스트 조회.
      */
-    public Page<PostSummaryResponseDto> getPosts(String conceptType, String sortBy,
+    public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sortBy,
                                                  int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
+        //concept이 all일 경우 필터링은 false
+        boolean filterByConcept = !Concept.ALL.equals(conceptType);
+
         //repository를 통해 jpa 가 db 에서 받아온 post 엔티티 + 페이지 정보
         Page<Post> postPage;
 
-        if (conceptType == null) {
-            //전체 조회 (무한 스크롤)
-            postPage = postRepository.findAll(pageable);
-        } else {
+
+        if (!filterByConcept) {
+            //filterByConcept이 false일때 (concept이 all이거나 null이어서 필터링 없이 전체조회)
             switch (sortBy) {
-                //댓글 많은 순 정렬
+                //전체조회 + comment순 정렬
                 case "comments":
-                    postPage = postRepository.findByConceptTypeOrderByCommentCount(conceptType,
-                            pageable);
+                    postPage = postRepository.findAllOrderByCommentCount(pageable);
                     break;
-                //반응 많은 순 정렬
+                //전체조회 + reaction순 정렬
                 case "reactions":
                     //TODO 반응하기 임시 기본 정렬 대체
                     postPage = postRepository.findByConceptType(conceptType, pageable);
 //                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
 //                            pageable);
                     break;
-                //기본 최신순 정렬
-                default: // 최신순
+                //전체 조회 + 최신순 정렬
+                default:
+                    postPage = postRepository.findAll(pageable);
+            }
+        } else { //concept별 필터링
+            switch (sortBy) {
+                //컨셉별 조회 + comment순 정렬
+                case "comments":
+                    postPage = postRepository.findByConceptTypeOrderByCommentCount(conceptType,
+                            pageable);
+                    break;
+                //컨셉별 조회 + reaction순 정렬
+                case "reactions":
+                    //TODO 반응하기 임시 기본 정렬 대체
+                    postPage = postRepository.findByConceptType(conceptType, pageable);
+//                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
+//                            pageable);
+                    break;
+                //컨셉별 조회 + 최신순 정렬
+                default:
                     postPage = postRepository.findByConceptType(conceptType, pageable);
             }
         }
