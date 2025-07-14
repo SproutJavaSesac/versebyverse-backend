@@ -78,7 +78,8 @@ public class CommentController {
     public ApiResponse<String> deleteComment(
             @PathVariable("commentId") Long commentId) {
 
-        commentService.deleteComment(commentId);
+        Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
+        commentService.deleteComment(commentId, memberId);
         return ApiResponse.success("성공적으로 댓글을 삭제했습니다.");
     }
 }

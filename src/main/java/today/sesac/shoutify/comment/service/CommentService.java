@@ -12,6 +12,7 @@ import today.sesac.shoutify.comment.entity.Comment;
 import today.sesac.shoutify.comment.exception.CommentErrorCode;
 import today.sesac.shoutify.comment.exception.CommentException;
 import today.sesac.shoutify.comment.repository.CommentRepository;
+import today.sesac.shoutify.global.exception.PermissionRequiredException;
 import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.service.MemberService;
 import today.sesac.shoutify.post.entity.Post;
@@ -112,8 +113,22 @@ public class CommentService {
      * @param commentId 삭제할 댓글 ID
      */
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Long memberId) {
 
+        validateIsSameCommenterAsMember(commentId, memberId);
         commentRepository.deleteById(commentId);
+    }
+
+    private void validateIsSameCommenterAsMember(Long commentId, Long memberId) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
+                        "commentId"));
+        if (!comment.getCommenter().getId().equals(memberId)) {
+            throw new PermissionRequiredException("commentId", String.format(
+                    "댓글 작성자와 요청한 회원이 일치하지 않습니다. 요청한 회원 ID: %d, 댓글 작성자 ID: %d",
+                    memberId, comment.getCommenter().getId()
+            ));
+        }
     }
 }
