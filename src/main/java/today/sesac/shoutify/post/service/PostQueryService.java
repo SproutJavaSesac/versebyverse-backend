@@ -1,8 +1,12 @@
 package today.sesac.shoutify.post.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.shoutify.member.entity.Member;
+import today.sesac.shoutify.post.dto.AuthorPostStatDto;
 import today.sesac.shoutify.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.shoutify.post.entity.Post;
 import today.sesac.shoutify.post.exception.PostErrorCode;
@@ -16,6 +20,7 @@ import today.sesac.shoutify.post.repository.PostRepository;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryService {
+
     private final PostRepository postRepository;
 
     /**
@@ -26,6 +31,7 @@ public class PostQueryService {
      * @return postSingleQueryResponseDto
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
+
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
 
@@ -33,5 +39,24 @@ public class PostQueryService {
                 foundPost.getAfterContent(), foundPost.getAuthor().getNickname(),
                 foundPost.getCreatedAt(), foundPost.getImageUrl(),
                 foundPost.getConceptType().toString(), foundPost.isMine(memberId));
+    }
+
+    /**
+     * 특정 기간 동안 활동 중인 작성자와 게시글 수를 조회합니다.
+     *
+     * @param startDate 시작 날짜
+     * @param endDate   종료 날짜
+     * @return 작성자와 게시글 수의 리스트
+     */
+    public List<AuthorPostStatDto> getAuthorAndPostCounts(LocalDateTime startDate,
+            LocalDateTime endDate) {
+
+        return postRepository.findActiveAuthorActivePostCounts(startDate, endDate)
+                .stream()
+                .map(tuple -> new AuthorPostStatDto(
+                        tuple.get(0, Member.class),
+                        tuple.get(1, Long.class)
+                ))
+                .toList();
     }
 }
