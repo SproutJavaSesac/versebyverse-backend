@@ -43,7 +43,7 @@ public class PostSummaryResponseDto {
      * @param commentCount  댓글 갯수
      * @return Page 객체 내부에 들어가는 Dto 객체
      */
-    public static PostSummaryResponseDto of(Post post, int reactionCount, int commentCount) {
+    public static PostSummaryResponseDto of(Post post, int commentCount, int reactionCount) {
         return new PostSummaryResponseDto(post.getId(), post.getAuthor().getNickname(),
                 post.getAfterTitle(), post.getAfterContent(), post.getCreatedAt(),
                 reactionCount, commentCount, post.getConceptType().name(), post.getImageUrl());
