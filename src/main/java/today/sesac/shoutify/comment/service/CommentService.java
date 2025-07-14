@@ -33,7 +33,6 @@ public class CommentService {
 
     /**
      * 댓글을 작성합니다.
-     * TODO 검증 로직 추가
      *
      * @param commentCreateRequestDto 댓글 작성 요청 DTO
      * @param commenterId             댓글 작성자 회원 ID
@@ -47,7 +46,8 @@ public class CommentService {
         // TODO 해당 메서드 구현 PR 머지되어야 가능
         Post activePost = postQueryService.getActivePostById(postId);
 
-        Member member = memberService.getMember(commenterId); // TODO ActiveMember 가져오도록 수정 필요
+        Member member = memberService.getActiveMemberOrThrow(
+                commenterId); // TODO ActiveMember 가져오도록 수정 필요
 
         String afterContent = "AI가 변경해 준 content"; // TODO: AI 처리 로직 추가 예정
 
@@ -87,13 +87,14 @@ public class CommentService {
 
     /**
      * 게시글 ID에 해당하는 댓글 목록을 페이지네이션 방식으로 조회합니다.
-     * TODO 검증 로직
      *
      * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
      */
     public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
+
+        postQueryService.validateActivePostByIdOrThrow(postId);
 
         Page<Comment> pageByPostIdWithPageable = commentRepository
                 .findByPostIdOrderByPathAsc(postId, pageable);
