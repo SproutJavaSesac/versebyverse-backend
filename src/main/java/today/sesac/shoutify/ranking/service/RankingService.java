@@ -44,12 +44,13 @@ public class RankingService {
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
             RankingPeriodType periodType, LocalDate periodValue, Pageable pageable) {
 
-        DateTimeRange dateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByDuration(
+        DateTimeRange periodDateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(
                 periodValue,
                 periodType);
 
         Page<Ranking> rankings = rankingRepository.findAllByCategoryAndPeriodTypeAndCreatedAtBetween(
-                category, periodType, dateTimeRange.startDateTime(), dateTimeRange.endDateTime(),
+                category, periodType, periodDateTimeRange.startDateTime(),
+                periodDateTimeRange.endDateTime(),
                 pageable);
 
         List<RankingSingleResponseDto> rankingDtoList = rankings.stream()

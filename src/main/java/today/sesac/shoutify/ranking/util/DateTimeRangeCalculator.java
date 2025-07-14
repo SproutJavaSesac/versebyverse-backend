@@ -20,7 +20,7 @@ public final class DateTimeRangeCalculator {
      * @param periodType  기간 유형 (일간, 주간, 월간, 연간)
      * @return 해당 기간의 시작 시각과 종료 시각을 포함하는 {@link DateTimeRange} 객체
      */
-    public static DateTimeRange getStartDateAndEndDateByDuration(LocalDate periodValue,
+    public static DateTimeRange getStartDateAndEndDateByPeriod(LocalDate periodValue,
             RankingPeriodType periodType) {
 
         LocalDateTime startDateTime = getStartTimeOfDate(periodValue);
