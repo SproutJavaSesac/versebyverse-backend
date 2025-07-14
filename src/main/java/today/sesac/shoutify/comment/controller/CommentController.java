@@ -43,7 +43,7 @@ public class CommentController {
             @PathVariable("postId") Long postId) {
 
         Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
-        CommentCreateResponseDto commentCreateResponseDto = commentService.createComment(
+        CommentCreateResponseDto commentCreateResponseDto = commentService.writeComment(
                 commentCreateRequestDto, memberId, postId);
 
         return ApiResponse.success(commentCreateResponseDto);

@@ -1,7 +1,5 @@
 package today.sesac.shoutify.comment.service;
 
-import java.time.LocalDateTime;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +9,12 @@ import today.sesac.shoutify.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.shoutify.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.shoutify.comment.dto.response.CommentListResponseDto;
 import today.sesac.shoutify.comment.entity.Comment;
+import today.sesac.shoutify.comment.exception.CommentErrorCode;
+import today.sesac.shoutify.comment.exception.CommentException;
 import today.sesac.shoutify.comment.repository.CommentRepository;
+import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.member.service.MemberService;
+import today.sesac.shoutify.post.entity.Post;
 import today.sesac.shoutify.post.service.PostQueryService;
 
 /**
@@ -31,7 +33,7 @@ public class CommentService {
 
     /**
      * 댓글을 작성합니다.
-     * TODO 생성 로직 수정, 검증 로직 추가
+     * TODO 검증 로직 추가
      *
      * @param commentCreateRequestDto 댓글 작성 요청 DTO
      * @param commenterId             댓글 작성자 회원 ID
@@ -39,23 +41,47 @@ public class CommentService {
      * @return 댓글 작성 응답 DTO
      */
     @Transactional
-    public CommentCreateResponseDto createComment(CommentCreateRequestDto commentCreateRequestDto,
+    public CommentCreateResponseDto writeComment(CommentCreateRequestDto commentCreateRequestDto,
             Long commenterId, Long postId) {
 
-        return CommentCreateResponseDto.testOf(
-                1L,
-                postId,
-                commenterId,
-                "commenterTempNickname",
-                commentCreateRequestDto.parentId(),
+        // TODO 해당 메서드 구현 PR 머지되어야 가능
+        Post activePost = postQueryService.getActivePostById(postId);
+
+        Member member = memberService.getMember(commenterId); // TODO ActiveMember 가져오도록 수정 필요
+
+        String afterContent = "AI가 변경해 준 content"; // TODO: AI 처리 로직 추가 예정
+
+        Comment comment = createRootOrReplyComment(commentCreateRequestDto, afterContent,
+                activePost, member);
+        Comment savedComment = commentRepository.save(comment);
+        savedComment.updatePath(); // 댓글 경로 자동 생성
+        return CommentCreateResponseDto.of(savedComment);
+
+    }
+
+    private Comment createRootOrReplyComment(
+            CommentCreateRequestDto commentCreateRequestDto,
+            String afterContent, Post activePost, Member member) {
+
+        if (commentCreateRequestDto.parentId() == null) {
+            return Comment.createRootLevelComment(
+                    commentCreateRequestDto.content(),
+                    afterContent,
+                    activePost,
+                    member
+            );
+        }
+
+        Comment parentComment = commentRepository.findById(commentCreateRequestDto.parentId())
+                .orElseThrow(() -> new CommentException(
+                        CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
+
+        return Comment.createReplyComment(
                 commentCreateRequestDto.content(),
-                0,
-                0,
-                Map.of(),
-                false,
-                false,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                afterContent,
+                activePost,
+                parentComment,
+                member
         );
     }
 
