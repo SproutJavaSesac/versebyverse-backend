@@ -46,19 +46,26 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
+    // TODO @prac2317 스키마 확인 필
+    private boolean isDeleted;
+
     private Member(RoleType roleType, SocialType socialType, String email, String nickname) {
+
         this.roleType = roleType;
         this.socialType = socialType;
         this.email = email;
         this.nickname = nickname;
+        this.isDeleted = false;
     }
 
     public static Member create(RoleType roleType, SocialType socialType, String email,
             String nickname) {
+
         return new Member(roleType, socialType, email, nickname);
     }
 
     public void editProfile(String nickname) {
+
         this.nickname = nickname;
     }
 }
