@@ -57,4 +57,8 @@ public class Member extends BaseEntity {
             String nickname) {
         return new Member(roleType, socialType, email, nickname);
     }
+
+    public void editProfile(String nickname) {
+        this.nickname = nickname;
+    }
 }

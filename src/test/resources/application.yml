@@ -13,6 +13,10 @@ spring:
       hibernate:
         format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
         show-sql: true # hibernate가 실행하는 SQL을 로그로 출력
+  # 테스트에서는 data.sql 실행 안 함
+  sql:
+    init:
+      mode: never
 
   web:
     resources:
