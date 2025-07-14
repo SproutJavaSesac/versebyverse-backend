@@ -867,3 +867,40 @@ VALUES (181, 10, 1, NULL, 'P10-L0-1', 'P10-L0-1', 0, '181', false, false, NOW(),
        (198, 10, 8, 191, 'P10-L2-5', 'P10-L2-5', 2, '184-191-198', false, false, NOW(), NOW()),
        (199, 10, 9, 192, 'P10-L2-6', 'P10-L2-6', 2, '185-192-199', false, false, NOW(), NOW()),
        (200, 10, 10, 193, 'P10-L2-7', 'P10-L2-7', 2, '186-193-200', false, false, NOW(), NOW());
+
+-- ranking
+-- Member 1의 10일치 DAILY POST 랭킹 데이터 (최근 10일)
+-- 각 날짜별로 다른 점수와 순위를 가지도록 설정
+INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank, created_at)
+VALUES
+-- 오늘 (가장 높은 점수)
+(11, 1, 1, 950, 'DAILY', 'POST', 2, DATE_SUB(NOW(), INTERVAL 0 DAY)),
+
+-- 1일 전
+(12, 1, 2, 870, 'DAILY', 'POST', 3, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+
+-- 2일 전
+(13, 1, 3, 820, 'DAILY', 'POST', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+
+-- 3일 전
+(14, 1, 1, 910, 'DAILY', 'POST', 4, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+
+-- 4일 전
+(15, 1, 4, 750, 'DAILY', 'POST', 2, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+
+-- 5일 전
+(16, 1, 2, 880, 'DAILY', 'POST', 5, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+
+-- 6일 전
+(17, 1, 5, 680, 'DAILY', 'POST', 3, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+
+-- 7일 전
+(18, 1, 3, 800, 'DAILY', 'POST', 6, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+
+-- 8일 전
+(19, 1, 6, 620, 'DAILY', 'POST', 4, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+
+-- 9일 전 (가장 낮은 점수)
+(20, 1, 7, 580, 'DAILY', 'POST', 7, DATE_SUB(NOW(), INTERVAL 9 DAY));
+
+-- 나머지 회원들의 랭킹 데이터
