@@ -42,6 +42,7 @@ public class MemberService {
      */
     public Member createMember(RoleType roleType, SocialType socialType, String email,
             String nickname) {
+
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
         return savedMember;
@@ -54,6 +55,7 @@ public class MemberService {
      * @return Member 객체
      */
     public Member findById(Long memberId) {
+
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
@@ -61,6 +63,7 @@ public class MemberService {
     }
 
     public Member findByEmailAndSocialType(String email, SocialType socialType) {
+
         Member member = memberRepository.findByEmailAndSocialType(email, socialType).orElseThrow(
                 () -> new MemberNotFoundException(email + ", " + socialType,
                         "해당 email을 가진 회원을 찾을 수 없습니다.")
@@ -69,6 +72,7 @@ public class MemberService {
     }
 
     public Member getMember(Long memberId) {
+
         return memberRepository.findById(memberId)
                 // TODO 에러코드 수정 예정
                 .orElseThrow(
@@ -76,6 +80,7 @@ public class MemberService {
     }
 
     public MyInfoGetResponseDto getMemberInformation(Long memberId) {
+
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
@@ -87,6 +92,7 @@ public class MemberService {
     }
 
     private MyInfoGetResponseDto convertMemberToInfo(Member member) {
+
         MyInfoGetResponseDto myInfoGetResponseDto = new MyInfoGetResponseDto();
         myInfoGetResponseDto.setMemberId(member.getId());
         myInfoGetResponseDto.setNickname(member.getNickname());
@@ -195,6 +201,7 @@ public class MemberService {
     }
 
     private MyPostSummary convertPostToSummary(Post post) {
+
         MyPostSummary summary = new MyPostSummary();
 
         summary.setPostId(post.getId());
@@ -215,6 +222,7 @@ public class MemberService {
     }
 
     private MyCommentSummary convertCommentToSummary(Comment comment) {
+
         MyCommentSummary summary = new MyCommentSummary();
 
         summary.setCommentId(comment.getId());
@@ -228,5 +236,22 @@ public class MemberService {
         summary.setReactionCount((int) (Math.random() * 20) + 1);
 
         return summary;
+    }
+
+    /**
+     * 주어진 memberId가 존재하고, 활성 상태의 회원인지 확인합니다.
+     *
+     * @param memberId 확인할 회원의 ID
+     * @throws MemberNotFoundException 해당 ID를 가진 회원이 존재하지 않거나 삭제된 경우 예외 발생
+     */
+    public void validateMemberActiveExists(Long memberId) {
+
+        if (!memberRepository.existsByIdAndIsDeletedFalse(memberId)) {
+            throw new MemberNotFoundException(null,
+                    String.format(
+                            "해당 id를 가진 회원을 찾을 수 없습니다. memberId: %d",
+                            memberId
+                    ));
+        }
     }
 }
