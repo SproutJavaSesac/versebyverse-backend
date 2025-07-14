@@ -33,11 +33,15 @@ public class RankingService {
     private static final String RANKING_UP = "+";
 
     /**
-     * 순위(랭킹) 정보를 조회합니다.
+     * 특정 카테고리와 기간 유형에 해당하는 순위(랭킹) 정보를 조회합니다.
      *
-     * @param category 조회할 순위(랭킹) 카테고리
+     * @param category    조회할 순위(랭킹) 카테고리
+     * @param periodType  조회할 순위(랭킹) 기간 유형
+     * @param periodValue 조회할 순위(랭킹) 기간 값 (예: 특정 날짜)
+     * @param pageable    페이징 정보
+     * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
-    public RankingListResponseDto getRankingsByCategory(RankingCategory category,
+    public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
             RankingPeriodType periodType, LocalDate periodValue, Pageable pageable) {
 
         DateDuration dateDuration = TimeCalculator.getStartDateAndEndDateByDuration(periodValue,

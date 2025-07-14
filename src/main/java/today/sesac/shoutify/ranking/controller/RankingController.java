@@ -38,7 +38,7 @@ public class RankingController {
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
     @GetMapping
-    public ApiResponse<RankingListResponseDto> getRankingsByCategory(
+    public ApiResponse<RankingListResponseDto> getRankingsByCategoryAndPeriod(
             @RequestParam("category") RankingCategory category,
             @RequestParam(value = "periodType") RankingPeriodType periodType,
             @RequestParam(value = "periodValue") LocalDate periodValue,
@@ -49,7 +49,7 @@ public class RankingController {
     ) {
 
         return ApiResponse.success(
-                rankingService.getRankingsByCategory(category, periodType, periodValue,
+                rankingService.getRankingsByCategoryAndPeriod(category, periodType, periodValue,
                         PageRequest.of(page, size, Sort.by(direction, sortBy))));
     }
 }
