@@ -53,7 +53,7 @@ public class RankingService {
         LocalDateTime endDateTime = LocalDateTime.now();
         List<MyRankingSummary> myRankingSummaryList = rankingRepository
                 .findAllByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
-                        member.getId(), category, periodType,
+                        memberId, category, periodType,
                         getStartTimeFromEndTimeAndPeriod(
                                 endDateTime, periodType, maxCount),
                         endDateTime)
@@ -71,10 +71,10 @@ public class RankingService {
 
     // todo periodType 추가 시 수정 필요
     private LocalDateTime getStartTimeFromEndTimeAndPeriod(LocalDateTime endDateTime,
-            RankingPeriodType periodType, int period) {
+            RankingPeriodType periodType, int maxCount) {
 
         return switch (periodType) {
-            case DAILY -> endDateTime.minusDays(period);
+            case DAILY -> endDateTime.minusDays(maxCount - 1L);
         };
     }
 
