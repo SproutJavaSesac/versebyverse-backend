@@ -7,25 +7,25 @@ import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 /**
  * 시간 계산을 위한 유틸리티 클래스.
  */
-public final class TimeCalculator {
+public final class DateTimeRangeCalculator {
 
-    private TimeCalculator() {
+    private DateTimeRangeCalculator() {
 
     }
 
     /**
-     * 주어진 날짜와 기간 유형에 따라 시작 시각과 종료 시각을 계산하여 {@link DateDuration} 객체를 반환합니다.
+     * 주어진 날짜와 기간 유형에 따라 시작 시각과 종료 시각을 계산하여 {@link DateTimeRange} 객체를 반환합니다.
      *
      * @param periodValue 기간 값 (예: 특정 날짜)
      * @param periodType  기간 유형 (일간, 주간, 월간, 연간)
-     * @return 해당 기간의 시작 시각과 종료 시각을 포함하는 {@link DateDuration} 객체
+     * @return 해당 기간의 시작 시각과 종료 시각을 포함하는 {@link DateTimeRange} 객체
      */
-    public static DateDuration getStartDateAndEndDateByDuration(LocalDate periodValue,
+    public static DateTimeRange getStartDateAndEndDateByDuration(LocalDate periodValue,
             RankingPeriodType periodType) {
 
         LocalDateTime startDateTime = getStartTimeOfDate(periodValue);
         LocalDateTime endDateTime = getEndTimeByPeriodAndDate(periodValue, periodType);
-        return new DateDuration(startDateTime, endDateTime);
+        return new DateTimeRange(startDateTime, endDateTime);
     }
 
     /**

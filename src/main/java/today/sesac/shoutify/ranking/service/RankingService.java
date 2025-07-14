@@ -13,8 +13,8 @@ import today.sesac.shoutify.ranking.entity.Ranking;
 import today.sesac.shoutify.ranking.entity.RankingCategory;
 import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 import today.sesac.shoutify.ranking.repository.RankingRepository;
-import today.sesac.shoutify.ranking.util.DateDuration;
-import today.sesac.shoutify.ranking.util.TimeCalculator;
+import today.sesac.shoutify.ranking.util.DateTimeRange;
+import today.sesac.shoutify.ranking.util.DateTimeRangeCalculator;
 
 /**
  * 순위(랭킹) 정보를 관리하는 서비스입니다. 다른 서비스에서 순위 정보를 조회할 때 사용됩니다.
@@ -44,11 +44,12 @@ public class RankingService {
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
             RankingPeriodType periodType, LocalDate periodValue, Pageable pageable) {
 
-        DateDuration dateDuration = TimeCalculator.getStartDateAndEndDateByDuration(periodValue,
+        DateTimeRange dateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByDuration(
+                periodValue,
                 periodType);
 
         Page<Ranking> rankings = rankingRepository.findAllByCategoryAndPeriodTypeAndCreatedAtBetween(
-                category, periodType, dateDuration.startDateTime(), dateDuration.endDateTime(),
+                category, periodType, dateTimeRange.startDateTime(), dateTimeRange.endDateTime(),
                 pageable);
 
         List<RankingSingleResponseDto> rankingDtoList = rankings.stream()

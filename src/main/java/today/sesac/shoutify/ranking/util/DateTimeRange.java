@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * @param startDateTime 시작 시각
  * @param endDateTime   종료 시각
  */
-public record DateDuration(
+public record DateTimeRange(
         LocalDateTime startDateTime,
         LocalDateTime endDateTime
 ) {
