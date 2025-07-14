@@ -69,9 +69,9 @@ public class RankingService {
         } else if (rank == previousRank) {
             return RANKING_UNCHANGED;
         } else {
-            return rank - previousRank > 0
-                    ? RANKING_UP + (rank - previousRank)
-                    : String.valueOf(rank - previousRank);
+            return previousRank - rank > 0
+                    ? RANKING_UP + (previousRank - rank)
+                    : String.valueOf(previousRank - rank);
         }
     }
 
