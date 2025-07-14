@@ -1,8 +1,11 @@
 package today.sesac.shoutify.member.controller;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +26,7 @@ import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 import today.sesac.shoutify.ranking.service.RankingService;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
@@ -77,11 +81,12 @@ public class MemberController {
     public ApiResponse<MyRankingListResponseDto> getMemberRankings(
             @RequestParam(defaultValue = "POST") RankingCategory category,
             @RequestParam(defaultValue = "DAILY") RankingPeriodType periodType,
-            @RequestParam(defaultValue = "7") int maxCount,
+            @RequestParam(defaultValue = "7") @Min(value = 1) @Max(value = 30) int maxCount,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
-        Long memberId = userPrincipal.getMemberId();
+        Long memberId = 1L;
+//        Long memberId = userPrincipal.getMemberId();
         MyRankingListResponseDto myRankingListResponseDto = rankingService.getMyRankingByMemberId(
                 memberId, category, periodType, maxCount);
         return ApiResponse.success(myRankingListResponseDto);
