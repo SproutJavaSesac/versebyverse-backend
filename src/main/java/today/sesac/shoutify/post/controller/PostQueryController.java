@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.global.response.ApiResponse;
 import today.sesac.shoutify.global.response.PaginationDto;
 import today.sesac.shoutify.post.dto.response.PageResponseDto;
@@ -38,7 +39,8 @@ public class PostQueryController {
      */
     @GetMapping
     public ApiResponse<PageResponseDto<PostSummaryResponseDto>> getPostsList(
-            @RequestParam(required = false) String concept, // null이면 전체 조회
+            @RequestParam(defaultValue = "ALL") Concept concept,
+            // concept이 null이면 all인경우와 같은 로직 사용(필터링 없이 최신순 조회)
             @RequestParam(defaultValue = "latest") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
