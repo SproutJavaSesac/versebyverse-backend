@@ -20,7 +20,8 @@ import today.sesac.shoutify.global.domain.BaseEntityOnlyCreatedAt;
 import today.sesac.shoutify.member.entity.Member;
 
 /**
- * 순위(랭킹) 정보입니다. 정적 팩토리 메서드 {@link #create(Member, RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
+ * 순위(랭킹) 정보입니다. 정적 팩토리 메서드
+ * {@link #createFirstEntry(Member, RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
  */
 @Getter
 @Entity
@@ -87,6 +88,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
             Integer previousRank,
             RankingPeriodType periodType
     ) {
+
         this.member = member;
         this.category = category;
         this.score = score;
@@ -105,18 +107,44 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
      * @param periodType 순위의 기간 타입
      * @return 랭킹 객체
      */
-    public static Ranking create(
+    public static Ranking createFirstEntry(
             Member member,
             RankingCategory category,
             int score, int rank,
             RankingPeriodType periodType
     ) {
+
         return new Ranking(
                 member,
                 category,
                 score,
                 rank,
                 null, // 초기 이전 순위 X
+                periodType
+        );
+    }
+
+    /**
+     * 순위(랭킹)를 생성합니다. 이전 순위가 있는 경우에 사용합니다.
+     *
+     * @param member          순위에 진입하는 회원
+     * @param rankingCategory 순위 카테고리
+     * @param postCount       순위에 반영되는 게시글 수
+     * @param rank            현재 순위
+     * @param previousRank    이전 순위
+     * @param periodType      순위의 기간 타입
+     * @return 랭킹 객체
+     */
+    public static Ranking createWithPreviousRank(Member member, RankingCategory rankingCategory,
+            int postCount,
+            int rank, int previousRank, RankingPeriodType periodType) {
+
+        return new Ranking(
+                member,
+                rankingCategory,
+                postCount,
+                rank,
+                previousRank,
                 periodType
         );
     }
