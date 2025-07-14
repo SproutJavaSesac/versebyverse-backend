@@ -19,30 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      *
      * @param startDate 조회 시작 날짜
      * @param endDate   조회 종료 날짜
-     * @return 작성자 ID와 해당 작성자의 게시글 수, 랭킹 정보가 포함된 튜플 리스트
-     */
-    @Query(value = """
-            SELECT RANK() over (ORDER BY COUNT(p.id) DESC) AS ranks,
-            p.author_id AS author_id,
-            COUNT(p.id) AS postCount,
-            JSON_ARRAYAGG(p.id) AS postIds
-            FROM posts p JOIN members m ON p.author_id = m.id
-            WHERE p.created_at BETWEEN :startDate AND :endDate
-            AND p.is_deleted = false And p.is_hidden = false And p.is_reported = false
-            AND m.is_deleted = false
-            GROUP BY p.author_id
-            ORDER BY postCount DESC
-            """, nativeQuery = true)
-    List<Tuple> findPostsWithRankByNativeQuery(
-            LocalDateTime startDate,
-            LocalDateTime endDate
-    );
-
-    /**
-     * 특정 기간 동안 작성된 게시글의 작성자별 게시글 수를 조회하고, 작성자별로 랭킹을 매깁니다.
-     *
-     * @param startDate 조회 시작 날짜
-     * @param endDate   조회 종료 날짜
      * @return 작성자와 해당 작성자의 게시글 수, 랭킹 정보가 포함된 튜플 리스트
      */
     @Query(value = """
