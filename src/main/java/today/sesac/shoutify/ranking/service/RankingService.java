@@ -1,11 +1,16 @@
 package today.sesac.shoutify.ranking.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.shoutify.member.dto.response.MyRankingListResponseDto;
+import today.sesac.shoutify.member.dto.response.MyRankingSummary;
+import today.sesac.shoutify.member.service.MemberService;
 import today.sesac.shoutify.ranking.entity.Ranking;
 import today.sesac.shoutify.ranking.entity.RankingCategory;
+import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 import today.sesac.shoutify.ranking.repository.RankingRepository;
 
 /**
@@ -18,6 +23,8 @@ public class RankingService {
 
     private final RankingRepository rankingRepository;
 
+    private final MemberService memberService;
+
     /**
      * 순위(랭킹) 정보를 조회합니다.
      * TODO 추후 RankingResponse로 변경 예정
@@ -25,16 +32,50 @@ public class RankingService {
      * @param category 조회할 순위(랭킹) 카테고리
      */
     public List<Ranking> getRankingsByCategory(RankingCategory category) {
+
         return List.of();
     }
 
     /**
-     * 내 순위(랭킹) 정보를 조회합니다.
+     * 특정 회원의 순위(랭킹) 정보를 조회합니다.
      *
-     * @param memberId 회원 ID
-     * @return 내 순위(랭킹) 정보
+     * @param memberId   회원 ID
+     * @param category   조회할 순위(랭킹) 카테고리
+     * @param periodType 조회할 기간 타입
+     * @param maxCount   조회하는 랭킹 최대 개수(최대 30개)
+     * @return 해당 회원의 순위(랭킹) 정보
      */
-    public Ranking getMyRankingByMemberId(Long memberId) {
-        return null;
+    public MyRankingListResponseDto getMyRankingByMemberId(Long memberId, RankingCategory category,
+            RankingPeriodType periodType, int maxCount) {
+
+        memberService.validateMemberActiveExists(memberId);
+
+        LocalDateTime endDateTime = LocalDateTime.now();
+        List<MyRankingSummary> myRankingSummaryList = rankingRepository
+                .findAllByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
+                        member.getId(), category, periodType,
+                        getStartTimeFromEndTimeAndPeriod(
+                                endDateTime, periodType, maxCount),
+                        endDateTime)
+                .stream()
+                .map(ranking -> {
+                    String rankChange = getRankChangeWithSymbol(ranking.getRanks(),
+                            ranking.getPreviousRank());
+                    return new MyRankingSummary(ranking, rankChange);
+                }).toList();
+
+        return new MyRankingListResponseDto(
+                category, maxCount, periodType, myRankingSummaryList
+        );
     }
+
+    // todo periodType 추가 시 수정 필요
+    private LocalDateTime getStartTimeFromEndTimeAndPeriod(LocalDateTime endDateTime,
+            RankingPeriodType periodType, int period) {
+
+        return switch (periodType) {
+            case DAILY -> endDateTime.minusDays(period);
+        };
+    }
+
 }
