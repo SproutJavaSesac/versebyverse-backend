@@ -26,6 +26,7 @@ public class PostQueryService {
      * @return postSingleQueryResponseDto
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
+
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
 
@@ -33,5 +34,18 @@ public class PostQueryService {
                 foundPost.getAfterContent(), foundPost.getAuthor().getNickname(),
                 foundPost.getCreatedAt(), foundPost.getImageUrl(),
                 foundPost.getConceptType().toString(), foundPost.isMine(memberId));
+    }
+
+    /**
+     * 게시글이 존재하는지 확인합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @throws PostException 게시글이 존재하지 않을 경우
+     */
+    public void validateActivePostByIdOrThrow(Long postId) {
+
+        if (!postRepository.existsByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)) {
+            throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
+        }
     }
 }
