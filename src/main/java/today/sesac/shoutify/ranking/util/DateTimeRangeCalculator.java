@@ -41,7 +41,7 @@ public final class DateTimeRangeCalculator {
 
     /**
      * 주어진 기간 유형과 날짜에 따라 종료 시각을 계산합니다.
-     * todo weekly, monthly, yearly에 대해 각각 일/월, 1일, 1월이 시작이 아니라면 예외 처리 필요
+     * todo weekly, monthly, yearly에 대해 각각 일/월, 1일, 1월이 시작이 아니라면 예외/자동 보정 처리 필요
      *
      * @param periodValue 기간 값 (예: 특정 날짜)
      * @param periodType  기간 유형 (일간, 주간, 월간, 연간)

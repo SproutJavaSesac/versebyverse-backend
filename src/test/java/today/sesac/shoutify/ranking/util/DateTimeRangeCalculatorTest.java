@@ -13,6 +13,74 @@ import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 class DateTimeRangeCalculatorTest {
 
     @Test
+    @DisplayName("[unit][정상] 일간 기간으로 시작/종료 시각을 계산한다")
+    void calculateDailyPeriod() {
+        // given
+        LocalDate testDate = LocalDate.of(2024, 1, 15);
+        RankingPeriodType periodType = RankingPeriodType.DAILY;
+
+        // when
+        DateTimeRange result = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(testDate,
+                periodType);
+
+        // then
+        assertThat(result.startDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 15, 0, 0, 0));
+        assertThat(result.endDateTime()).isEqualTo(
+                LocalDateTime.of(2024, 1, 15, 23, 59, 59, 999_999_999));
+    }
+
+    @Test
+    @DisplayName("[unit][정상] 주간 기간으로 시작/종료 시각을 계산한다")
+    void calculateWeeklyPeriod() {
+        // given
+        LocalDate testDate = LocalDate.of(2024, 1, 14);
+        RankingPeriodType periodType = RankingPeriodType.WEEKLY;
+
+        // when
+        DateTimeRange result = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(testDate,
+                periodType);
+
+        // then
+        assertThat(result.startDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 14, 0, 0, 0));
+        assertThat(result.endDateTime()).isEqualTo(
+                LocalDateTime.of(2024, 1, 20, 23, 59, 59, 999_999_999));
+    }
+
+    @Test
+    @DisplayName("[unit][정상] 월간 기간으로 시작/종료 시각을 계산한다")
+    void calculateMonthlyPeriod() {
+        // given
+        LocalDate testDate = LocalDate.of(2024, 1, 2);
+        RankingPeriodType periodType = RankingPeriodType.MONTHLY;
+
+        // when
+        DateTimeRange result = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(testDate,
+                periodType);
+
+        // then
+        assertThat(result.startDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 2, 0, 0, 0));
+        assertThat(result.endDateTime()).isEqualTo(
+                LocalDateTime.of(2024, 2, 1, 23, 59, 59, 999_999_999));
+    }
+
+    @Test
+    @DisplayName("[unit][정상] 연간 기간으로 시작/종료 시각을 계산한다")
+    void calculateYearlyPeriod() {
+        // given
+        LocalDate testDate = LocalDate.of(2024, 1, 2);
+        RankingPeriodType periodType = RankingPeriodType.YEARLY;
+
+        // when
+        DateTimeRange result = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(testDate,
+                periodType);
+
+        // then
+        assertThat(result.startDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 2, 0, 0, 0));
+        assertThat(result.endDateTime()).isEqualTo(
+                LocalDateTime.of(2025, 1, 1, 23, 59, 59, 999_999_999));
+    }
+
+    @Test
     @DisplayName("[unit][경계] 윤년 2월의 월간 기간을 계산한다")
     void calculateLeapYearFebruary() {
         // given
