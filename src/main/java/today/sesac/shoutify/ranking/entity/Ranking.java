@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,14 +21,11 @@ import today.sesac.shoutify.member.entity.Member;
 /**
  * 순위(랭킹) 정보입니다. 정적 팩토리 메서드
  * {@link #createFirstEntry(Member, RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
+ * todo 기간과 함께 unique 고려 필요
  */
 @Getter
 @Entity
-@Table(name = "rankings",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"member_id", "category", "period_type"})
-        }
-)
+@Table(name = "rankings")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ranking extends BaseEntityOnlyCreatedAt {
 
