@@ -51,10 +51,10 @@ public final class DateTimeRangeCalculator {
             RankingPeriodType periodType) {
 
         return switch (periodType) {
-            case DAILY -> periodValue.plusDays(1).atStartOfDay();
-            case WEEKLY -> periodValue.plusWeeks(1).atStartOfDay();
-            case MONTHLY -> periodValue.plusMonths(1).atStartOfDay();
-            case YEARLY -> periodValue.plusYears(1).atStartOfDay();
+            case DAILY -> periodValue.plusDays(1).atStartOfDay().minusNanos(1); // 하루의 마지막 시각
+            case WEEKLY -> periodValue.plusWeeks(1).atStartOfDay().minusNanos(1);
+            case MONTHLY -> periodValue.plusMonths(1).atStartOfDay().minusNanos(1);
+            case YEARLY -> periodValue.plusYears(1).atStartOfDay().minusNanos(1);
         };
     }
 
