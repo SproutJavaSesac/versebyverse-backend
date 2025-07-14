@@ -1,5 +1,6 @@
 package today.sesac.shoutify.ranking.dto.response;
 
+import java.time.LocalDateTime;
 import today.sesac.shoutify.ranking.entity.Ranking;
 
 /**
@@ -20,7 +21,8 @@ public record RankingSingleResponseDto(
         int categoryValue,
         int rank,
         Integer previousRank,
-        String rankChange
+        String rankChange,
+        LocalDateTime createdAt
 ) {
 
     /**
@@ -41,7 +43,8 @@ public record RankingSingleResponseDto(
                 ranking.getScore(),
                 ranking.getRanks(),
                 ranking.getPreviousRank(),
-                rankChange
+                rankChange,
+                ranking.getCreatedAt()
         );
     }
 
