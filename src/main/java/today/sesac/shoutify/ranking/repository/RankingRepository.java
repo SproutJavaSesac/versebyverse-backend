@@ -1,8 +1,13 @@
 package today.sesac.shoutify.ranking.repository;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import today.sesac.shoutify.member.entity.Member;
 import today.sesac.shoutify.ranking.entity.Ranking;
+import today.sesac.shoutify.ranking.entity.RankingCategory;
+import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 
 /**
  * 순위(랭킹) 정보를 관리하는 레포지토리입니다. 기본적으로 순위 서비스에서 사용됩니다.
@@ -10,4 +15,17 @@ import today.sesac.shoutify.ranking.entity.Ranking;
 @Repository
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
 
+    /**
+     * 특정 회원의 순위(랭킹)를 조회합니다.
+     *
+     * @param member 회원
+     * @return {@code Optional<Ranking>} 해당 회원의 순위 정보.
+     */
+    Optional<Ranking> findByMemberAndCategoryAndPeriodTypeAndCreatedAtBetween(
+            Member member,
+            RankingCategory category,
+            RankingPeriodType rankingPeriodType,
+            LocalDateTime start,
+            LocalDateTime end
+    );
 }

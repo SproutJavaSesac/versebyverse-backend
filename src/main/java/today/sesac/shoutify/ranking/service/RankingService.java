@@ -1,6 +1,5 @@
 package today.sesac.shoutify.ranking.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,20 +51,20 @@ public class RankingService {
     }
 
     /**
-     * 하루 단위로 순위(랭킹)를 계산합니다. 어제 하루 동안의 게시글 수를 기준으로 회원의 순위를 계산합니다.
+     * 일정 기간 단위로 순위(랭킹)를 계산합니다. 해당 기간 동안의 게시글 수를 기준으로 회원의 순위를 계산합니다.
+     *
+     * @param startDateTime 시작 날짜 및 시간
+     * @param endDateTime   종료 날짜 및 시간
+     * @param periodType    순위(랭킹) 기간 유형 (예: 일간, 주간 등)
      */
     @Transactional
-    public void calculatePostsRankingPerDay() {
-
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        LocalDateTime yesterdayStartTime = yesterday.atStartOfDay();        // 어제 00시
-        LocalDateTime yesterdayEndTime = yesterdayStartTime.plusDays(1)
-                .minusSeconds(1);        // 어제 23시 59분 59초
+    public void calculatePostsRanking(LocalDateTime startDateTime, LocalDateTime endDateTime,
+            RankingPeriodType periodType) {
 
         List<AuthorPostStatDto> authorAndPostCounts = postQueryService.getAuthorAndPostCounts(
-                yesterdayStartTime, yesterdayEndTime);
+                startDateTime, endDateTime);
 
-        int previousPostCount = 0;
+        int lastProcessedPostCount = 0;
         int rank = 0;
         for (int i = 0; i < authorAndPostCounts.size(); i++) {
 
@@ -73,45 +72,49 @@ public class RankingService {
             Member member = authorAndPostCounts.get(i).author();
             // TODO null, long -> int 예외 확인 필요
             int postCount = authorAndPostCounts.get(i).postCount().intValue();
-            if (i == 0 || previousPostCount != postCount) {
+            if (i == 0 || lastProcessedPostCount != postCount) {
                 rank = i + 1;
             }
 
             // 어제 날짜로 createdAt에서 어제 날짜, member, category 조회 후 없으면 새로 저장, 있으면 update
-            Optional<Ranking> existingRankingOptinal =
-                    rankingRepository.findByMemberAndCategoryAndPeriodTypeAndCreatedAtBetween(
-                            member, RankingCategory.POST,
-                            RankingPeriodType.DAILY,
-                            yesterdayStartTime,
-                            yesterdayEndTime
-                    );
+            saveRankingNewOrWithPrevious(member, postCount, rank, startDateTime, endDateTime,
+                    periodType);
 
-            Ranking ranking;
-            boolean isNewRanking = existingRankingOptinal.isEmpty();
-            if (isNewRanking) {
-                ranking = createNewRanking(member, postCount, rank);
-                previousPostCount = postCount;
-            } else {
-                ranking = createRankingWithPreviousRank(member, postCount, rank,
-                        existingRankingOptinal.get().getPreviousRank());
-            }
-            rankingRepository.save(ranking);
+            lastProcessedPostCount = postCount;
         }
     }
 
-    private Ranking createNewRanking(Member member, int postCount, int rank) {
+    private void saveRankingNewOrWithPrevious(Member member, int postCount, int rank,
+            LocalDateTime startDateTime, LocalDateTime endDateTime, RankingPeriodType periodType) {
+
+        Optional<Ranking> existingRanking = rankingRepository.findByMemberAndCategoryAndPeriodTypeAndCreatedAtBetween(
+                member, RankingCategory.POST,
+                periodType,
+                startDateTime, endDateTime
+        );
+
+        Ranking ranking = existingRanking
+                .map(existing -> createRankingWithPreviousRank(
+                        member, postCount, rank, existing.getRanks(), periodType))
+                .orElse(createNewRanking(member, postCount, rank, periodType));
+
+        rankingRepository.save(ranking);
+    }
+
+    private Ranking createNewRanking(Member member, int postCount, int rank,
+            RankingPeriodType periodType) {
 
         return Ranking.createFirstEntry(
                 member,
                 RankingCategory.POST,
                 postCount,
                 rank,
-                RankingPeriodType.DAILY
+                periodType
         );
     }
 
     private Ranking createRankingWithPreviousRank(Member member, int postCount, int rank,
-            int previousRank) {
+            int previousRank, RankingPeriodType periodType) {
         // 업데이트
         return Ranking.createWithPreviousRank(
                 member,
@@ -119,7 +122,7 @@ public class RankingService {
                 postCount,
                 rank,
                 previousRank,
-                RankingPeriodType.DAILY
+                periodType
         );
     }
 }
