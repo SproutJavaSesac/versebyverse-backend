@@ -14,7 +14,11 @@ import today.sesac.shoutify.post.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    //전체 조회 댓글순 sort
+    /**
+     * 게시물 전체 조회 + 댓글 순 정렬.
+     *
+     * @param pageable 페이지네이션 정보
+     */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Comment c ON p.id = c.post.id
             GROUP BY p.id
@@ -29,17 +33,27 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    GROUP BY p.id
 //    ORDER BY COUNT(r.id) DESC
 //      """)
-//    Page<Post> findAllOrderByReactionCount(Pageable pageable);
+//Page<Post> findAllOrderByReactionCount(Pageable pageable);
 
 
-    //컨셉별 최신순 sort
+    /**
+     * 컨셉별 조회 + 최신순 정렬.
+     *
+     * @param conceptType 컨셉 타입
+     * @param pageable    페이지네이션 정보
+     */
     @Query("""
             SELECT p FROM Post p 
             WHERE p.conceptType = :conceptType
             """)
     Page<Post> findByConceptType(Concept conceptType, Pageable pageable);
 
-    //컨셉별 댓글순 sort
+    /**
+     * 컨셉별 조회 + 댓글순 정렬.
+     *
+     * @param conceptType 컨셉 타입
+     * @param pageable    페이지네이션 정보
+     */
     @Query("""
             SELECT p FROM Post p
             LEFT JOIN Comment c ON p.id = c.post.id

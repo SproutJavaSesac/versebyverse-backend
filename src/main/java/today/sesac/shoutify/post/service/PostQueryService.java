@@ -43,41 +43,33 @@ public class PostQueryService {
 
 
         if (!filterByConcept) {
-            //filterByConcept이 false일때 (concept이 all이거나 null이어서 필터링 없이 전체조회)
-            switch (sortBy) {
+            //filterByConcept이 false 일때 (concept이 all 이거나 null 이어서 필터링 없이 전체조회)
+            postPage = switch (sortBy) {
                 //전체조회 + comment순 정렬
-                case "comments":
-                    postPage = postRepository.findAllOrderByCommentCount(pageable);
-                    break;
+                case "comments" -> postRepository.findAllOrderByCommentCount(pageable);
                 //전체조회 + reaction순 정렬
-                case "reactions":
+                case "reactions" ->
                     //TODO 반응하기 임시 기본 정렬 대체
-                    postPage = postRepository.findByConceptType(conceptType, pageable);
+                        postRepository.findByConceptType(conceptType, pageable);
 //                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
 //                            pageable);
-                    break;
                 //전체 조회 + 최신순 정렬
-                default:
-                    postPage = postRepository.findAll(pageable);
-            }
+                default -> postRepository.findAll(pageable);
+            };
         } else { //concept별 필터링
-            switch (sortBy) {
+            postPage = switch (sortBy) {
                 //컨셉별 조회 + comment순 정렬
-                case "comments":
-                    postPage = postRepository.findByConceptTypeOrderByCommentCount(conceptType,
-                            pageable);
-                    break;
+                case "comments" -> postRepository.findByConceptTypeOrderByCommentCount(conceptType,
+                        pageable);
                 //컨셉별 조회 + reaction순 정렬
-                case "reactions":
+                case "reactions" ->
                     //TODO 반응하기 임시 기본 정렬 대체
-                    postPage = postRepository.findByConceptType(conceptType, pageable);
+                        postRepository.findByConceptType(conceptType, pageable);
 //                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
 //                            pageable);
-                    break;
                 //컨셉별 조회 + 최신순 정렬
-                default:
-                    postPage = postRepository.findByConceptType(conceptType, pageable);
-            }
+                default -> postRepository.findByConceptType(conceptType, pageable);
+            };
         }
         //Post 객체를 dto객체로 변환
         return postPage.map(post -> {
