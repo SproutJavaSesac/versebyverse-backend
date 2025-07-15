@@ -12,7 +12,7 @@ import today.sesac.shoutify.ranking.entity.Ranking;
  * @param categoryValue         카테고리 값 (예: 특정 카테고리의 점수)
  * @param rank                  현재 순위
  * @param previousRank          이전 순위
- * @param rankChange            순위 변화 (예: 신규, 상승, 하락, 유지 등)
+ * @param rankChange            순위 변화 (예: 신규(NEW), 상승(+2), 하락(-1), 유지(-))
  */
 public record RankingSingleResponseDto(
         Long memberId,
@@ -29,7 +29,7 @@ public record RankingSingleResponseDto(
      * 순위(랭킹) 정보를 담는 생성자.
      *
      * @param ranking    순위(랭킹) 정보
-     * @param rankChange 순위 변화 (예: 신규, 상승, 하락, 유지 등)
+     * @param rankChange 순위 변화 (예: 신규(NEW), 상승(+2), 하락(-1), 유지(-))
      */
     public RankingSingleResponseDto(
             Ranking ranking,
