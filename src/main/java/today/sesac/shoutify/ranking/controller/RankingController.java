@@ -34,22 +34,22 @@ public class RankingController {
      * @param page        페이지 번호 (기본값: 0)
      * @param size        페이지 크기 (기본값: 20)
      * @param direction   정렬 방향 (기본값: DESC)
-     * @param sortBy      정렬 기준 필드 (기본값: createdAt)
+     * @param sort      정렬 기준 필드 (기본값: createdAt)
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
     @GetMapping
     public ApiResponse<RankingListResponseDto> getRankingsByCategoryAndPeriod(
-            @RequestParam("category") RankingCategory category,
-            @RequestParam(value = "periodType") RankingPeriodType periodType,
-            @RequestParam(value = "periodValue") LocalDate periodValue,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size,
-            @RequestParam(value = "direction", defaultValue = "DESC") Direction direction,
-            @RequestParam(value = "sort", defaultValue = "createdAt") String sortBy
+            @RequestParam RankingCategory category,
+            @RequestParam RankingPeriodType periodType,
+            @RequestParam LocalDate periodValue,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "DESC") Direction direction,
+            @RequestParam(defaultValue = "createdAt") String sort
     ) {
 
         return ApiResponse.success(
                 rankingService.getRankingsByCategoryAndPeriod(category, periodType, periodValue,
-                        PageRequest.of(page, size, Sort.by(direction, sortBy))));
+                        PageRequest.of(page, size, Sort.by(direction, sort))));
     }
 }
