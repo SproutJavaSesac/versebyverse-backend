@@ -2,6 +2,7 @@ package today.sesac.shoutify.ranking.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import today.sesac.shoutify.ranking.entity.RankingPeriodType;
 
 /**
@@ -50,12 +51,13 @@ public final class DateTimeRangeCalculator {
     private static LocalDateTime getEndTimeByPeriodAndDate(LocalDate periodValue,
             RankingPeriodType periodType) {
 
-        return switch (periodType) {
-            case DAILY -> periodValue.plusDays(1).atStartOfDay().minusNanos(1);
-            case WEEKLY -> periodValue.plusWeeks(1).atStartOfDay().minusNanos(1);
-            case MONTHLY -> periodValue.plusMonths(1).atStartOfDay().minusNanos(1);
-            case YEARLY -> periodValue.plusYears(1).atStartOfDay().minusNanos(1);
+        LocalDate endDate = switch (periodType) {
+            case DAILY -> periodValue;
+            case WEEKLY -> periodValue.plusWeeks(1).minusDays(1);
+            case MONTHLY -> periodValue.plusMonths(1).minusDays(1);
+            case YEARLY -> periodValue.plusYears(1).minusDays(1);
         };
-    }
 
+        return endDate.atTime(LocalTime.MAX);
+    }
 }
