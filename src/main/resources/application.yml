@@ -1,6 +1,6 @@
 spring:
   application:
-    name: shoutify
+    name: versebyverse
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
