@@ -8,15 +8,15 @@ import lombok.Getter;
 @Getter
 public abstract class AbstractBaseException extends RuntimeException {
 
-    private final IErrorCode IErrorCode;
+    private final IErrorCode iErrorCode;
 
     private final String param;
 
-    protected AbstractBaseException(IErrorCode IErrorCode, String param,
+    protected AbstractBaseException(IErrorCode iErrorCode, String param,
             String errorMessageInStackTrace) {
 
         super(errorMessageInStackTrace);
-        this.IErrorCode = IErrorCode;
+        this.iErrorCode = iErrorCode;
         this.param = param;
     }
 }
