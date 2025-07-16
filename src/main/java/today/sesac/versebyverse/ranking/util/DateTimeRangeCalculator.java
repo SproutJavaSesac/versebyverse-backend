@@ -1,9 +1,9 @@
-package today.sesac.shoutify.ranking.util;
+package today.sesac.versebyverse.ranking.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
 
 /**
  * 시간 계산을 위한 유틸리티 클래스.

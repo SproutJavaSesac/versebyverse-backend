@@ -1,4 +1,4 @@
-package today.sesac.shoutify.ranking.util;
+package today.sesac.versebyverse.ranking.util;
 
 import java.time.LocalDateTime;
 

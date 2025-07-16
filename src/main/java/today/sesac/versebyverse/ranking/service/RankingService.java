@@ -9,13 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.ranking.entity.Ranking;
 import today.sesac.versebyverse.ranking.entity.RankingCategory;
-import today.sesac.versebyverse.ranking.repository.RankingRepository;
-import today.sesac.versebyverse.ranking.dto.response.RankingListResponseDto;
-import today.sesac.versebyverse.ranking.dto.response.RankingSingleResponseDto;
-import today.sesac.versebyverse.ranking.entity.Ranking;
-import today.sesac.versebyverse.ranking.entity.RankingCategory;
 import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
 import today.sesac.versebyverse.ranking.repository.RankingRepository;
+import today.sesac.versebyverse.ranking.response.RankingListResponseDto;
+import today.sesac.versebyverse.ranking.response.RankingSingleResponseDto;
 import today.sesac.versebyverse.ranking.util.DateTimeRange;
 import today.sesac.versebyverse.ranking.util.DateTimeRangeCalculator;
 

@@ -1,4 +1,4 @@
-package today.sesac.shoutify.ranking.util;
+package today.sesac.versebyverse.ranking.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
 
 class DateTimeRangeCalculatorTest {
 

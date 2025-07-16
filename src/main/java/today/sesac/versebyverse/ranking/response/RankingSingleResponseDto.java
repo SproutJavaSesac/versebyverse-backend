@@ -1,7 +1,7 @@
-package today.sesac.shoutify.ranking.dto.response;
+package today.sesac.versebyverse.ranking.response;
 
 import java.time.LocalDateTime;
-import today.sesac.shoutify.ranking.entity.Ranking;
+import today.sesac.versebyverse.ranking.entity.Ranking;
 
 /**
  * 단일 순위(랭킹) 정보를 담는 DTO.

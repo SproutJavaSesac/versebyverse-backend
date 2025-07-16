@@ -1,9 +1,9 @@
-package today.sesac.shoutify.ranking.dto.response;
+package today.sesac.versebyverse.ranking.response;
 
 import java.time.LocalDate;
 import java.util.List;
-import today.sesac.shoutify.ranking.entity.RankingCategory;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.entity.RankingCategory;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
 
 /**
  * 특정 카테고리와 기간 유형에 해당하는 순위(랭킹) 정보를 담은 목록을 보여주는 DTO.

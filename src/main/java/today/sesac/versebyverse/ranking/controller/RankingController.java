@@ -1,4 +1,4 @@
-package today.sesac.shoutify.ranking.controller;
+package today.sesac.versebyverse.ranking.controller;
 
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import today.sesac.shoutify.global.response.ApiResponse;
-import today.sesac.shoutify.ranking.dto.response.RankingListResponseDto;
-import today.sesac.shoutify.ranking.entity.RankingCategory;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
-import today.sesac.shoutify.ranking.service.RankingService;
+import today.sesac.versebyverse.global.response.ApiResponse;
+import today.sesac.versebyverse.ranking.entity.RankingCategory;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.response.RankingListResponseDto;
+import today.sesac.versebyverse.ranking.service.RankingService;
 
 /**
  * 순위(랭킹) 정보를 관리하는 컨트롤러.
