@@ -46,16 +46,31 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
-    private Member(RoleType roleType, SocialType socialType, String email, String nickname) {
+    private String profileImageUrl;
+
+    private Member(RoleType roleType, SocialType socialType, String email, String nickname,
+            String profileImageUrl) {
         this.roleType = roleType;
         this.socialType = socialType;
         this.email = email;
         this.nickname = nickname;
+        this.profileImageUrl = profileImageUrl;
     }
 
+    /**
+     * 회원 가입합니다.
+     * todo @prac2317 프로필 이미지 url 현재는 Null로 설정, 추후 받는 걸로 변경 필요
+     *
+     * @param roleType   역할
+     * @param socialType 소셜 타입
+     * @param email      가입한 이메일
+     * @param nickname   닉네임
+     * @return 생성된 회원 엔티티
+     */
     public static Member create(RoleType roleType, SocialType socialType, String email,
             String nickname) {
-        return new Member(roleType, socialType, email, nickname);
+
+        return new Member(roleType, socialType, email, nickname, null);
     }
 
     public void editProfile(String nickname) {
