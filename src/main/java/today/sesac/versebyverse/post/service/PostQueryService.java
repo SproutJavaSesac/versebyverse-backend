@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.member.entity.Member;
-import today.sesac.versebyverse.post.dto.AuthorPostStatDto;
+import today.sesac.versebyverse.post.dto.AuthorPostCountDto;
 import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.exception.PostErrorCode;
@@ -48,12 +48,12 @@ public class PostQueryService {
      * @param endDate   종료 날짜
      * @return 작성자와 게시글 수의 리스트
      */
-    public List<AuthorPostStatDto> getAuthorAndPostCounts(LocalDateTime startDate,
+    public List<AuthorPostCountDto> getAuthorAndPostCount(LocalDateTime startDate,
             LocalDateTime endDate) {
 
-        return postRepository.findActiveAuthorActivePostCounts(startDate, endDate)
+        return postRepository.findActiveAuthorActivePostCount(startDate, endDate)
                 .stream()
-                .map(tuple -> new AuthorPostStatDto(
+                .map(tuple -> new AuthorPostCountDto(
                         tuple.get(0, Member.class),
                         tuple.get(1, Long.class)
                 ))

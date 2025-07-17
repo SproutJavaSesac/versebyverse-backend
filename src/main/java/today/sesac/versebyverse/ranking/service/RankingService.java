@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.member.entity.Member;
-import today.sesac.versebyverse.post.dto.AuthorPostStatDto;
+import today.sesac.versebyverse.post.dto.AuthorPostCountDto;
 import today.sesac.versebyverse.post.service.PostQueryService;
 import today.sesac.versebyverse.ranking.dto.response.RankingListResponseDto;
 import today.sesac.versebyverse.ranking.dto.response.RankingSingleResponseDto;
@@ -96,17 +96,17 @@ public class RankingService {
     public void calculatePostsRanking(LocalDateTime startDateTime, LocalDateTime endDateTime,
             RankingPeriodType periodType) {
 
-        List<AuthorPostStatDto> authorAndPostCounts = postQueryService.getAuthorAndPostCounts(
+        List<AuthorPostCountDto> authorAndPostCountList = postQueryService.getAuthorAndPostCount(
                 startDateTime, endDateTime);
 
         int lastProcessedPostCount = 0;
         int rank = 0;
-        for (int i = 0; i < authorAndPostCounts.size(); i++) {
+        for (int i = 0; i < authorAndPostCountList.size(); i++) {
 
             // TODO 여기서 null이 나오는 경우 확인 필요
-            Member member = authorAndPostCounts.get(i).author();
+            Member member = authorAndPostCountList.get(i).author();
             // TODO null, long -> int 예외 확인 필요
-            int postCount = authorAndPostCounts.get(i).postCount().intValue();
+            int postCount = authorAndPostCountList.get(i).postCount().intValue();
             if (i == 0 || lastProcessedPostCount != postCount) {
                 rank = i + 1;
             }

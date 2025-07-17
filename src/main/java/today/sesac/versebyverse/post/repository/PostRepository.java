@@ -31,7 +31,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             GROUP BY p.author
             ORDER BY postCount DESC
             """)
-    List<Tuple> findActiveAuthorActivePostCounts(
+    List<Tuple> findActiveAuthorActivePostCount(
             LocalDateTime startDate,
             LocalDateTime endDate
     );
