@@ -1,14 +1,14 @@
-package today.sesac.shoutify.ai.service;
+package today.sesac.versebyverse.ai.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import today.sesac.shoutify.ai.dto.request.AiRequestDto;
-import today.sesac.shoutify.ai.dto.response.AiResponseDto;
-import today.sesac.shoutify.ai.prompt.PromptTemplate;
-import today.sesac.shoutify.ai.prompt.PromptTemplateLoader;
-import today.sesac.shoutify.ai.prompt.PromptType;
+import today.sesac.versebyverse.ai.dto.request.AiRequestDto;
+import today.sesac.versebyverse.ai.dto.response.AiResponseDto;
+import today.sesac.versebyverse.ai.prompt.PromptTemplate;
+import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
+import today.sesac.versebyverse.ai.prompt.PromptType;
 
 /**
  * 도메인별 AI 서비스의 공통 로직을 담당하는 추상 클래스.
@@ -38,6 +38,7 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
      * @throws IllegalStateException 응답 파싱 실패 시 발생
      */
     public R invokeAi(T requestDto, PromptType promptType) {
+
         PromptTemplate template = promptTemplateLoader.getTemplate(promptType);
         String prompt = template.buildPromptMessage(requestDto);
         String response = chatClient.prompt(prompt).call().content();
@@ -52,6 +53,7 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
      * @throws IllegalStateException 응답 파싱 실패 시 발생
      */
     private R parseResponseMassageToDto(String responseMessage) {
+
         try {
             String content = cleanJsonBlock(responseMessage);
             return objectMapper.readValue(content, responseType());
@@ -61,6 +63,7 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
     }
 
     private String cleanJsonBlock(String raw) {
+
         return raw.replaceAll("(?s)^.*?```json", "")
                 .replaceAll("```.*$", "")
                 .trim();

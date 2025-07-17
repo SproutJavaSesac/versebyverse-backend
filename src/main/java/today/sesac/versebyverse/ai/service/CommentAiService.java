@@ -1,11 +1,11 @@
-package today.sesac.shoutify.ai.service;
+package today.sesac.versebyverse.ai.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
-import today.sesac.shoutify.ai.dto.request.CommentAiRequestDto;
-import today.sesac.shoutify.ai.dto.response.CommentAiResponseDto;
-import today.sesac.shoutify.ai.prompt.PromptTemplateLoader;
+import today.sesac.versebyverse.ai.dto.request.CommentAiRequestDto;
+import today.sesac.versebyverse.ai.dto.response.CommentAiResponseDto;
+import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
 
 /**
  * 댓글 관련 AI 서비스입니다.
@@ -22,6 +22,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
     public CommentAiService(ChatClient chatClient,
             PromptTemplateLoader promptTemplateLoader,
             ObjectMapper objectMapper) {
+
         super(chatClient, promptTemplateLoader, objectMapper);
     }
 
@@ -32,6 +33,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      */
     @Override
     protected Class<CommentAiResponseDto> responseType() {
+
         return CommentAiResponseDto.class;
     }
 }

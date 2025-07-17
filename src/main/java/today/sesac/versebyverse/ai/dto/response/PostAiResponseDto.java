@@ -2,8 +2,8 @@ package today.sesac.versebyverse.ai.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import today.sesac.shoutify.global.domain.Concept;
-import today.sesac.shoutify.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Emotion;
 
 /**
  * 게시글 AI 응답 데이터 전송 객체(DTO)입니다.

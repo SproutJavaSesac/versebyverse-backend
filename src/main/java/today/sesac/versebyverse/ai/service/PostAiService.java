@@ -1,11 +1,11 @@
-package today.sesac.shoutify.ai.service;
+package today.sesac.versebyverse.ai.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
-import today.sesac.shoutify.ai.dto.request.PostAiRequestDto;
-import today.sesac.shoutify.ai.dto.response.PostAiResponseDto;
-import today.sesac.shoutify.ai.prompt.PromptTemplateLoader;
+import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
+import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
+import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
 
 /**
  * 게시글 도메인의 AI 처리를 담당하는 서비스입니다.
@@ -20,6 +20,7 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
      */
     public PostAiService(ChatClient chatClient, PromptTemplateLoader promptTemplateLoader,
             ObjectMapper objectMapper) {
+
         super(chatClient, promptTemplateLoader, objectMapper);
     }
 
@@ -30,6 +31,7 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
      */
     @Override
     protected Class<PostAiResponseDto> responseType() {
+
         return PostAiResponseDto.class;
     }
 }
