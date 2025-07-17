@@ -66,7 +66,7 @@ public class PromptTemplateLoader {
                 new InputStreamReader(new ClassPathResource(filePath).getInputStream(),
                         StandardCharsets.UTF_8))) {
             String content = reader.lines().collect(Collectors.joining("\n"));
-            String[] parts = content.split("---", 3);
+            String[] parts = content.split("##", 3);
 
             if (parts.length < 3) {
                 throw new IllegalArgumentException("Invalid format in: " + filePath);
