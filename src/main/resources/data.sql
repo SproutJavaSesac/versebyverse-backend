@@ -878,3 +878,17 @@ VALUES (181, 10, 1, NULL, 'P10-L0-1', 'P10-L0-1', 0, '181', false, false, NOW(),
        (198, 10, 8, 191, 'P10-L2-5', 'P10-L2-5', 2, '184-191-198', false, false, NOW(), NOW()),
        (199, 10, 9, 192, 'P10-L2-6', 'P10-L2-6', 2, '185-192-199', false, false, NOW(), NOW()),
        (200, 10, 10, 193, 'P10-L2-7', 'P10-L2-7', 2, '186-193-200', false, false, NOW(), NOW());
+
+-- ranking
+INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank,
+                     created_at) value
+    (1, 1, 1, 1000, 'DAILY', 'POST', NULL, '2025-07-13 00:00:00'),
+    (2, 2, 2, 900, 'DAILY', 'POST', NULL, '2025-07-13 23:59:59'),
+    (3, 3, 3, 800, 'DAILY', 'POST', NULL, '2025-07-14 00:00:00'),
+    (4, 4, 4, 700, 'DAILY', 'POST', NULL, NOW()),
+    (5, 5, 5, 600, 'DAILY', 'POST', NULL, NOW()),
+    (6, 6, 6, 500, 'DAILY', 'POST', NULL, NOW()),
+    (7, 7, 7, 400, 'DAILY', 'POST', NULL, NOW()),
+    (8, 8, 8, 300, 'DAILY', 'POST', NULL, NOW()),
+    (9, 9, 9, 200, 'DAILY', 'POST', NULL, NOW()),
+    (10, 10, 10, 100, 'DAILY', 'POST', NULL, NOW());
