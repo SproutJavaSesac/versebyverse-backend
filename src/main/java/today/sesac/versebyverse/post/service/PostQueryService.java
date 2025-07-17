@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
+import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.post.dto.AuthorPostStatDto;
 import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.versebyverse.post.entity.Post;

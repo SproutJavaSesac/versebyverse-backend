@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.ranking.response;
+package today.sesac.versebyverse.ranking.dto.response;
 
 import java.time.LocalDateTime;
 import today.sesac.versebyverse.ranking.entity.Ranking;

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.global.response.ApiResponse;
+import today.sesac.versebyverse.ranking.dto.response.RankingListResponseDto;
 import today.sesac.versebyverse.ranking.entity.RankingCategory;
 import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
-import today.sesac.versebyverse.ranking.response.RankingListResponseDto;
 import today.sesac.versebyverse.ranking.service.RankingService;
 
 /**
