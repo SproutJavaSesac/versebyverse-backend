@@ -96,27 +96,59 @@ public class RankingService {
     public void calculatePostsRanking(LocalDateTime startDateTime, LocalDateTime endDateTime,
             RankingPeriodType periodType) {
 
-        List<AuthorPostCountDto> authorAndPostCountList = postQueryService.getAuthorAndPostCount(
-                startDateTime, endDateTime);
+        List<AuthorPostCountDto> authorPostCountList = postQueryService
+                .getAuthorAndPostCount(startDateTime, endDateTime);
+
+        processRankingCalculation(authorPostCountList, startDateTime, endDateTime, periodType);
+    }
+
+    /**
+     * 순위 계산 처리를 담당하는 메서드입니다. 불변 데이터와 순수 함수를 사용하여 동시성 안전성을 보장합니다.
+     */
+    private void processRankingCalculation(List<AuthorPostCountDto> authorPostCountList,
+            LocalDateTime startDateTime, LocalDateTime endDateTime, RankingPeriodType periodType) {
 
         int lastProcessedPostCount = 0;
-        int rank = 0;
-        for (int i = 0; i < authorAndPostCountList.size(); i++) {
+        int currentRank = 0;
+
+        for (int i = 0; i < authorPostCountList.size(); i++) {
+            AuthorPostCountDto authorPostCount = authorPostCountList.get(i);
 
             // TODO 여기서 null이 나오는 경우 확인 필요
-            Member member = authorAndPostCountList.get(i).author();
+            Member member = authorPostCount.author();
             // TODO null, long -> int 예외 확인 필요
-            int postCount = authorAndPostCountList.get(i).postCount().intValue();
-            if (i == 0 || lastProcessedPostCount != postCount) {
-                rank = i + 1;
-            }
+            int postCount = authorPostCount.postCount().intValue();
 
-            // 어제 날짜로 createdAt에서 어제 날짜, member, category 조회 후 없으면 새로 저장, 있으면 update
-            saveRankingNewOrWithPrevious(member, postCount, rank, startDateTime, endDateTime,
+            currentRank = calculateRank(i, postCount, lastProcessedPostCount, currentRank);
+
+            saveRankingNewOrWithPrevious(member, postCount, currentRank, startDateTime, endDateTime,
                     periodType);
 
             lastProcessedPostCount = postCount;
         }
+    }
+
+    /**
+     * 현재 사용자의 순위를 계산하는 순수 함수입니다.
+     * 동점자의 경우 같은 순위를 부여하고, 다음 순위는 실제 순서를 반영합니다.
+     * 예: 1위(10개), 2위(8개), 2위(8개), 4위(7개)
+     *
+     * @param currentIndex 현재 처리 중인 사용자의 인덱스 (0부터 시작)
+     * @param currentPostCount 현재 사용자의 게시글 수
+     * @param previousPostCount 이전에 처리한 사용자의 게시글 수
+     * @param previousRank 이전에 처리한 사용자의 순위
+     * @return 현재 사용자의 순위
+     */
+    private int calculateRank(int currentIndex, int currentPostCount,
+            int previousPostCount, int previousRank) {
+
+        // 첫 번째 사용자이거나 이전 사용자와 게시글 수가 다른 경우: 새로운 순위 부여
+        if (currentIndex == 0 || previousPostCount != currentPostCount) {
+            return currentIndex + 1;
+        }
+
+        // 이전 사용자와 게시글 수가 같은 경우: 동점자로 같은 순위 유지
+        return previousRank;
     }
 
     private void saveRankingNewOrWithPrevious(Member member, int postCount, int rank,
