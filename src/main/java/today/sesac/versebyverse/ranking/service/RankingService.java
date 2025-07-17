@@ -66,7 +66,7 @@ public class RankingService {
         List<RankingSingleResponseDto> rankingDtoList = rankings.stream()
                 .map(ranking -> new RankingSingleResponseDto(
                         ranking,
-                        getRankChangeWithSymbol(ranking.getRanks(), ranking.getPreviousRank())
+                        getRankChangeWithSymbol(ranking.getRank(), ranking.getPreviousRank())
                 )).toList();
 
         return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
@@ -131,7 +131,7 @@ public class RankingService {
 
         Ranking ranking = existingRanking
                 .map(existing -> createRankingWithPreviousRank(
-                        member, postCount, rank, existing.getRanks(), periodType))
+                        member, postCount, rank, existing.getRank(), periodType))
                 .orElse(createNewRanking(member, postCount, rank, periodType));
 
         rankingRepository.save(ranking);

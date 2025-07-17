@@ -57,9 +57,10 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
 
     /**
      * 해당 카테고리의 순위.
+     * mysql에서 rank는 예약어라 entity 복수형 사용.
      */
-    @Column(columnDefinition = "int unsigned", nullable = false)
-    private int ranks;
+    @Column(name = "ranks", columnDefinition = "int unsigned", nullable = false)
+    private int rank;
 
     /**
      * 이전 순위.
@@ -80,7 +81,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
             Member member,
             RankingCategory category,
             int score,
-            int ranks,
+            int rank,
             Integer previousRank,
             RankingPeriodType periodType
     ) {
@@ -88,7 +89,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
         this.member = member;
         this.category = category;
         this.score = score;
-        this.ranks = ranks;
+        this.rank = rank;
         this.previousRank = previousRank;
         this.periodType = periodType;
     }

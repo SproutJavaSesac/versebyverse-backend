@@ -41,7 +41,7 @@ public record RankingSingleResponseDto(
                 ranking.getMember().getNickname(),
                 ranking.getMember().getProfileImageUrl(),
                 ranking.getScore(),
-                ranking.getRanks(),
+                ranking.getRank(),
                 ranking.getPreviousRank(),
                 rankChange,
                 ranking.getCreatedAt()
