@@ -73,7 +73,7 @@ public class PostQueryService {
         }
         //Post 객체를 dto객체로 변환
         return postPage.map(post -> {
-            int commentCount = commentRepository.countByPostId(post.getId());
+            Long commentCount = commentRepository.countByPostId(post.getId());
             // TODO reaction개수 임시 0으로 고정
             int reactionCount = 0;
             //int reactionCount = reactionRepository.countByPostId(post.getId());
