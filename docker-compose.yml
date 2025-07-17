@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    container_name: shoutify-mysql
+    container_name: versebyverse-mysql
     image: mysql:8.4
     # 한글 사용 위해 utf8mb4 설정
     command:
@@ -19,7 +19,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: UTC # 타임존 설정
   mysql-test:
-    container_name: shoutify-mysql-test
+    container_name: versebyverse-mysql-test
     image: mysql:8.4
     # 한글 사용 위해 utf8mb4 설정
     command:
