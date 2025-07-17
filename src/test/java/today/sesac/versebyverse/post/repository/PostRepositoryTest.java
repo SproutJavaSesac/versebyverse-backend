@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post.repository;
+package today.sesac.versebyverse.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,12 +11,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import today.sesac.shoutify.global.domain.Concept;
-import today.sesac.shoutify.global.domain.Emotion;
-import today.sesac.shoutify.member.entity.Member;
-import today.sesac.shoutify.member.entity.RoleType;
-import today.sesac.shoutify.member.entity.SocialType;
-import today.sesac.shoutify.post.entity.Post;
+import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.member.entity.Member;
+import today.sesac.versebyverse.member.entity.RoleType;
+import today.sesac.versebyverse.member.entity.SocialType;
+import today.sesac.versebyverse.post.entity.Post;
 
 @DataJpaTest
 @EnableJpaAuditing

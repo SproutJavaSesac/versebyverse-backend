@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post.service;
+package today.sesac.versebyverse.post.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,10 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import today.sesac.shoutify.post.entity.Post;
-import today.sesac.shoutify.post.exception.PostErrorCode;
-import today.sesac.shoutify.post.exception.PostException;
-import today.sesac.shoutify.post.repository.PostRepository;
+import today.sesac.versebyverse.post.entity.Post;
+import today.sesac.versebyverse.post.exception.PostErrorCode;
+import today.sesac.versebyverse.post.exception.PostException;
+import today.sesac.versebyverse.post.repository.PostRepository;
 
 @DisplayName("[Mockito] PostQueryService 테스트")
 @ExtendWith(MockitoExtension.class)
