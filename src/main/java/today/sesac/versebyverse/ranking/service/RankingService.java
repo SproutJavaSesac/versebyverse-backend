@@ -72,16 +72,16 @@ public class RankingService {
         return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
     }
 
-    private String getRankChangeWithSymbol(int rank, Integer previousRank) {
+    private String getRankChangeWithSymbol(int currentRank, Integer historicalRank) {
 
-        if (previousRank == null) {
+        if (historicalRank == null) {
             return RANKING_NEW;
-        } else if (rank == previousRank) {
+        } else if (currentRank == historicalRank) {
             return RANKING_UNCHANGED;
         } else {
-            return previousRank - rank > 0
-                    ? RANKING_UP + (previousRank - rank)
-                    : String.valueOf(previousRank - rank);
+            return historicalRank - currentRank > 0
+                    ? RANKING_UP + (historicalRank - currentRank)
+                    : String.valueOf(historicalRank - currentRank);
         }
     }
 
@@ -103,13 +103,14 @@ public class RankingService {
     }
 
     /**
-     * 순위 계산 처리를 담당하는 메서드입니다. 불변 데이터와 순수 함수를 사용하여 동시성 안전성을 보장합니다.
+     * 동점자 순위를 포함한 순위 계산 처리를 합니다.
      */
-    private void processRankingCalculation(List<AuthorPostCountDto> authorPostCountList,
-            LocalDateTime startDateTime, LocalDateTime endDateTime, RankingPeriodType periodType) {
+    private void processRankingCalculation(
+            List<AuthorPostCountDto> authorPostCountList, LocalDateTime startDateTime,
+            LocalDateTime endDateTime, RankingPeriodType periodType) {
 
-        int lastProcessedPostCount = 0;
-        int currentRank = 0;
+        int previousMemberPostCount = 0;  // 바로 앞에 처리된 사용자의 게시글 수
+        int previousAssignedRank = 0;            // 바로 앞에 할당된 순위
 
         for (int i = 0; i < authorPostCountList.size(); i++) {
             AuthorPostCountDto authorPostCount = authorPostCountList.get(i);
@@ -119,59 +120,62 @@ public class RankingService {
             // TODO null, long -> int 예외 확인 필요
             int postCount = authorPostCount.postCount().intValue();
 
-            currentRank = calculateRank(i, postCount, lastProcessedPostCount, currentRank);
+            // 순위 계산: 동점자 처리를 위한 순수 함수 사용
+            int currentRank =
+                    calculateRankForTie(i, postCount, previousMemberPostCount,
+                            previousAssignedRank);
 
-            saveRankingNewOrWithPrevious(member, postCount, currentRank, startDateTime, endDateTime,
-                    periodType);
+            saveRankingNewOrWithHistorical(
+                    member, postCount, currentRank, startDateTime, endDateTime, periodType);
 
-            lastProcessedPostCount = postCount;
+            previousAssignedRank = currentRank;
+            previousMemberPostCount = postCount;
         }
     }
 
     /**
-     * 현재 사용자의 순위를 계산하는 순수 함수입니다.
-     * 동점자의 경우 같은 순위를 부여하고, 다음 순위는 실제 순서를 반영합니다.
-     * 예: 1위(10개), 2위(8개), 2위(8개), 4위(7개)
-     * TODO 추후 클래스 분리 및 테스트 코드 작성 필요
+     * 동점자를 고려한 현재 사용자의 순위를 계산하는 함수입니다. 동점자의 경우 같은 순위를 부여하고, 다음 순위는 실제 순서를 반영합니다. 예: 1위(10개),
+     * 2위(8개), 2위(8개), 4위(7개)
      *
-     * @param currentIndex 현재 처리 중인 사용자의 인덱스 (0부터 시작)
-     * @param currentPostCount 현재 사용자의 게시글 수
-     * @param previousPostCount 이전에 처리한 사용자의 게시글 수
-     * @param previousRank 이전에 처리한 사용자의 순위
+     * @param currentIndex            현재 처리 중인 사용자의 인덱스 (0부터 시작)
+     * @param currentPostCount        현재 사용자의 게시글 수
+     * @param previousMemberPostCount 바로 앞에 처리된 사용자의 게시글 수
+     * @param previousAssignedRank    바로 앞에 할당된 순위
      * @return 현재 사용자의 순위
      */
-    private int calculateRank(int currentIndex, int currentPostCount,
-            int previousPostCount, int previousRank) {
+    private int calculateRankForTie(
+            int currentIndex, int currentPostCount, int previousMemberPostCount,
+            int previousAssignedRank) {
 
-        // 첫 번째 사용자이거나 이전 사용자와 게시글 수가 다른 경우: 새로운 순위 부여
-        if (currentIndex == 0 || previousPostCount != currentPostCount) {
+        // 첫 번째 사용자이거나 앞 사용자와 게시글 수가 다른 경우: 새로운 순위 부여
+        if (currentIndex == 0 || previousMemberPostCount != currentPostCount) {
             return currentIndex + 1;
         }
 
-        // 이전 사용자와 게시글 수가 같은 경우: 동점자로 같은 순위 유지
-        return previousRank;
+        // 앞 사용자와 게시글 수가 같은 경우: 동점자로 같은 순위 유지
+        return previousAssignedRank;
     }
 
-    private void saveRankingNewOrWithPrevious(Member member, int postCount, int rank,
-            LocalDateTime startDateTime, LocalDateTime endDateTime, RankingPeriodType periodType) {
+    private void saveRankingNewOrWithHistorical(
+            Member member, int postCount, int rank, LocalDateTime startDateTime,
+            LocalDateTime endDateTime, RankingPeriodType periodType) {
 
-        Optional<Ranking> existingRanking =
+        Optional<Ranking> previousPeriodRanking =
                 rankingRepository.findByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
                         member.getId(), RankingCategory.POST,
-                        periodType,
-                        startDateTime, endDateTime
+                        periodType, startDateTime, endDateTime
                 );
 
-        Ranking ranking = existingRanking
-                .map(existing -> createRankingWithPreviousRank(
+        Ranking ranking = previousPeriodRanking
+                .map(existing -> createRankingWithHistoricalRank(
                         member, postCount, rank, existing.getRank(), periodType))
                 .orElse(createNewRanking(member, postCount, rank, periodType));
 
         rankingRepository.save(ranking);
     }
 
-    private Ranking createNewRanking(Member member, int postCount, int rank,
-            RankingPeriodType periodType) {
+    private Ranking createNewRanking(
+            Member member, int postCount, int rank, RankingPeriodType periodType) {
 
         return Ranking.createFirstEntry(
                 member,
@@ -182,15 +186,16 @@ public class RankingService {
         );
     }
 
-    private Ranking createRankingWithPreviousRank(Member member, int postCount, int rank,
-            int previousRank, RankingPeriodType periodType) {
-        // 업데이트
+    private Ranking createRankingWithHistoricalRank(
+            Member member, int postCount, int rank, int historicalRank,
+            RankingPeriodType periodType) {
+
         return Ranking.createWithPreviousRank(
                 member,
                 RankingCategory.POST,
                 postCount,
                 rank,
-                previousRank,
+                historicalRank,
                 periodType
         );
     }
