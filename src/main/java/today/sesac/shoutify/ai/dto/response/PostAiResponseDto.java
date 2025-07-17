@@ -2,7 +2,8 @@ package today.sesac.shoutify.ai.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import today.sesac.shoutify.ai.dto.request.PostAiRequestDto;
+import today.sesac.shoutify.global.domain.Concept;
+import today.sesac.shoutify.global.domain.Emotion;
 
 /**
  * 게시글 AI 응답 데이터 전송 객체(DTO)입니다.
@@ -15,7 +16,7 @@ import today.sesac.shoutify.ai.dto.request.PostAiRequestDto;
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class PostAiResponseDto extends AiResponseDto<PostAiRequestDto> {
+public class PostAiResponseDto extends AiResponseDto {
 
     /**
      * AI가 처리한 게시글 제목.
@@ -25,12 +26,12 @@ public class PostAiResponseDto extends AiResponseDto<PostAiRequestDto> {
     /**
      * AI가 분석한 게시글 컨셉 타입.
      */
-    private String conceptType;
+    private Concept conceptType;
 
     /**
      * AI가 분석한 게시글 감정 타입.
      */
-    private String emotionType;
+    private Emotion emotionType;
 
     /**
      * AI가 처리한 게시글 내용.

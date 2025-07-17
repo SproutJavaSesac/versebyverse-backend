@@ -15,7 +15,7 @@ import today.sesac.shoutify.ai.dto.request.CommentAiRequestDto;
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
-class CommentAiResponseDto extends AiResponseDto<CommentAiRequestDto> {
+public class CommentAiResponseDto extends AiResponseDto<CommentAiRequestDto> {
 
     /**
      * AI가 처리한 댓글 내용.
