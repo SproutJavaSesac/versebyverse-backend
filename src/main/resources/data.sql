@@ -892,3 +892,33 @@ INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previou
     (8, 8, 8, 300, 'DAILY', 'POST', NULL, NOW()),
     (9, 9, 9, 200, 'DAILY', 'POST', NULL, NOW()),
     (10, 10, 10, 100, 'DAILY', 'POST', NULL, NOW());
+
+INSERT INTO profanities (original, replacement, description, category, created_at, updated_at)
+VALUES
+-- GENERAL_SWEAR
+('씨발', '아이고', '일반적인 욕설 표현', 'GENERAL_SWEAR', NOW(), NOW()),
+('좆', '이런', '남성 성기 관련 비속어', 'GENERAL_SWEAR', NOW(), NOW()),
+('병신', '멍청이', '비하적 욕설 표현', 'GENERAL_SWEAR', NOW(), NOW()),
+('개새끼', '나쁜 사람', '동물에 빗댄 욕설', 'GENERAL_SWEAR', NOW(), NOW()),
+('존나', '매우', '강조 표현의 욕설화', 'GENERAL_SWEAR', NOW(), NOW()),
+
+-- SEXUAL_DEGRADATION
+('보지', '성기', '여성 성기 비속어', 'SEXUAL_DEGRADATION', NOW(), NOW()),
+('자지', '성기', '남성 성기 비속어', 'SEXUAL_DEGRADATION', NOW(), NOW()),
+('떡치다', '관계하다', '성행위 은어', 'SEXUAL_DEGRADATION', NOW(), NOW()),
+('섹스', '관계', '성행위를 직접 지칭', 'SEXUAL_DEGRADATION', NOW(), NOW()),
+('딸딸이', '자위', '남성 자위 비속어', 'SEXUAL_DEGRADATION', NOW(), NOW()),
+
+-- DISCRIMINATION_HATE
+('틀딱', '어르신', '노인을 비하하는 표현', 'DISCRIMINATION_HATE', NOW(), NOW()),
+('급식충', '학생', '학생 비하 표현', 'DISCRIMINATION_HATE', NOW(), NOW()),
+('흑형', '흑인 남성', '흑인 대상 비하', 'DISCRIMINATION_HATE', NOW(), NOW()),
+('김치녀', '여성', '한국 여성 비하 표현', 'DISCRIMINATION_HATE', NOW(), NOW()),
+('정신병자', '정신질환자', '정신질환 비하', 'DISCRIMINATION_HATE', NOW(), NOW()),
+
+-- MODIFIED_SWEAR
+('ㅅㅂ', '아이고', '초성 욕설', 'MODIFIED_SWEAR', NOW(), NOW()),
+('ㅂㅅ', '멍청이', '초성 비하', 'MODIFIED_SWEAR', NOW(), NOW()),
+('시@발', '아이고', '우회 욕설', 'MODIFIED_SWEAR', NOW(), NOW()),
+('fuxk', 'dang', '영어 욕설 우회 표현', 'MODIFIED_SWEAR', NOW(), NOW()),
+('tlqkf', '젠장', '한글 자판 치환 욕설', 'MODIFIED_SWEAR', NOW(), NOW());
