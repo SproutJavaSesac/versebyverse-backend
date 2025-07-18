@@ -51,7 +51,7 @@ public class AuthController {
     @DeleteMapping("/members/withdraw")
     public ApiResponse<String> withdraw(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        authService.withdraw(userPrincipal.getName());
+        authService.withdraw(userPrincipal.getMemberId(), userPrincipal.getName());
 
         return ApiResponse.success("삭제완료");
     }

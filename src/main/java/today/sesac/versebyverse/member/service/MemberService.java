@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
@@ -28,6 +29,7 @@ import today.sesac.versebyverse.post.repository.PostRepository;
  */
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -40,12 +42,24 @@ public class MemberService {
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
+    @Transactional
     public Member createMember(RoleType roleType, SocialType socialType, String email,
             String nickname) {
 
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
         return savedMember;
+    }
+
+    @Transactional
+    public void deleteMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(String.valueOf(memberId),
+                        "해당 id를 가진 회원을 찾을 수 없습니다."));
+        member.delete();
+
+        log.info("회원 삭제 완료");
     }
 
     /**
@@ -116,6 +130,7 @@ public class MemberService {
         return myInfoGetResponseDto;
     }
 
+    @Transactional
     public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(

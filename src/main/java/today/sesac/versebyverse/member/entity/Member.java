@@ -46,6 +46,8 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
+    private boolean isDeleted;
+
     private String profileImageUrl;
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
@@ -54,6 +56,7 @@ public class Member extends BaseEntity {
         this.socialType = socialType;
         this.email = email;
         this.nickname = nickname;
+        this.isDeleted = false;
         this.profileImageUrl = profileImageUrl;
     }
 
@@ -76,5 +79,9 @@ public class Member extends BaseEntity {
     public void editProfile(String nickname) {
 
         this.nickname = nickname;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import today.sesac.versebyverse.auth.exception.WithdrawFailureException;
+import today.sesac.versebyverse.member.service.MemberService;
 
 /**
  * 로그인 등 인증/인가 기능을 담당하는 서비스.
@@ -30,12 +31,14 @@ public class AuthService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private final MemberService memberService;
+
     /**
      * 탈퇴 요청을 수행합니다.
      *
      * @param username 사용자를 구분하기 위해 사용되는 이름입니다.
      */
-    public void withdraw(String username) {
+    public void withdraw(Long memberId, String username) {
 
         // 1. 현재 세션에서 액세스 토큰 가져오기
         OAuth2AuthorizedClient client = authorizedClientService
@@ -57,6 +60,7 @@ public class AuthService {
         revokeGoogleAccess(accessToken);
 
         // TODO: 3. DB에서 회원 삭제
+        memberService.deleteMember(memberId);
 
         // TODO: 이후 처리
     }
