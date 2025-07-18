@@ -59,7 +59,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             LEFT JOIN Comment c ON p.id = c.post.id
             WHERE p.conceptType = :conceptType
             GROUP BY p
-            ORDER BY COUNT(DISTINCT c.id) DESC
+            ORDER BY COUNT(c.id) DESC
             """)
     Page<Post> findByConceptTypeOrderByCommentCount(Concept conceptType, Pageable pageable);
 
