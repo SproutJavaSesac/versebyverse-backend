@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
+import today.sesac.versebyverse.comment.entity.Comment;
+import today.sesac.versebyverse.comment.exception.CommentErrorCode;
 import today.sesac.versebyverse.comment.exception.CommentException;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
