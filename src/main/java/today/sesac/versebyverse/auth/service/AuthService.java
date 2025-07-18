@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import today.sesac.versebyverse.auth.exception.WithdrawFailureException;
 
 /**
  * 로그인 등 인증/인가 기능을 담당하는 서비스.
@@ -39,6 +40,10 @@ public class AuthService {
         // 1. 현재 세션에서 액세스 토큰 가져오기
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient("google", username);
+        // TODO: if문으로 예외처리하는 게 맞는지 고민하기,
+        if (client == null) {
+            throw new WithdrawFailureException("client", "OAuth2AuthorizedClient 존재하지 않음");
+        }
 
         // access 토큰, refresh 토큰 확인하기
         // TODO: refreshToken 문제 해결하기 - 로그인 후 시간 경과되면 탈퇴 안 될 것으로 추정
@@ -81,6 +86,7 @@ public class AuthService {
             log.info("Google token revoked successfully: {}", response.getStatusCode());
         } catch (Exception e) { //TODO: Exception으로 묶는 게 맞는지 체크
             log.error("Failed to revoke Google token: {}", e.getMessage());
+            throw new WithdrawFailureException("accessToken", "구글 연동 해제 중 문제 발생");
         }
     }
 
