@@ -47,10 +47,10 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
     }
 
     /**
-     * AI 응답메세지(JSON)을 응답 DTO 객체로 파싱하는 메서드.
+     * AI 응답메세지(JSON)을 응답 DTO 객체로 파싱하는 메서드.`
      *
      * @param responseMessage AI 응답 메세지
-     * @return 파싱된 응다 DTO 객체
+     * @return 파싱된 응답 DTO 객체
      * @throws IllegalStateException 응답 파싱 실패 시 발생
      */
     private R parseResponseMessageToDto(String responseMessage) {
