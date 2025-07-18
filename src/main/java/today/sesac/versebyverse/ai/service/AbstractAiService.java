@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.ai.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
         PromptTemplate template = promptTemplateLoader.getTemplate(promptType);
         String prompt = template.buildPromptMessage(requestDto);
         String response = chatClient.prompt(prompt).call().content();
-        return parseResponseMassageToDto(response);
+        return parseResponseMessageToDto(response);
     }
 
     /**
@@ -52,13 +53,13 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
      * @return 파싱된 응다 DTO 객체
      * @throws IllegalStateException 응답 파싱 실패 시 발생
      */
-    private R parseResponseMassageToDto(String responseMessage) {
+    private R parseResponseMessageToDto(String responseMessage) {
 
         try {
             String content = cleanJsonBlock(responseMessage);
             return objectMapper.readValue(content, responseType());
-        } catch (Exception e) {
-            throw new IllegalStateException("[AbstractAiService] AI 응답 파싱 실패 : ", e);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("[AbstractAiService] AI 응답 파싱 실패 : ", e);
         }
     }
 

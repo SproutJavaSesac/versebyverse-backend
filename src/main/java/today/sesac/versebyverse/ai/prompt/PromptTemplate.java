@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.ai.dto.request.AiRequestDto;
+import today.sesac.versebyverse.ai.model.AiPromptPayload;
 
 /**
  * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다.
@@ -15,14 +16,6 @@ import today.sesac.versebyverse.ai.dto.request.AiRequestDto;
  *     <li>프롬프트의 각 영역은 템플릿 파일에서 분리하여 읽어올 수 있습니다.</li>
  * </ul>
  *
- * <pre>
- * {
- *   "role": "...",
- *   "condition": "...",
- *   "example": "...",
- *   "input": "{ ... }",
- *   "output": {}
- * }
  * </pre>
  *
  * @see today.sesac.versebyverse.ai.prompt.PromptTemplateLoader
@@ -42,25 +35,16 @@ public class PromptTemplate {
     /**
      * 입력 객체를 JSON으로 변환하여 프롬프트 메시지를 생성합니다.
      *
-     * @param inputDto 입력 DTO 객체 (예: PostRequestDto, CommentRequestDto 등)
+     * @param aiRequestDto 입력 DTO 객체 (예: PostRequestDto, CommentRequestDto 등)
      * @return 전체 프롬프트 문자열
      * @throws IllegalArgumentException 입력 객체의 JSON 변환에 실패한 경우
      */
-    public String buildPromptMessage(AiRequestDto inputDto) {
+    public String buildPromptMessage(AiRequestDto aiRequestDto) {
         // TODO : 커스텀 예외 처리 적용하기
         // TODO : 예외 발생 시 처리 방법 고민하기
-        // TODO : prompt .md파일 형식 변경 고민
         try {
-            String inputJson = objectMapper.writeValueAsString(inputDto);
-            return """
-                    {
-                      "role": "%s",
-                      "condition": "%s",
-                      "example": "%s",
-                      "input": "%s",
-                      "output": {}
-                    }
-                    """.formatted(role, condition, example, inputJson);
+            AiPromptPayload payload = AiPromptPayload.of(role, condition, example, aiRequestDto);
+            return objectMapper.writeValueAsString(payload);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("프롬프트 입력 객체를 JSON으로 변환하는 데 실패했습니다.", e);
         }
