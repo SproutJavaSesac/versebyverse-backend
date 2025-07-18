@@ -155,6 +155,14 @@ public class Post extends BaseEntity {
     }
 
     /**
+     * 게시글을 신고합니다.
+     */
+    public void report() {
+
+        this.isReported = true;
+    }
+
+    /**
      * 게시글 삭제 버튼을 위한 boolean값.
      *
      * @param memberId 사용자 id
