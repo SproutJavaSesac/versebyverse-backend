@@ -1,17 +1,17 @@
-package today.sesac.shoutify.ranking.service;
+package today.sesac.versebyverse.ranking.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import today.sesac.shoutify.member.dto.response.MyRankingListResponseDto;
-import today.sesac.shoutify.member.dto.response.MyRankingSummary;
-import today.sesac.shoutify.member.service.MemberService;
-import today.sesac.shoutify.ranking.entity.Ranking;
-import today.sesac.shoutify.ranking.entity.RankingCategory;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
-import today.sesac.shoutify.ranking.repository.RankingRepository;
+import today.sesac.versebyverse.member.dto.response.MyRankingListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MyRankingSummary;
+import today.sesac.versebyverse.member.service.MemberService;
+import today.sesac.versebyverse.ranking.entity.Ranking;
+import today.sesac.versebyverse.ranking.entity.RankingCategory;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.repository.RankingRepository;
 
 /**
  * 순위(랭킹) 정보를 관리하는 서비스입니다. 다른 서비스에서 순위 정보를 조회할 때 사용됩니다.

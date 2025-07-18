@@ -1,28 +1,39 @@
 -- === Member 10명 생성 (반드시 Post보다 먼저 실행되어야 합니다) ===
 -- RoleType: ROLE_USER, ROLE_ADMIN
 -- SocialType: KAKAO, GOOGLE
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (1, 'ROLE_USER', 'KAKAO', 'sesac1@gmail.com', '행복한 코알라', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (2, 'ROLE_USER', 'GOOGLE', 'sesac2@gmail.com', '슬기로운 미어캣', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (3, 'ROLE_USER', 'KAKAO', 'sesac3@gmail.com', '용감한 펭귄', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (4, 'ROLE_USER', 'GOOGLE', 'sesac4@gmail.com', '신비로운 유니콘', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (5, 'ROLE_USER', 'KAKAO', 'sesac5@gmail.com', '춤추는 알파카', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (6, 'ROLE_USER', 'GOOGLE', 'sesac6@gmail.com', '고요한 나무늘보', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (7, 'ROLE_USER', 'KAKAO', 'sesac7@gmail.com', '씩씩한 햄스터', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (8, 'ROLE_USER', 'GOOGLE', 'sesac8@gmail.com', '자유로운 돌고래', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (9, 'ROLE_USER', 'KAKAO', 'sesac9@gmail.com', '어쩌구 저쩌구', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (10, 'ROLE_USER', 'GOOGLE', 'sesac10@gmail.com', '명상하는 여우', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (11, 'ROLE_ADMIN', 'KAKAO', 'sesac11@gmail.com', '관리자쿼카', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (1, 'ROLE_USER', 'KAKAO', 'sesac1@gmail.com', '행복한 코알라', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (2, 'ROLE_USER', 'GOOGLE', 'sesac2@gmail.com', '슬기로운 미어캣', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (3, 'ROLE_USER', 'KAKAO', 'sesac3@gmail.com', '용감한 펭귄', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (4, 'ROLE_USER', 'GOOGLE', 'sesac4@gmail.com', '신비로운 유니콘', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (5, 'ROLE_USER', 'KAKAO', 'sesac5@gmail.com', '춤추는 알파카', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (6, 'ROLE_USER', 'GOOGLE', 'sesac6@gmail.com', '고요한 나무늘보', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (7, 'ROLE_USER', 'KAKAO', 'sesac7@gmail.com', '씩씩한 햄스터', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (8, 'ROLE_USER', 'GOOGLE', 'sesac8@gmail.com', '자유로운 돌고래', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (9, 'ROLE_USER', 'KAKAO', 'sesac9@gmail.com', '어쩌구 저쩌구', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (10, 'ROLE_USER', 'GOOGLE', 'sesac10@gmail.com', '명상하는 여우', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (11, 'ROLE_ADMIN', 'KAKAO', 'sesac11@gmail.com', '관리자쿼카', false, NOW(), NOW());
 
 -- === Post 200개 생성 (회원별 개수 차등) ===
 -- Post의 author_id는 위에서 생성한 Member의 id를 참조합니다.
@@ -869,6 +880,19 @@ VALUES (181, 10, 1, NULL, 'P10-L0-1', 'P10-L0-1', 0, '181', false, false, NOW(),
        (200, 10, 10, 193, 'P10-L2-7', 'P10-L2-7', 2, '186-193-200', false, false, NOW(), NOW());
 
 -- ranking
+INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank,
+                     created_at) value
+    (1, 1, 1, 1000, 'DAILY', 'POST', NULL, '2025-07-13 00:00:00'),
+    (2, 2, 2, 900, 'DAILY', 'POST', NULL, '2025-07-13 23:59:59'),
+    (3, 3, 3, 800, 'DAILY', 'POST', NULL, '2025-07-14 00:00:00'),
+    (4, 4, 4, 700, 'DAILY', 'POST', NULL, NOW()),
+    (5, 5, 5, 600, 'DAILY', 'POST', NULL, NOW()),
+    (6, 6, 6, 500, 'DAILY', 'POST', NULL, NOW()),
+    (7, 7, 7, 400, 'DAILY', 'POST', NULL, NOW()),
+    (8, 8, 8, 300, 'DAILY', 'POST', NULL, NOW()),
+    (9, 9, 9, 200, 'DAILY', 'POST', NULL, NOW()),
+    (10, 10, 10, 100, 'DAILY', 'POST', NULL, NOW());
+
 -- Member 1의 10일치 DAILY POST 랭킹 데이터 (최근 10일)
 -- 각 날짜별로 다른 점수와 순위를 가지도록 설정
 INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank, created_at)
@@ -902,5 +926,3 @@ VALUES
 
 -- 9일 전 (가장 낮은 점수)
 (20, 1, 7, 580, 'DAILY', 'POST', 7, DATE_SUB(NOW(), INTERVAL 9 DAY));
-
--- 나머지 회원들의 랭킹 데이터
