@@ -126,7 +126,10 @@ public class RankingService {
             RankingPeriodType periodType, int maxCount) {
 
         return switch (periodType) {
-            case DAILY -> endDateTime.minusDays(maxCount - 1L);
+            case DAILY -> endDateTime.minusDays(maxCount);
+            case WEEKLY -> endDateTime.minusWeeks(maxCount);
+            case MONTHLY -> endDateTime.minusMonths(maxCount);
+            case YEARLY -> endDateTime.minusYears(maxCount);
         };
     }
 
