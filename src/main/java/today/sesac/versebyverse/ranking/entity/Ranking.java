@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,16 +19,13 @@ import today.sesac.versebyverse.global.domain.BaseEntityOnlyCreatedAt;
 import today.sesac.versebyverse.member.entity.Member;
 
 /**
- * 순위(랭킹) 정보입니다. 정적 팩토리 메서드 {@link #create(Member, RankingCategory, int, int, RankingPeriodType)}를
- * 통해 생성합니다.
+ * 순위(랭킹) 정보입니다. 정적 팩토리 메서드
+ * {@link #createFirstEntry(Member, RankingCategory, int, int, RankingPeriodType)}를 통해 생성합니다.
+ * todo 기간과 함께 unique 고려 필요
  */
 @Getter
 @Entity
-@Table(name = "rankings",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"member_id", "category", "period_type"})
-        }
-)
+@Table(name = "rankings")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ranking extends BaseEntityOnlyCreatedAt {
 
@@ -61,9 +57,10 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
 
     /**
      * 해당 카테고리의 순위.
+     * mysql에서 rank는 예약어라 entity 복수형 사용.
      */
-    @Column(columnDefinition = "int unsigned", nullable = false)
-    private int ranks;
+    @Column(name = "ranks", columnDefinition = "int unsigned", nullable = false)
+    private int rank;
 
     /**
      * 이전 순위.
@@ -84,7 +81,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
             Member member,
             RankingCategory category,
             int score,
-            int ranks,
+            int rank,
             Integer previousRank,
             RankingPeriodType periodType
     ) {
@@ -92,7 +89,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
         this.member = member;
         this.category = category;
         this.score = score;
-        this.ranks = ranks;
+        this.rank = rank;
         this.previousRank = previousRank;
         this.periodType = periodType;
     }
@@ -107,7 +104,7 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
      * @param periodType 순위의 기간 타입
      * @return 랭킹 객체
      */
-    public static Ranking create(
+    public static Ranking createFirstEntry(
             Member member,
             RankingCategory category,
             int score, int rank,
@@ -120,6 +117,31 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
                 score,
                 rank,
                 null, // 초기 이전 순위 X
+                periodType
+        );
+    }
+
+    /**
+     * 순위(랭킹)를 생성합니다. 이전 순위가 있는 경우에 사용합니다.
+     *
+     * @param member          순위에 진입하는 회원
+     * @param rankingCategory 순위 카테고리
+     * @param postCount       순위에 반영되는 게시글 수
+     * @param rank            현재 순위
+     * @param previousRank    이전 순위
+     * @param periodType      순위의 기간 타입
+     * @return 랭킹 객체
+     */
+    public static Ranking createWithPreviousRank(Member member, RankingCategory rankingCategory,
+            int postCount,
+            int rank, int previousRank, RankingPeriodType periodType) {
+
+        return new Ranking(
+                member,
+                rankingCategory,
+                postCount,
+                rank,
+                previousRank,
                 periodType
         );
     }

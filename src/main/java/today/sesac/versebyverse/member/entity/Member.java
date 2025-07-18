@@ -46,14 +46,19 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
+    // TODO @prac2317 스키마 확인 필
+    private boolean isDeleted;
+
     private String profileImageUrl;
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
             String profileImageUrl) {
+
         this.roleType = roleType;
         this.socialType = socialType;
         this.email = email;
         this.nickname = nickname;
+        this.isDeleted = false;
         this.profileImageUrl = profileImageUrl;
     }
 
