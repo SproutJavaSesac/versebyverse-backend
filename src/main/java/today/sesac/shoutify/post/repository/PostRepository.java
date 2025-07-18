@@ -1,8 +1,8 @@
-package today.sesac.shoutify.post.repository;
+package today.sesac.versebyverse.post.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import today.sesac.shoutify.post.entity.Post;
+import today.sesac.versebyverse.post.entity.Post;
 
 /**
  * 게시글 repository.
