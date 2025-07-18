@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.ranking.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,5 +44,19 @@ public interface RankingRepository extends JpaRepository<Ranking, Long> {
             RankingPeriodType rankingPeriodType,
             LocalDateTime start,
             LocalDateTime end
+    );
+
+    /**
+     * 특정 회원의 순위(랭킹) 정보를 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @return 해당 회원의 순위(랭킹) 정보
+     */
+    List<Ranking> findAllByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
+            Long memberId,
+            RankingCategory category,
+            RankingPeriodType periodType,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime
     );
 }

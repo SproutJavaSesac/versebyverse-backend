@@ -23,7 +23,7 @@ public record MyRankingSummary(
     public MyRankingSummary(Ranking ranking, String rankChange) {
 
         this(
-                ranking.getRanks(),
+                ranking.getRank(),
                 ranking.getScore(),
                 ranking.getPreviousRank(),
                 rankChange,
