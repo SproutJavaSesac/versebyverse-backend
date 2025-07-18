@@ -70,7 +70,7 @@ public class MemberService {
      */
     public Member findById(Long memberId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
         return member;
@@ -78,7 +78,7 @@ public class MemberService {
 
     public Member findByEmailAndSocialType(String email, SocialType socialType) {
 
-        Member member = memberRepository.findByEmailAndSocialType(email, socialType).orElseThrow(
+        Member member = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email, socialType).orElseThrow(
                 () -> new MemberNotFoundException(email + ", " + socialType,
                         "해당 email을 가진 회원을 찾을 수 없습니다.")
         );
@@ -95,7 +95,7 @@ public class MemberService {
 
     public MyInfoGetResponseDto getMemberInformation(Long memberId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );
@@ -133,7 +133,7 @@ public class MemberService {
     @Transactional
     public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );

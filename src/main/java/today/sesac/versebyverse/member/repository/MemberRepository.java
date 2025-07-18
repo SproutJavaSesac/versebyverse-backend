@@ -9,5 +9,6 @@ import today.sesac.versebyverse.member.entity.SocialType;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByEmailAndSocialType(String email, SocialType socialType);
+    Optional<Member> findByIdAndIsDeletedFalse(Long id);
+    Optional<Member> findByEmailAndSocialTypeAndIsDeletedFalse(String email, SocialType socialType);
 }
