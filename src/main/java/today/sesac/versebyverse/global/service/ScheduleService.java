@@ -1,4 +1,4 @@
-package today.sesac.shoutify.global.service;
+package today.sesac.versebyverse.global.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import today.sesac.shoutify.ranking.entity.RankingPeriodType;
-import today.sesac.shoutify.ranking.service.RankingService;
+import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
+import today.sesac.versebyverse.ranking.service.RankingService;
 
 /**
  * 스케줄링 서비스입니다. 주기적으로 실행되는 작업을 관리합니다.
