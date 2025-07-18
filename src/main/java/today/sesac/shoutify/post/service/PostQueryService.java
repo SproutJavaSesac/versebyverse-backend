@@ -29,7 +29,7 @@ public class PostQueryService {
     /**
      * 게시글 목록 리스트 조회.
      */
-    public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sortBy,
+    public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sort,
                                                  int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
@@ -44,7 +44,7 @@ public class PostQueryService {
 
         if (!filterByConcept) {
             //filterByConcept이 false 일때 (concept이 all 이거나 null 이어서 필터링 없이 전체조회)
-            postPage = switch (sortBy) {
+            postPage = switch (sort) {
                 //전체조회 + comment순 정렬
                 case "comments" -> postRepository.findAllOrderByCommentCount(pageable);
                 //전체조회 + reaction순 정렬
@@ -57,7 +57,7 @@ public class PostQueryService {
                 default -> postRepository.findAll(pageable);
             };
         } else { //concept별 필터링
-            postPage = switch (sortBy) {
+            postPage = switch (sort) {
                 //컨셉별 조회 + comment순 정렬
                 case "comments" -> postRepository.findByConceptTypeOrderByCommentCount(conceptType,
                         pageable);
