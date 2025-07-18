@@ -1,28 +1,39 @@
 -- === Member 10명 생성 (반드시 Post보다 먼저 실행되어야 합니다) ===
 -- RoleType: ROLE_USER, ROLE_ADMIN
 -- SocialType: KAKAO, GOOGLE
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (1, 'ROLE_USER', 'KAKAO', 'sesac1@gmail.com', '행복한 코알라', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (2, 'ROLE_USER', 'GOOGLE', 'sesac2@gmail.com', '슬기로운 미어캣', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (3, 'ROLE_USER', 'KAKAO', 'sesac3@gmail.com', '용감한 펭귄', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (4, 'ROLE_USER', 'GOOGLE', 'sesac4@gmail.com', '신비로운 유니콘', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (5, 'ROLE_USER', 'KAKAO', 'sesac5@gmail.com', '춤추는 알파카', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (6, 'ROLE_USER', 'GOOGLE', 'sesac6@gmail.com', '고요한 나무늘보', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (7, 'ROLE_USER', 'KAKAO', 'sesac7@gmail.com', '씩씩한 햄스터', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (8, 'ROLE_USER', 'GOOGLE', 'sesac8@gmail.com', '자유로운 돌고래', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (9, 'ROLE_USER', 'KAKAO', 'sesac9@gmail.com', '어쩌구 저쩌구', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (10, 'ROLE_USER', 'GOOGLE', 'sesac10@gmail.com', '명상하는 여우', NOW(), NOW());
-INSERT INTO members (id, role_type, social_type, email, nickname, created_at, updated_at)
-VALUES (11, 'ROLE_ADMIN', 'KAKAO', 'sesac11@gmail.com', '관리자쿼카', NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (1, 'ROLE_USER', 'KAKAO', 'sesac1@gmail.com', '행복한 코알라', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (2, 'ROLE_USER', 'GOOGLE', 'sesac2@gmail.com', '슬기로운 미어캣', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (3, 'ROLE_USER', 'KAKAO', 'sesac3@gmail.com', '용감한 펭귄', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (4, 'ROLE_USER', 'GOOGLE', 'sesac4@gmail.com', '신비로운 유니콘', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (5, 'ROLE_USER', 'KAKAO', 'sesac5@gmail.com', '춤추는 알파카', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (6, 'ROLE_USER', 'GOOGLE', 'sesac6@gmail.com', '고요한 나무늘보', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (7, 'ROLE_USER', 'KAKAO', 'sesac7@gmail.com', '씩씩한 햄스터', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (8, 'ROLE_USER', 'GOOGLE', 'sesac8@gmail.com', '자유로운 돌고래', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (9, 'ROLE_USER', 'KAKAO', 'sesac9@gmail.com', '어쩌구 저쩌구', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (10, 'ROLE_USER', 'GOOGLE', 'sesac10@gmail.com', '명상하는 여우', false, NOW(), NOW());
+INSERT INTO members (id, role_type, social_type, email, nickname, is_deleted, created_at,
+                     updated_at)
+VALUES (11, 'ROLE_ADMIN', 'KAKAO', 'sesac11@gmail.com', '관리자쿼카', false, NOW(), NOW());
 
 -- === Post 200개 생성 (회원별 개수 차등) ===
 -- Post의 author_id는 위에서 생성한 Member의 id를 참조합니다.
