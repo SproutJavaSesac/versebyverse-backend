@@ -45,7 +45,9 @@ public class PostQueryController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
+        //게시글 리스트 + 페이징 정보
         Page<PostSummaryResponseDto> result = postQueryService.getPosts(concept, sort, page, size);
+        //페이지 정보만 따로 뽑아서 넣기
         PaginationDto paginationDto = new PaginationDto(
                 result.getNumber(),
                 result.getTotalPages(),
@@ -54,7 +56,7 @@ public class PostQueryController {
                 result.hasNext(),
                 result.hasPrevious()
         );
-
+        //게시글 리스트 + 위 paginationDto 묶기
         PageResponseDto<PostSummaryResponseDto> pageResponseDto =
                 new PageResponseDto<>(result.getContent(), paginationDto);
 
