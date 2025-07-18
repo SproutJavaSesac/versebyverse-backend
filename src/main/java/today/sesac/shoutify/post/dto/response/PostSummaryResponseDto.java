@@ -3,7 +3,6 @@ package today.sesac.shoutify.post.dto.response;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import today.sesac.shoutify.post.entity.Post;
 
 /**
@@ -13,7 +12,6 @@ import today.sesac.shoutify.post.entity.Post;
 //image 값이 null인 경우도 있어서 image는 final 제외 -> 빌더쓰면 안 붙여도 됨
 @Getter
 @AllArgsConstructor(staticName = "of")
-@RequiredArgsConstructor(staticName = "of")
 public class PostSummaryResponseDto {
 
     private final Long postId;
