@@ -3,6 +3,7 @@ package today.sesac.shoutify.post.dto.response;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.shoutify.global.domain.Concept;
 import today.sesac.shoutify.post.entity.Post;
 
 /**
@@ -28,7 +29,7 @@ public class PostSummaryResponseDto {
 
     private final Long commentCount;
 
-    private final String conceptType;
+    private final Concept conceptType;
 
     private String imageUrl;
 
@@ -44,6 +45,6 @@ public class PostSummaryResponseDto {
     public static PostSummaryResponseDto of(Post post, Long commentCount, int reactionCount) {
         return new PostSummaryResponseDto(post.getId(), post.getAuthor().getNickname(),
                 post.getAfterTitle(), post.getAfterContent(), post.getCreatedAt(),
-                reactionCount, commentCount, post.getConceptType().name(), post.getImageUrl());
+                reactionCount, commentCount, post.getConceptType(), post.getImageUrl());
     }
 }
