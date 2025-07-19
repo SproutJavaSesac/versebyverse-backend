@@ -1,5 +1,7 @@
 package today.sesac.versebyverse.post.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.member.entity.Member;
+import today.sesac.versebyverse.post.dto.AuthorPostCountDto;
 import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
 import today.sesac.versebyverse.post.dto.response.PostSummaryResponseDto;
 import today.sesac.versebyverse.post.entity.Post;
@@ -81,6 +85,24 @@ public class PostQueryService {
         });
     }
 
+    /**
+     * 특정 기간 동안 활동 중인 작성자와 게시글 수를 조회합니다.
+     *
+     * @param startDate 시작 날짜
+     * @param endDate   종료 날짜
+     * @return 작성자와 게시글 수의 리스트
+     */
+    public List<AuthorPostCountDto> getAuthorAndPostCount(LocalDateTime startDate,
+                                                          LocalDateTime endDate) {
+
+        return postRepository.findActiveAuthorActivePostCount(startDate, endDate)
+                .stream()
+                .map(tuple -> new AuthorPostCountDto(
+                        tuple.get(0, Member.class),
+                        tuple.get(1, Long.class)
+                ))
+                .toList();
+    }
 
     /**
      * 게시글 단건 상세 조회.
