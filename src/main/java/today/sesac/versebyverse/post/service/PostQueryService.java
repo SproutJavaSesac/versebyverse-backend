@@ -120,4 +120,17 @@ public class PostQueryService {
                 foundPost.getCreatedAt(), foundPost.getImageUrl(),
                 foundPost.getConceptType().toString(), foundPost.isMine(memberId));
     }
+
+    /**
+     * 게시물 ID로 게시물을 조회합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물만 조회합니다.
+     *
+     * @param postId 게시물 ID
+     * @return 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물 Entity 객체
+     */
+    public Post getActivePostById(Long postId) {
+
+        return postRepository
+                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)
+                .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, "postId"));
+    }
 }
