@@ -1,4 +1,4 @@
-package today.sesac.shoutify.post.service;
+package today.sesac.versebyverse.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -7,14 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import today.sesac.shoutify.comment.repository.CommentRepository;
-import today.sesac.shoutify.global.domain.Concept;
-import today.sesac.shoutify.post.dto.response.PostSingleQueryResponseDto;
-import today.sesac.shoutify.post.dto.response.PostSummaryResponseDto;
-import today.sesac.shoutify.post.entity.Post;
-import today.sesac.shoutify.post.exception.PostErrorCode;
-import today.sesac.shoutify.post.exception.PostException;
-import today.sesac.shoutify.post.repository.PostRepository;
+import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
+import today.sesac.versebyverse.post.dto.response.PostSummaryResponseDto;
+import today.sesac.versebyverse.post.entity.Post;
+import today.sesac.versebyverse.post.exception.PostErrorCode;
+import today.sesac.versebyverse.post.exception.PostException;
+import today.sesac.versebyverse.post.repository.PostRepository;
 
 /**
  * 게시글 조회 service.
