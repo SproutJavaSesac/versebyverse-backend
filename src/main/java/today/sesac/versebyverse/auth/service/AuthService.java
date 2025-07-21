@@ -43,7 +43,6 @@ public class AuthService {
         // 1. 현재 세션에서 액세스 토큰 가져오기
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient("google", username);
-        // TODO: if문으로 예외처리하는 게 맞는지 고민하기,
         if (client == null) {
             throw new WithdrawFailureException("client", "OAuth2AuthorizedClient 존재하지 않음");
         }
@@ -59,10 +58,8 @@ public class AuthService {
         // 2. 구글 연동 해제 API 호출
         revokeGoogleAccess(accessToken);
 
-        // TODO: 3. DB에서 회원 삭제
+        // 3. DB에서 회원 삭제
         memberService.deleteMember(memberId);
-
-        // TODO: 이후 처리
     }
 
     /**
