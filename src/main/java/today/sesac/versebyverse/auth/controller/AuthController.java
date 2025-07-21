@@ -53,6 +53,6 @@ public class AuthController {
 
         authService.withdraw(userPrincipal.getMemberId(), userPrincipal.getName());
 
-        return ApiResponse.success("삭제완료");
+        return ApiResponse.success("회원 탈퇴가 완료되었습니다.");
     }
 }
