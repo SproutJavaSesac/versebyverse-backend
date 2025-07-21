@@ -59,6 +59,15 @@ public class CommentService {
 
     }
 
+    /**
+     * 댓글을 작성할 때, 루트 댓글 또는 답글을 생성합니다.
+     *
+     * @param commentCreateRequestDto 댓글 작성 요청 DTO
+     * @param afterContent            AI가 변환한 후의 댓글 내용
+     * @param activePost              작성할 게시글
+     * @param member                  댓글 작성자 회원
+     * @return 생성된 댓글 엔티티
+     */
     private Comment createRootOrReplyComment(
             CommentCreateRequestDto commentCreateRequestDto,
             String afterContent, Post activePost, Member member) {
@@ -72,9 +81,15 @@ public class CommentService {
             );
         }
 
-        Comment parentComment = commentRepository.findById(commentCreateRequestDto.parentId())
-                .orElseThrow(() -> new CommentException(
-                        CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
+        Comment parentComment =
+                commentRepository.findByIdAndIsDeletedFalse(commentCreateRequestDto.parentId())
+                        .orElseThrow(() -> new CommentException(
+                                CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
+
+        // 신고된 경우, 신고된 댓글에서는 답글을 작성할 수 없습니다.
+        if (parentComment.isReported()) {
+            throw new CommentException(CommentErrorCode.INVALID_REPLY_REFERENCE, "parentId");
+        }
 
         return Comment.createReplyComment(
                 commentCreateRequestDto.content(),

@@ -10,7 +10,8 @@ import today.sesac.versebyverse.global.exception.IErrorCode;
 @Getter
 public enum CommentErrorCode implements IErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."),
-    MAX_LEVEL_EXCEEDED(HttpStatus.BAD_REQUEST, "최대 댓글 레벨을 초과했습니다.");
+    MAX_LEVEL_EXCEEDED(HttpStatus.BAD_REQUEST, "최대 댓글 레벨을 초과했습니다."),
+    INVALID_REPLY_REFERENCE(HttpStatus.BAD_REQUEST, "공개된 댓글에만 답글을 달 수 있습니다.");
 
     private final HttpStatus httpStatus;
 
