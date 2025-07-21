@@ -8,4 +8,6 @@ import today.sesac.versebyverse.profanity.entity.Profanity;
  */
 public interface ProfanityRepository extends JpaRepository<Profanity, Long> {
 
+    boolean existsByOriginal(String original);
+
 }
