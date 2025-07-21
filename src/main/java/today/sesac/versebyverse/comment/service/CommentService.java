@@ -1,7 +1,5 @@
 package today.sesac.versebyverse.comment.service;
 
-import java.time.LocalDateTime;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +9,13 @@ import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
 import today.sesac.versebyverse.comment.entity.Comment;
+import today.sesac.versebyverse.comment.exception.CommentErrorCode;
+import today.sesac.versebyverse.comment.exception.CommentException;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.exception.PermissionRequiredException;
+import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
+import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
 
 /**
@@ -31,7 +34,6 @@ public class CommentService {
 
     /**
      * 댓글을 작성합니다.
-     * TODO 생성 로직 수정, 검증 로직 추가
      *
      * @param commentCreateRequestDto 댓글 작성 요청 DTO
      * @param commenterId             댓글 작성자 회원 ID
@@ -39,35 +41,75 @@ public class CommentService {
      * @return 댓글 작성 응답 DTO
      */
     @Transactional
-    public CommentCreateResponseDto createComment(CommentCreateRequestDto commentCreateRequestDto,
+    public CommentCreateResponseDto writeComment(CommentCreateRequestDto commentCreateRequestDto,
             Long commenterId, Long postId) {
 
-        return CommentCreateResponseDto.testOf(
-                1L,
-                postId,
-                commenterId,
-                "commenterTempNickname",
-                commentCreateRequestDto.parentId(),
+        Post activePost = postQueryService.getActivePostById(postId);
+
+        Member member = memberService.getActiveMemberOrThrow(
+                commenterId);
+
+        String afterContent = "AI가 변경해 준 content"; // TODO: AI 처리 로직 추가 예정
+
+        Comment comment = createRootOrReplyComment(commentCreateRequestDto, afterContent,
+                activePost, member);
+        Comment savedComment = commentRepository.save(comment);
+        savedComment.updatePath(); // 댓글 경로 자동 생성
+        return CommentCreateResponseDto.of(savedComment);
+
+    }
+
+    /**
+     * 댓글을 작성할 때, 루트 댓글 또는 답글을 생성합니다.
+     *
+     * @param commentCreateRequestDto 댓글 작성 요청 DTO
+     * @param afterContent            AI가 변환한 후의 댓글 내용
+     * @param activePost              작성할 게시글
+     * @param member                  댓글 작성자 회원
+     * @return 생성된 댓글 엔티티
+     */
+    private Comment createRootOrReplyComment(
+            CommentCreateRequestDto commentCreateRequestDto,
+            String afterContent, Post activePost, Member member) {
+
+        if (commentCreateRequestDto.parentId() == null) {
+            return Comment.createRootLevelComment(
+                    commentCreateRequestDto.content(),
+                    afterContent,
+                    activePost,
+                    member
+            );
+        }
+
+        Comment parentComment =
+                commentRepository.findByIdAndIsDeletedFalse(commentCreateRequestDto.parentId())
+                        .orElseThrow(() -> new CommentException(
+                                CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
+
+        // 신고된 경우, 신고된 댓글에서는 답글을 작성할 수 없습니다.
+        if (parentComment.isReported()) {
+            throw new CommentException(CommentErrorCode.INVALID_REPLY_REFERENCE, "parentId");
+        }
+
+        return Comment.createReplyComment(
                 commentCreateRequestDto.content(),
-                0,
-                0,
-                Map.of(),
-                false,
-                false,
-                LocalDateTime.now(),
-                LocalDateTime.now()
+                afterContent,
+                activePost,
+                parentComment,
+                member
         );
     }
 
     /**
      * 게시글 ID에 해당하는 댓글 목록을 페이지네이션 방식으로 조회합니다.
-     * TODO 검증 로직
      *
      * @param postId   게시글 ID
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
      */
     public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
+
+        postQueryService.validateActivePostByIdOrThrow(postId);
 
         Page<Comment> pageByPostIdWithPageable = commentRepository
                 .findByPostIdOrderByPathAsc(postId, pageable);
@@ -85,8 +127,22 @@ public class CommentService {
      * @param commentId 삭제할 댓글 ID
      */
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Long memberId) {
 
+        validateIsSameCommenterAsMember(commentId, memberId);
         commentRepository.deleteById(commentId);
+    }
+
+    private void validateIsSameCommenterAsMember(Long commentId, Long memberId) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
+                        "commentId"));
+        if (!comment.getCommenter().getId().equals(memberId)) {
+            throw new PermissionRequiredException("commentId", String.format(
+                    "댓글 작성자와 요청한 회원이 일치하지 않습니다. 요청한 회원 ID: %d, 댓글 작성자 ID: %d",
+                    memberId, comment.getCommenter().getId()
+            ));
+        }
     }
 }
