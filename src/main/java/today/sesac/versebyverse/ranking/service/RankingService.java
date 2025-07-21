@@ -121,7 +121,6 @@ public class RankingService {
         );
     }
 
-    // todo periodType 추가 시 수정 필요
     private LocalDateTime getStartTimeFromEndTimeAndPeriod(LocalDateTime endDateTime,
             RankingPeriodType periodType, int maxCount) {
 
