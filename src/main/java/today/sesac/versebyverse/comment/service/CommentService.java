@@ -44,11 +44,10 @@ public class CommentService {
     public CommentCreateResponseDto writeComment(CommentCreateRequestDto commentCreateRequestDto,
             Long commenterId, Long postId) {
 
-        // TODO 해당 메서드 구현 PR 머지되어야 가능
         Post activePost = postQueryService.getActivePostById(postId);
 
         Member member = memberService.getActiveMemberOrThrow(
-                commenterId); // TODO ActiveMember 가져오도록 수정 필요
+                commenterId);
 
         String afterContent = "AI가 변경해 준 content"; // TODO: AI 처리 로직 추가 예정
 
