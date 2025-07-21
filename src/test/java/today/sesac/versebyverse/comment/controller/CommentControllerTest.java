@@ -51,7 +51,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("[정상] 댓글 작성 테스트")
-    void createComment() throws Exception {
+    void writeComment() throws Exception {
 
         // given
         long commentId = 1L; // 댓글 ID
@@ -80,7 +80,7 @@ class CommentControllerTest {
                 LocalDateTime.now() // updatedAt
         );
 
-        when(commentService.createComment(commentCreateRequestDto, commenterId, postId))
+        when(commentService.writeComment(commentCreateRequestDto, commenterId, postId))
                 .thenReturn(responseDto);
 
         // when, then
