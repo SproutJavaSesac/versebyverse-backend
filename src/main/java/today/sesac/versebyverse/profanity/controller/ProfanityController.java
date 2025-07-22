@@ -1,18 +1,8 @@
 package today.sesac.versebyverse.profanity.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
@@ -21,6 +11,9 @@ import today.sesac.versebyverse.profanity.dto.response.ProfanityListResponseWrap
 import today.sesac.versebyverse.profanity.dto.response.ProfanityResponseDto;
 import today.sesac.versebyverse.profanity.entity.ProfanityCategory;
 import today.sesac.versebyverse.profanity.service.ProfanityService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 비속어 관련 API 컨트롤러.
@@ -99,13 +92,10 @@ public class ProfanityController {
      * @return 응답
      */
     @PatchMapping("{profanityId}")
-    public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable int profanityId,
-            @RequestBody ProfanityUpdateRequestDto dto) {
+    public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable long profanityId,
+                                                             @RequestBody ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
-        return ApiResponse.success(ProfanityResponseDto.of(
-                profanityId, dto.getOriginal(), dto.getReplacement(), dto.getDescription(),
-                dto.getCategory()
-        ));
+        return ApiResponse.success(profanityService.updateProfanity(profanityId, profanityUpdateRequestDto));
     }
 
     /**

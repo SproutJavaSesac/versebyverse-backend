@@ -44,3 +44,6 @@ out/
 
 ### docker - my sql ###
 /mysql-data/
+
+# macOS system file
+.DS_Store
