@@ -52,6 +52,7 @@ public class Member extends BaseEntity {
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
             String profileImageUrl) {
+
         this.roleType = roleType;
         this.socialType = socialType;
         this.email = email;

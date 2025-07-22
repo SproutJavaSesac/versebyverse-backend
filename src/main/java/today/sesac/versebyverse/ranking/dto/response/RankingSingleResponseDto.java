@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.ranking.response;
+package today.sesac.versebyverse.ranking.dto.response;
 
 import java.time.LocalDateTime;
 import today.sesac.versebyverse.ranking.entity.Ranking;
@@ -41,7 +41,7 @@ public record RankingSingleResponseDto(
                 ranking.getMember().getNickname(),
                 ranking.getMember().getProfileImageUrl(),
                 ranking.getScore(),
-                ranking.getRanks(),
+                ranking.getRank(),
                 ranking.getPreviousRank(),
                 rankChange,
                 ranking.getCreatedAt()
