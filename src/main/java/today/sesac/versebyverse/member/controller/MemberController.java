@@ -30,7 +30,7 @@ public class MemberController {
     @GetMapping("/me/posts")
     public ApiResponse<?> getMemberPosts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 

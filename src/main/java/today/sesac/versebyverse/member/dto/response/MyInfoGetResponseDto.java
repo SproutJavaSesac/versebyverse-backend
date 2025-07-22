@@ -1,12 +1,12 @@
 package today.sesac.versebyverse.member.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@AllArgsConstructor(staticName = "create")
 public class MyInfoGetResponseDto {
 
     private Long memberId;

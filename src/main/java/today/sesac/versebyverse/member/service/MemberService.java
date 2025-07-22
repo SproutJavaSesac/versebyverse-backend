@@ -79,6 +79,12 @@ public class MemberService {
                         () -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 
+    /**
+     * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
+     *
+     * @param memberId 사용자의 id
+     * @return MyInfoGetResponseDto 객체
+     */
     public MyInfoGetResponseDto getMemberInformation(Long memberId) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(
@@ -86,34 +92,34 @@ public class MemberService {
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );
 
-        MyInfoGetResponseDto myInfoGetResponseDto = convertMemberToInfo(member);
-
-        return myInfoGetResponseDto;
+        return convertMemberToInfo(member);
     }
 
+    /**
+     * 회원 정보를 dto로 전환합니다.
+     * @param member 회원 객체
+     * @return MyInfoGetResponseDto 객체
+     */
     private MyInfoGetResponseDto convertMemberToInfo(Member member) {
-
-        MyInfoGetResponseDto myInfoGetResponseDto = new MyInfoGetResponseDto();
-        myInfoGetResponseDto.setMemberId(member.getId());
-        myInfoGetResponseDto.setNickname(member.getNickname());
-        myInfoGetResponseDto.setEmail(member.getEmail());
-        myInfoGetResponseDto.setProfileImageUrl(null);
 
         List<Post> memberPosts = postRepository.findAll().stream()
                 .filter(post -> post.getAuthor().getId().equals(member.getId()))
                 .filter(post -> !post.isDeleted())
-                .collect(Collectors.toList());
+                .toList();
         List<Comment> memberComments = commentRepository.findAll().stream()
                 .filter(comment -> comment.getCommenter().getId().equals(member.getId()))
                 .filter(comment -> !comment.isDeleted())
-                .collect(Collectors.toList());
+                .toList();
 
-        myInfoGetResponseDto.setPostCount(memberPosts.size());
-        myInfoGetResponseDto.setReactionCount(
-                (int) (Math.random() * 20) + 1); //TODO: 프론트 테스트 - 회원이 받은 총 리액션 개수 하드코딩
-        myInfoGetResponseDto.setCommentCount(memberComments.size());
-
-        return myInfoGetResponseDto;
+        return MyInfoGetResponseDto.create(
+                member.getId(),
+                member.getNickname(),
+                member.getEmail(),
+                member.getProfileImageUrl(),
+                memberPosts.size(),
+                31,
+                memberComments.size()
+        );
     }
 
     public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
