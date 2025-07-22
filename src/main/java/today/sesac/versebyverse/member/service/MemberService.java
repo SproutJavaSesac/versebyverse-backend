@@ -51,15 +51,22 @@ public class MemberService {
         return savedMember;
     }
 
+    /**
+     *  회원을 삭제합니다.
+     *  soft-delete 방식으로 isDeleted 필드만 변경합니다.
+     *
+     * @param memberId 회원의 id
+     */
     @Transactional
     public void deleteMember(Long memberId) {
+        log.info("회원 삭제 시작, memberId: {}", memberId);
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
         member.delete();
 
-        log.info("회원 삭제 완료");
+        log.info("회원 삭제 완료, memberId: {}", memberId);
     }
 
     /**
