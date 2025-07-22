@@ -251,4 +251,21 @@ public class MemberService {
 
         return summary;
     }
+
+    /**
+     * 주어진 memberId가 존재하고, 활성 상태의 회원인지 확인합니다.
+     *
+     * @param memberId 확인할 회원의 ID
+     * @throws MemberNotFoundException 해당 ID를 가진 회원이 존재하지 않거나 삭제된 경우 예외 발생
+     */
+    public void validateMemberActiveExists(Long memberId) {
+
+        if (!memberRepository.existsByIdAndIsDeletedFalse(memberId)) {
+            throw new MemberNotFoundException(null,
+                    String.format(
+                            "해당 id를 가진 회원을 찾을 수 없습니다. memberId: %d",
+                            memberId
+                    ));
+        }
+    }
 }
