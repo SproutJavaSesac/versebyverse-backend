@@ -10,64 +10,56 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import today.sesac.versebyverse.auth.exception.WithdrawFailureException;
-import today.sesac.versebyverse.member.service.MemberService;
 
-/**
- * 로그인 등 인증/인가 기능을 담당하는 서비스.
- */
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AuthService {
-
-    private final MemberService memberService;
+public class SocialLoginService {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * 탈퇴 요청을 수행합니다.
+     * 소셜 로그인 플랫폼과의 연동 해제를 구현하는 메서드입니다.
      *
-     * @param username 사용자를 구분하기 위해 사용되는 이름입니다.
+     * @param username 사용자를 식별할 수 있는 이름.
      */
-    @Transactional
-    public void withdraw(Long memberId, String username) {
-        log.info("회원 탈퇴 시작, memberId: {}, username: {}", memberId, username);
+    public void revokeAccess(String username) {
+        OAuth2AccessToken accessToken = getAccessToken(username);
+        sendRevoke(accessToken);
+    }
 
-        // 1. 현재 세션에서 액세스 토큰 가져오기
+    /**
+     * 사용자의 소셜 로그인 엑세스 토큰을 조회합니다.
+     * TODO: refreshToken 문제 해결하기 - 로그인 후 시간 경과되면 탈퇴 안 될 것으로 추정
+     * @param username 사용자를 식별할 수 있는 이름
+     * @return OAuth2AccessToken 엑세스 토큰
+     */
+    private OAuth2AccessToken getAccessToken(String username) {
+
         OAuth2AuthorizedClient client = authorizedClientService
                 .loadAuthorizedClient("google", username);
         if (client == null) {
             throw new WithdrawFailureException("client", "OAuth2AuthorizedClient가 존재하지 않습니다.");
         }
 
-        // TODO: refreshToken 문제 해결하기 - 로그인 후 시간 경과되면 탈퇴 안 될 것으로 추정
-        OAuth2AccessToken accessToken = client.getAccessToken();
-
-        // 2. 구글 연동 해제 API 호출
-        revokeGoogleAccess(accessToken);
-
-        // 3. DB에서 회원 삭제
-        memberService.deleteMember(memberId);
-
-        log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
+        return client.getAccessToken();
     }
 
     /**
      * TODO: 카카오나 다른 소셜 로그인이 추가되면 어떻게 변경할지 고민하기
-     * 회원의 구글 아이디와 서비스의 연동을 해제하는 메서드입니다.
+     * 구글 api를 호출하여 엑세스 토큰을 해제하는 메서드입니다.
      *
-     * @param accessToken 엑세스 토큰이 필요합니다.
+     * @param accessToken 엑세스 토큰
      */
-    private void revokeGoogleAccess(OAuth2AccessToken accessToken) {
+    private void sendRevoke(OAuth2AccessToken accessToken) {
+
         String revokeUrl = "https://oauth2.googleapis.com/revoke";
 
         // http 요청을 위한 RestTemplate 설정
@@ -90,6 +82,4 @@ public class AuthService {
             throw new WithdrawFailureException("serverError", "일시적 서버 문제");
         }
     }
-
-
 }

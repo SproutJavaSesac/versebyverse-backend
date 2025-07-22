@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.auth.exception.WithdrawFailureException;
+import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
@@ -39,6 +43,8 @@ public class MemberService {
 
     private final CommentRepository commentRepository;
 
+    private final SocialLoginService socialLoginService;
+
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
@@ -68,6 +74,26 @@ public class MemberService {
 
         log.info("회원 삭제 완료, memberId: {}", memberId);
     }
+
+    /**
+     * 탈퇴 요청을 수행합니다.
+     *
+     * @param username 사용자를 구분하기 위해 사용되는 이름입니다.
+     */
+    @Transactional
+    public void withdraw(Long memberId, String username) {
+
+        log.info("회원 탈퇴 시작, memberId: {}, username: {}", memberId, username);
+
+        // 1. 소셜 로그인 연동 해제 API 호출
+        socialLoginService.revokeAccess(username);
+
+        // 2. DB에서 회원 삭제
+        this.deleteMember(memberId);
+
+        log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
+    }
+
 
     /**
      * 회원의 id로 db에서 회원의 정보를 조회합니다.
