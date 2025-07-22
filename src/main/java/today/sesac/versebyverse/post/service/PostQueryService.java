@@ -115,10 +115,7 @@ public class PostQueryService {
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
         // TODO 댓글갯수,반응갯수, 댓글 총갯수 추가
-        return PostSingleQueryResponseDto.of(foundPost.getId(), foundPost.getAfterTitle(),
-                foundPost.getAfterContent(), foundPost.getAuthor().getNickname(),
-                foundPost.getCreatedAt(), foundPost.getImageUrl(),
-                foundPost.getConceptType().toString(), foundPost.isMine(memberId));
+        return PostSingleQueryResponseDto.of(foundPost, memberId);
     }
 
     /**
