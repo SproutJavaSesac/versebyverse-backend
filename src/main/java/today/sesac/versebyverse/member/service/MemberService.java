@@ -215,6 +215,20 @@ public class MemberService {
         return response;
     }
 
+    /**
+     * 주어진 memberId로 활성화된 회원을 조회합니다. 회원이 존재하지 않거나 삭제된 경우 MemberNotFoundException을 발생시킵니다.
+     *
+     * @param memberId 조회할 회원의 ID
+     * @return 활성화된 회원 객체
+     * @throws MemberNotFoundException 회원이 존재하지 않거나 삭제된 경우
+     */
+    public Member getActiveMemberOrThrow(Long memberId) {
+
+        return memberRepository.findByIdAndIsDeletedFalse(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(null,
+                        String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
+    }
+
     private MyPostSummary convertPostToSummary(Post post) {
 
         MyPostSummary summary = new MyPostSummary();
