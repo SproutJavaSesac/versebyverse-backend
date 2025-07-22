@@ -26,9 +26,9 @@ import today.sesac.versebyverse.member.service.MemberService;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final MemberService memberService;
-
     private final AuthService authService;
+
+    private final MemberService memberService;
 
     // TODO: 프론트 테스트를 위한 로그인 상태 확인용 임시 메서드 - 수정 예정
     @GetMapping("/status")
