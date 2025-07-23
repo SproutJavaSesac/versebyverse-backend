@@ -3,6 +3,12 @@ package today.sesac.versebyverse.profanity.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
+import today.sesac.versebyverse.profanity.dto.response.ProfanityResponseDto;
+import today.sesac.versebyverse.profanity.entity.Profanity;
+import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
+import today.sesac.versebyverse.profanity.exception.ProfanityException;
 import today.sesac.versebyverse.profanity.repository.ProfanityRepository;
 
 /**
@@ -13,9 +19,23 @@ import today.sesac.versebyverse.profanity.repository.ProfanityRepository;
 @RequiredArgsConstructor
 public class ProfanityService {
 
-    /**
-     * 데이터베이스와 상호작용을 위해 ProfanityRepository를 의존성 주입받습니다.
-     */
     private final ProfanityRepository profanityRepository;
 
+    @Transactional
+    public ProfanityResponseDto registerProfanity(ProfanityRegisterRequestDto dto) {
+
+        if (profanityRepository.existsByOriginal(dto.original())) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
+                    "original: " + dto.original());
+        }
+        Profanity profanity = Profanity.create(
+                dto.original(),
+                dto.replacement(),
+                dto.description(),
+                dto.category()
+        );
+        Profanity saved = profanityRepository.save(profanity);
+        return ProfanityResponseDto.of(saved.getId(), saved.getOriginal(), saved.getReplacement(),
+                saved.getDescription(), saved.getCategory());
+    }
 }
