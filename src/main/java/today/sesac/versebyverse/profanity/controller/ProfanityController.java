@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.profanity.controller;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -85,9 +86,9 @@ public class ProfanityController {
      * @return 응답
      */
     @PostMapping
-    //@PreAuthorize("hasRole('ADMIN')")  //Spring Security 권한 제어 어노테이션
+    //@PreAuthorize("hasRole('ADMIN')")  //Spring Security 권한 제어 어노테이션 TODO: 회원 권한 완료되면 주석풀기
     public ApiResponse<ProfanityResponseDto> registerProfanity(
-            @RequestBody ProfanityRegisterRequestDto profanityRegisterRequestDto) {
+            @Valid @RequestBody ProfanityRegisterRequestDto profanityRegisterRequestDto) {
 
         return ApiResponse.success(profanityService.registerProfanity(profanityRegisterRequestDto));
     }

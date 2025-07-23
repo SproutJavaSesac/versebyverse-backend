@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.profanity.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import today.sesac.versebyverse.profanity.entity.ProfanityCategory;
 
@@ -15,7 +16,7 @@ public record ProfanityRegisterRequestDto(
         String replacement,
         @Size(max = 500)
         String description,
-        @NotBlank
+        @NotNull
         ProfanityCategory category
 ) {
 
