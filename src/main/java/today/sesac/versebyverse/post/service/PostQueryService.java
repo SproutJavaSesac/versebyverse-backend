@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
@@ -37,7 +36,7 @@ public class PostQueryService {
                                                  int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size);
 
         //concept이 all일 경우 필터링은 false
         boolean filterByConcept = !Concept.ALL.equals(conceptType);
@@ -58,7 +57,7 @@ public class PostQueryService {
 //                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
 //                            pageable);
                 //전체 조회 + 최신순 정렬
-                default -> postRepository.findAll(pageable);
+                default -> postRepository.findAllOrderByCreatedAt(pageable);
             };
         } else { //concept별 필터링
             postPage = switch (sort) {

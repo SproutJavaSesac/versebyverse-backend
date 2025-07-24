@@ -19,6 +19,18 @@ import today.sesac.versebyverse.post.entity.Post;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     /**
+     * 게시물 전체 조회 + 최신순 기본 정렬
+     *
+     * @param pageable 페이지네이션 정보
+     */
+    @Query("""
+            SELECT p FROM Post p
+            ORDER BY p.createdAt DESC
+            """)
+    Page<Post> findAllOrderByCreatedAt(Pageable pageable);
+
+
+    /**
      * 게시물 전체 조회 + 댓글 순 정렬.
      *
      * @param pageable 페이지네이션 정보
