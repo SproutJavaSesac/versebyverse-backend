@@ -1,10 +1,10 @@
 package today.sesac.versebyverse.comment.repository;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import today.sesac.versebyverse.comment.entity.Comment;
 
@@ -27,10 +27,18 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
 
     /**
-     * 게시글 ID 별로 댓글의 갯수를 조회.
+     * 게시글 ID로 삭제되지 않은 댓글을 조회합니다.
      *
-     * @param postId 게시글 Id
+     * @param postId 게시글 ID
+     * @return 댓글이 존재하면 Optional에 포함된 Comment 객체, 없으면 Optional.empty()
      */
-    @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
-    Long countByPostId(@Param("postId") Long postId);
+    Optional<Comment> findByIdAndIsDeletedFalse(Long postId);
+
+    /**
+     * 게시글 id로 해당 게시글의 삭제되지 않고, 신고되지 않은 댓글 수를 조회합니다.
+     *
+     * @param id
+     * @return Long 으로 해당 게시글의 댓글 수
+     */
+    Long countByPostIdAndIsDeletedFalseAndIsReportedFalse(Long id);
 }
