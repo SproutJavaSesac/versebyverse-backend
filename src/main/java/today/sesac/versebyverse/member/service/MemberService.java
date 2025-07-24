@@ -60,8 +60,7 @@ public class MemberService {
      *
      * @param memberId 회원의 id
      */
-    @Transactional
-    public void deleteMember(Long memberId) {
+    private void deleteMember(Long memberId) {
         log.info("회원 삭제 시작, memberId: {}", memberId);
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
@@ -86,7 +85,7 @@ public class MemberService {
         socialLoginService.revokeAccess(username);
 
         // 2. DB에서 회원 삭제
-        this.deleteMember(memberId);
+        deleteMember(memberId);
 
         log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
     }
