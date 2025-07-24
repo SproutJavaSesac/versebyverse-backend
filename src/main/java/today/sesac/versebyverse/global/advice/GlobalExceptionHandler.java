@@ -3,7 +3,6 @@ package today.sesac.versebyverse.global.advice;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -114,17 +113,29 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * enum 타입 변환 실패 등으로 발생하는 예외를 처리합니다. (예: 빈 문자열, 잘못된 값 등)
+     * {@link HttpMessageNotReadableException} 발생 시의 예외를 처리합니다.
+     *
+     * <p>주로 JSON → DTO 변환 중 발생하는 에러로, 다음과 같은 경우에 발생합니다:
+     * <ul>
+     *   <li>enum 타입 필드에 잘못된 문자열이 들어온 경우</li>
+     *   <li>빈 문자열을 숫자, 날짜 등으로 변환하려는 경우</li>
+     *   <li>잘못된 JSON 문법 (예: 쉼표 누락, 중괄호 미완성 등)</li>
+     * </ul></p>
+     *
+     * 예외 발생 시 400 Bad Request 응답을 반환하며, 오류 메시지는 {@link GlobalErrorCode#INVALID_REQUEST}를 따릅니다.
+     *
+     * @param exception 변환 실패로 인해 발생한 예외
+     * @return 400 응답과 함께 반환할 오류 정보
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({HttpMessageNotReadableException.class, ConversionFailedException.class})
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ApiResponse<ErrorResponse> handleEnumConversionException(Exception exception) {
 
         log.warn("[EnumConversionException] : ", exception);
         return ApiResponse.fail(
                 new ErrorResponse(
                         GlobalErrorCode.INVALID_REQUEST.name(),
-                        "요청 값이 올바르지 않습니다. (enum 변환 실패)",
+                        "요청 값이 올바르지 않습니다.",
                         null
                 )
         );
