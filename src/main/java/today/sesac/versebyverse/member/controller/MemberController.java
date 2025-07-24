@@ -36,7 +36,7 @@ public class MemberController {
      * @param userPrincipal 요청한 회원의 인증 정보.
      * @return 성공 메시지.
      */
-    @DeleteMapping
+    @DeleteMapping("/me")
     public ApiResponse<String> withdraw(@AuthenticationPrincipal UserPrincipal userPrincipal,
             HttpServletRequest request,
             HttpServletResponse response) {
