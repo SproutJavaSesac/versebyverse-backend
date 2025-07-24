@@ -2,6 +2,7 @@ package today.sesac.versebyverse.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,9 +27,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
     @GetMapping("/me/posts")
-    public ApiResponse<?> getMemberPosts(
+    public ApiResponse<MyPostListResponseDto> getMemberPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -36,8 +36,8 @@ public class MemberController {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyPostListResponseDto myPostListResponseDto = memberService.getMemberPosts(memberId, page,
-                size);
+        MyPostListResponseDto myPostListResponseDto = memberService.getMemberPosts(memberId,
+                PageRequest.of(page, size));
 
         return ApiResponse.success(myPostListResponseDto);
     }

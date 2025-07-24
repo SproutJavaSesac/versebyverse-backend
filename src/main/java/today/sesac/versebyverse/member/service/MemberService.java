@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
@@ -140,38 +143,30 @@ public class MemberService {
         return myInfoEditResponseDto;
     }
 
-    //TODO: 프론트 테스트 - 수정할 것
-    public MyPostListResponseDto getMemberPosts(Long memberId, int page, int size) {
+    public MyPostListResponseDto getMemberPosts(Long memberId, Pageable pageable) {
 
-        // TODO: 프론트 테스트할 때, PostRepository 수정하지 않기 위해 post 전부 불러옴. 수정 필수!!
-        List<Post> memberPosts = postRepository.findAll().stream()
-                .filter(post -> post.getAuthor().getId().equals(memberId))
-                .filter(post -> !post.isDeleted())
-                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .collect(Collectors.toList());
+        getActiveMemberOrThrow(memberId);
 
-        int totalCount = memberPosts.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                memberId, pageable);
 
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalCount);
-
-        List<Post> pagedPosts = fromIndex < totalCount
-                ? memberPosts.subList(fromIndex, toIndex)
-                : new ArrayList<>();
-
-        List<MyPostSummary> postSummaries = pagedPosts.stream()
+        List<MyPostSummary> postSummaries = pageByAuthorIdWithPageable.getContent().stream()
                 .map(this::convertPostToSummary)
                 .collect(Collectors.toList());
 
-        MyPostListResponseDto response = new MyPostListResponseDto();
-        PaginationDto paginationDto = new PaginationDto(page, totalPages, totalCount, size,
-                page + 1 < totalPages, page > 0);
+            PaginationDto paginationDto = new PaginationDto(
+                    pageByAuthorIdWithPageable.getNumber(),
+                    pageByAuthorIdWithPageable.getTotalPages(),
+                    pageByAuthorIdWithPageable.getTotalElements(),
+                    pageByAuthorIdWithPageable.getSize(),
+                    pageByAuthorIdWithPageable.hasNext(),
+                    pageByAuthorIdWithPageable.hasPrevious()
+            );
 
-        response.setPosts(postSummaries);
-        response.setPagination(paginationDto);
-
-        return response;
+            return MyPostListResponseDto.create(
+                    postSummaries,
+                    paginationDto
+            );
     }
 
     public MyCommentListResponseDto getMemberComments(Long memberId, int page, int size) {

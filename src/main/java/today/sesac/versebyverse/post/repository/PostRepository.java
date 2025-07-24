@@ -4,6 +4,8 @@ import jakarta.persistence.Tuple;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -52,4 +54,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물의 Optional
      */
     Optional<Post> findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
+
+    /**
+     * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다
+     *
+     * @param authorId
+     * @param pageable
+     * @return
+     */
+    Page<Post> findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(Long authorId, Pageable pageable);
 }
