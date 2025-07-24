@@ -81,11 +81,11 @@ public class MemberService {
 
         log.info("회원 탈퇴 시작, memberId: {}, username: {}", memberId, username);
 
-        // 1. 소셜 로그인 연동 해제 API 호출
-        socialLoginService.revokeAccess(username);
-
-        // 2. DB에서 회원 삭제
+        // 1. DB에서 회원 삭제
         deleteMember(memberId);
+
+        // 2. 소셜 로그인 연동 해제 API 호출
+        socialLoginService.revokeAccess(username);
 
         log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
     }
