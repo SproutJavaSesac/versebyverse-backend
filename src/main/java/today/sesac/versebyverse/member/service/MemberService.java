@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
@@ -17,7 +16,6 @@ import today.sesac.versebyverse.member.dto.response.MyCommentSummary;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyPostSummary;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
@@ -150,22 +148,8 @@ public class MemberService {
         Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable);
 
-        List<MyPostSummary> postSummaries = pageByAuthorIdWithPageable.getContent().stream()
-                .map(this::convertPostToSummary)
-                .collect(Collectors.toList());
-
-            PaginationDto paginationDto = new PaginationDto(
-                    pageByAuthorIdWithPageable.getNumber(),
-                    pageByAuthorIdWithPageable.getTotalPages(),
-                    pageByAuthorIdWithPageable.getTotalElements(),
-                    pageByAuthorIdWithPageable.getSize(),
-                    pageByAuthorIdWithPageable.hasNext(),
-                    pageByAuthorIdWithPageable.hasPrevious()
-            );
-
-            return MyPostListResponseDto.create(
-                    postSummaries,
-                    paginationDto
+            return MyPostListResponseDto.of(
+                    pageByAuthorIdWithPageable
             );
     }
 
@@ -215,26 +199,7 @@ public class MemberService {
                         String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
     }
 
-    private MyPostSummary convertPostToSummary(Post post) {
 
-        MyPostSummary summary = new MyPostSummary();
-
-        summary.setPostId(post.getId());
-        summary.setBeforeTitle(post.getBeforeTitle());
-        summary.setAfterTitle(post.getAfterTitle());
-        summary.setBeforeContent(post.getBeforeContent());
-        summary.setAfterContent(post.getAfterContent());
-        summary.setCreatedAt(post.getCreatedAt());
-        summary.setEmotionType(post.getEmotionType());
-        summary.setConceptType(post.getConceptType());
-        summary.setReactionCount(
-                (int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수 하드코딩
-        summary.setCommentCount((int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 댓글 개수 하드코딩
-        summary.setImageUrl(post.getImageUrl());
-        summary.setIsHidden(post.isHidden());
-
-        return summary;
-    }
 
     private MyCommentSummary convertCommentToSummary(Comment comment) {
 
