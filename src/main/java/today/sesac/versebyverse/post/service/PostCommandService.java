@@ -67,11 +67,7 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
-        return PostCreateResponseDto.of(
-                savedPost.getId(),
-                savedPost.getAfterTitle(),
-                savedPost.getAfterContent()
-        );
+        return PostCreateResponseDto.of(savedPost);
     }
 
     /**
