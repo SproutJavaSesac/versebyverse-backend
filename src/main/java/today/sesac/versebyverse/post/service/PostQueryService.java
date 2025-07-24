@@ -26,6 +26,7 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostQueryService {
+
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
@@ -76,7 +77,8 @@ public class PostQueryService {
         }
         //Post 객체를 dto객체로 변환
         return postPage.map(post -> {
-            Long commentCount = commentRepository.countByPostId(post.getId());
+            Long commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsReportedFalse(
+                    post.getId());
             // TODO reaction개수 임시 0으로 고정
             int reactionCount = 0;
             //int reactionCount = reactionRepository.countByPostId(post.getId());
@@ -128,5 +130,18 @@ public class PostQueryService {
         return postRepository
                 .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, "postId"));
+    }
+
+    /**
+     * 게시글이 존재하는지 확인합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @throws PostException 게시글이 존재하지 않을 경우
+     */
+    public void validateActivePostByIdOrThrow(Long postId) {
+
+        if (!postRepository.existsByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)) {
+            throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
+        }
     }
 }

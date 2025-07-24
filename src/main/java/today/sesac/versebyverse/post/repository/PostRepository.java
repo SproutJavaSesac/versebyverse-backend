@@ -89,6 +89,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    Page<Post> findByConceptTypeOrderByReactionCount(Concept conceptType, Pageable pageable);
 
     /**
+     * 게시글 ID로 게시글이 존재하는지 확인합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @return 존재하면 true, 아니면 false
+     */
+    boolean existsByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
+
+    /**
      * 특정 기간 동안 작성된 게시글의 작성자별 게시글 수를 조회하고, 작성자별로 랭킹을 매깁니다.
      *
      * @param startDate 조회 시작 날짜
@@ -117,5 +125,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물의 Optional
      */
     Optional<Post> findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
-
 }
