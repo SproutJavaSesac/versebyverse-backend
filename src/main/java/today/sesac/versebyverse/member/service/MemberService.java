@@ -1,6 +1,5 @@
 package today.sesac.versebyverse.member.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
@@ -94,25 +92,7 @@ public class MemberService {
 
         int commentCount = commentRepository.countByCommenterIdAndIsDeletedFalse(memberId);
 
-        return convertMyToInfo(member, postCount, commentCount);
-    }
-
-    /**
-     * 회원 정보를 dto로 전환합니다.
-     * @param member 회원 객체
-     * @return MyInfoGetResponseDto 객체
-     */
-    private MyInfoGetResponseDto convertMyToInfo(Member member, int postCount, int commentCount) {
-
-        return MyInfoGetResponseDto.create(
-                member.getId(),
-                member.getNickname(),
-                member.getEmail(),
-                member.getProfileImageUrl(),
-                postCount,
-                31,
-                commentCount
-        );
+        return MyInfoGetResponseDto.of(member, postCount, commentCount);
     }
 
     public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
