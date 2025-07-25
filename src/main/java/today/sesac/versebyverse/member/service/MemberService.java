@@ -83,14 +83,18 @@ public class MemberService {
      * @param memberId 사용자의 id
      * @return MyInfoGetResponseDto 객체
      */
-    public MyInfoGetResponseDto getMemberInformation(Long memberId) {
+    public MyInfoGetResponseDto getMyInformation(Long memberId) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );
 
-        return convertMemberToInfo(member);
+        int postCount = postRepository.countByAuthorIdAndIsDeletedFalse(memberId);
+
+        int commentCount = commentRepository.countByCommenterIdAndIsDeletedFalse(memberId);
+
+        return convertMyToInfo(member, postCount, commentCount);
     }
 
     /**
@@ -98,25 +102,16 @@ public class MemberService {
      * @param member 회원 객체
      * @return MyInfoGetResponseDto 객체
      */
-    private MyInfoGetResponseDto convertMemberToInfo(Member member) {
-
-        List<Post> memberPosts = postRepository.findAll().stream()
-                .filter(post -> post.getAuthor().getId().equals(member.getId()))
-                .filter(post -> !post.isDeleted())
-                .toList();
-        List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getCommenter().getId().equals(member.getId()))
-                .filter(comment -> !comment.isDeleted())
-                .toList();
+    private MyInfoGetResponseDto convertMyToInfo(Member member, int postCount, int commentCount) {
 
         return MyInfoGetResponseDto.create(
                 member.getId(),
                 member.getNickname(),
                 member.getEmail(),
                 member.getProfileImageUrl(),
-                memberPosts.size(),
+                postCount,
                 31,
-                memberComments.size()
+                commentCount
         );
     }
 

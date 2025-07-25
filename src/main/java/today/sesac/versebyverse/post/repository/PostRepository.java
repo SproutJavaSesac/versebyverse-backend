@@ -63,4 +63,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return 페이지로 가져온 작성자 게시글 목록
      */
     Page<Post> findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(Long authorId, Pageable pageable);
+
+    int countByAuthorIdAndIsDeletedFalse(Long authorId);
 }

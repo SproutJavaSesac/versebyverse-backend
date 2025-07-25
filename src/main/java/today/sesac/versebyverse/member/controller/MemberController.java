@@ -14,7 +14,6 @@ import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
@@ -74,14 +73,20 @@ public class MemberController {
         return ApiResponse.success(myCommentListResponseDto);
     }
 
+    /**
+     * 사용자의 정보를 조회합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자의 정보 응답 DTO
+     */
     @GetMapping("/me")
-    public ApiResponse<MyInfoGetResponseDto> getMemberInformation(
+    public ApiResponse<MyInfoGetResponseDto> getMyInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMemberInformation(memberId);
+        MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMyInformation(memberId);
 
         return ApiResponse.success(myInfoGetResponseDto);
     }

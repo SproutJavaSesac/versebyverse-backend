@@ -43,4 +43,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return 페이지로 가져온 작성자 댓글 목록
      */
     Page<Comment> findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(Long commenterId, Pageable pageable);
+
+    int countByCommenterIdAndIsDeletedFalse(Long commenterId);
 }
