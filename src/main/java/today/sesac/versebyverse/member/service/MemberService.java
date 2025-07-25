@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
@@ -78,7 +79,7 @@ public class MemberService {
     /**
      * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
      *
-     * @param memberId 사용자의 id
+     * @param memberId 사용자의 ID
      * @return MyInfoGetResponseDto 객체
      */
     public MyInfoGetResponseDto getMyInformation(Long memberId) {
@@ -95,22 +96,26 @@ public class MemberService {
         return MyInfoGetResponseDto.of(member, postCount, commentCount);
     }
 
-    public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
+    /**
+     * 사용자의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
+     *
+     * @param memberId 사용자의 ID
+     * @param nickname 변경할 사용자의 닉네임
+     * @return MyInfoEditResponseDto DTO
+     */
+    @Transactional
+    public MyInfoEditResponseDto editMyInformation(Long memberId, String nickname) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new MemberNotFoundException(String.valueOf(memberId),
-                        "해당 id를 가진 회원을 찾을 수 없습니다.")
-        );
+        Member member = getActiveMemberOrThrow(memberId);
+
         member.editProfile(nickname);
-        memberRepository.save(member);
 
-        MyInfoEditResponseDto myInfoEditResponseDto = new MyInfoEditResponseDto();
-        myInfoEditResponseDto.setMemberId(member.getId());
-        myInfoEditResponseDto.setNickname(member.getNickname());
-        myInfoEditResponseDto.setEmail(member.getEmail());
-        myInfoEditResponseDto.setProfileImageUrl(null);
-
-        return myInfoEditResponseDto;
+        return MyInfoEditResponseDto.of(
+                member.getId(),
+                member.getNickname(),
+                member.getEmail(),
+                member.getProfileImageUrl()
+        );
     }
 
     /**

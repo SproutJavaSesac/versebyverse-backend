@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.member.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,9 @@ import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
 import today.sesac.versebyverse.member.service.MemberService;
 
+/**
+ * 회원과 관련된 기능을 처리하는 컨트롤러.
+ */
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -91,15 +95,22 @@ public class MemberController {
         return ApiResponse.success(myInfoGetResponseDto);
     }
 
+    /**
+     * 사용자의 정보를 수정합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @param myInfoEditRequestDto 사용자의 정보 수정 요청 DTO
+     * @return 사용자의 정보 수정 응답 DTO
+     */
     @PutMapping("/me")
-    public ApiResponse<MyInfoEditResponseDto> editMemberInformation(
+    public ApiResponse<MyInfoEditResponseDto> editMyInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
+            @Valid @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMemberInformation(memberId,
+        MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMyInformation(memberId,
                 myInfoEditRequestDto.getNickname());
         return ApiResponse.success(myInfoEditResponseDto);
     }
