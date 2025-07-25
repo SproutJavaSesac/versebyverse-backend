@@ -30,22 +30,23 @@ public class ProfanityService {
      * 저장된 비속어 정보를 응답 DTO로 반환합니다.
      * </p>
      *
-     * @param dto 등록할 비속어 정보가 담긴 DTO (원문, 대체어, 설명, 카테고리)
+     * @param profanityRegisterRequestDto 등록할 비속어 정보가 담긴 DTO (원문, 대체어, 설명, 카테고리)
      * @return 저장된 비속어 정보를 담은 응답 DTO
      * @throws ProfanityException 이미 동일한 원문 비속어가 존재하는 경우 발생
      */
     @Transactional
-    public ProfanityResponseDto registerProfanity(ProfanityRegisterRequestDto dto) {
+    public ProfanityResponseDto registerProfanity(
+            ProfanityRegisterRequestDto profanityRegisterRequestDto) {
 
-        if (profanityRepository.existsByOriginal(dto.original())) {
+        if (profanityRepository.existsByOriginal(profanityRegisterRequestDto.original())) {
             throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
-                    "original: " + dto.original());
+                    "original: " + profanityRegisterRequestDto.original());
         }
         Profanity profanity = Profanity.create(
-                dto.original(),
-                dto.replacement(),
-                dto.description(),
-                dto.category()
+                profanityRegisterRequestDto.original(),
+                profanityRegisterRequestDto.replacement(),
+                profanityRegisterRequestDto.description(),
+                profanityRegisterRequestDto.category()
         );
         Profanity saved = profanityRepository.save(profanity);
         return ProfanityResponseDto.of(saved.getId(), saved.getOriginal(), saved.getReplacement(),
