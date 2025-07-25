@@ -62,30 +62,32 @@ public class ProfanityService {
      * null 또는 빈 문자열("") 값은 무시되며 기존 값이 유지됩니다.</p>
      *
      * @param profanityId 수정할 대상의 비속어 ID
-     * @param dto         수정할 필드 값을 담은 요청 DTO
+     * @param profanityUpdateRequestDto         수정할 필드 값을 담은 요청 DTO
      * @throws ProfanityException 비속어가 존재하지 않을 경우
      */
     @Transactional
-    public ProfanityResponseDto updateProfanity(long profanityId, ProfanityUpdateRequestDto dto) {
+    public ProfanityResponseDto updateProfanity(long profanityId,
+            ProfanityUpdateRequestDto profanityUpdateRequestDto) {
         Profanity profanity = profanityRepository.findById(profanityId)
                 .orElseThrow(() -> new ProfanityException(ProfanityErrorCode.PROFANITY_NOT_FOUND,
                         "ProfanityID: " + profanityId));
 
         // original 값이 변경되는 경우에만 중복 체크
-        if (dto.getOriginal() != null
-                && !dto.getOriginal().equals(profanity.getOriginal())
-                && profanityRepository.existsByOriginal(dto.getOriginal())) {
-            log.error("비속어 업데이트 실패 - 이미 존재함: {}", dto.getOriginal());
-            throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS, dto.getOriginal());
+        if (profanityUpdateRequestDto.getOriginal() != null
+                && !profanityUpdateRequestDto.getOriginal().equals(profanity.getOriginal())
+                && profanityRepository.existsByOriginal(profanityUpdateRequestDto.getOriginal())) {
+            log.error("비속어 업데이트 실패 - 이미 존재함: {}", profanityUpdateRequestDto.getOriginal());
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
+                    profanityUpdateRequestDto.getOriginal());
         }
 
         // 변경사항이 없을 경우 예외 발생
-        if (hasNoChanges(dto, profanity)) {
+        if (hasNoChanges(profanityUpdateRequestDto, profanity)) {
             log.warn("비속어 업데이트 실패 - 변경사항 없음: id={}", profanityId);
             throw new ProfanityException(ProfanityErrorCode.PROFANITY_NO_CHANGES, String.valueOf(profanityId));
         }
 
-        profanity.updateProfanity(dto);
+        profanity.updateProfanity(profanityUpdateRequestDto);
         return ProfanityResponseDto.of(profanity.getId(), profanity.getOriginal(), profanity.getReplacement(),
                 profanity.getDescription(), profanity.getCategory());
     }
