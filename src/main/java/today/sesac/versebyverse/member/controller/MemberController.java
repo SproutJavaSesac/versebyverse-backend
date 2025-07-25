@@ -14,6 +14,7 @@ import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
@@ -42,18 +43,25 @@ public class MemberController {
         return ApiResponse.success(myPostListResponseDto);
     }
 
-    // TODO: 프론트 테스트를 위한 임시 마이페이지 댓글 확인 메서드 - 수정하기
+    /**
+     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     */
     @GetMapping("/me/comments")
-    public ApiResponse<?> getMemberComments(
+    public ApiResponse<MyCommentListResponseDto> getMyComments(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyCommentListResponseDto myCommentListResponseDto = memberService.getMemberComments(
-                memberId, page, size);
+        MyCommentListResponseDto myCommentListResponseDto = memberService.getMyComments(
+                memberId, PageRequest.of(page, size));
 
         return ApiResponse.success(myCommentListResponseDto);
     }

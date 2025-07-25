@@ -46,8 +46,8 @@ public class MyPostSummaryDto {
                 post.getCreatedAt(),
                 post.getEmotionType(),
                 post.getConceptType(),
-                3,  // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수 하드코딩
-                5,  // TODO: 프론트 테스트 - 댓글 개수 하드코딩
+                3,  // TODO: 반응하기 미구현된 관계로 하드코딩 - 삭제하기
+                5,  // TODO: 댓글 개수 하드코딩
                 post.getImageUrl(),
                 post.isHidden()
         );

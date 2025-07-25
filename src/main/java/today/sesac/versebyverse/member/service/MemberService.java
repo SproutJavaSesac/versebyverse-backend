@@ -1,8 +1,6 @@
 package today.sesac.versebyverse.member.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,9 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
-import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyCommentSummary;
+import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
@@ -153,36 +150,23 @@ public class MemberService {
             );
     }
 
-    public MyCommentListResponseDto getMemberComments(Long memberId, int page, int size) {
-        // TODO: 프론트 테스트할 때, CommentRepository 수정하지 않기 위해 comment 전부 불러옴. 수정 필수!!
-        List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getCommenter().getId().equals(memberId))
-                .filter(comment -> !comment.isDeleted())
-                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .collect(Collectors.toList());
+    /**
+     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     */
+    public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
+        getActiveMemberOrThrow(memberId);
 
-        int totalCount = memberComments.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        Page<Comment> pageByAuthorIdWithPageable = commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                memberId, pageable
+        );
 
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalCount);
-
-        List<Comment> pagedComments = fromIndex < totalCount
-                ? memberComments.subList(fromIndex, toIndex)
-                : new ArrayList<>();
-
-        List<MyCommentSummary> commentSummaries = pagedComments.stream()
-                .map(this::convertCommentToSummary)
-                .collect(Collectors.toList());
-
-        MyCommentListResponseDto response = new MyCommentListResponseDto();
-        PaginationDto paginationDto = new PaginationDto(page, totalPages, totalCount, size,
-                page + 1 < totalPages, page > 0);
-
-        response.setComments(commentSummaries);
-        response.setPagination(paginationDto);
-
-        return response;
+        return MyCommentListResponseDto.of(
+                pageByAuthorIdWithPageable
+        );
     }
 
     /**
@@ -199,22 +183,4 @@ public class MemberService {
                         String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
     }
 
-
-
-    private MyCommentSummary convertCommentToSummary(Comment comment) {
-
-        MyCommentSummary summary = new MyCommentSummary();
-
-        summary.setCommentId(comment.getId());
-        summary.setPostId(comment.getPost().getId());
-        summary.setPostTitle(comment.getPost().getAfterTitle());
-        summary.setBeforeContent(comment.getBeforeContent());
-        summary.setAfterContent(comment.getAfterContent());
-        summary.setCreatedAt(comment.getCreatedAt());
-
-        // TODO: 프론트 테스트 - 리액션 개수 하드코딩
-        summary.setReactionCount((int) (Math.random() * 20) + 1);
-
-        return summary;
-    }
 }

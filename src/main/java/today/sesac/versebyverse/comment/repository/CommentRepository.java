@@ -33,4 +33,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return 댓글이 존재하면 Optional에 포함된 Comment 객체, 없으면 Optional.empty()
      */
     Optional<Comment> findByIdAndIsDeletedFalse(Long postId);
+
+
+    Page<Comment> findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(Long commenterId, Pageable pageable);
 }
