@@ -2,6 +2,7 @@ package today.sesac.versebyverse.profanity.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.versebyverse.profanity.entity.ProfanityCategory;
 
 /**
  * 비속어 수정 요청 Dto.
@@ -28,5 +29,5 @@ public class ProfanityUpdateRequestDto {
     /**
      * 비속어 카테고리.
      */
-    private String category;
+    private ProfanityCategory category;
 }
