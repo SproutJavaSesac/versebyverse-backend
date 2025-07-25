@@ -21,10 +21,12 @@ import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.repository.PostRepository;
 
 /**
+ * 회원 관련 비즈니스 로직을 처리하는 서비스.
  * TODO: 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가.
  */
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -80,7 +82,7 @@ public class MemberService {
      * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
      *
      * @param memberId 사용자의 ID
-     * @return MyInfoGetResponseDto 객체
+     * @return 내 정보 조회 응답 DTO
      */
     public MyInfoGetResponseDto getMyInformation(Long memberId) {
 
@@ -101,7 +103,7 @@ public class MemberService {
      *
      * @param memberId 사용자의 ID
      * @param nickname 변경할 사용자의 닉네임
-     * @return MyInfoEditResponseDto DTO
+     * @return 내 정보 수정 응답 DTO
      */
     @Transactional
     public MyInfoEditResponseDto editMyInformation(Long memberId, String nickname) {
@@ -132,9 +134,9 @@ public class MemberService {
         Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable);
 
-            return MyPostListResponseDto.of(
-                    pageByAuthorIdWithPageable
-            );
+        return MyPostListResponseDto.of(
+                pageByAuthorIdWithPageable
+        );
     }
 
     /**
