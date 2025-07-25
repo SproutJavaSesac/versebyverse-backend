@@ -28,8 +28,16 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    /**
+     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     */
     @GetMapping("/me/posts")
-    public ApiResponse<MyPostListResponseDto> getMemberPosts(
+    public ApiResponse<MyPostListResponseDto> getMyPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -37,7 +45,7 @@ public class MemberController {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyPostListResponseDto myPostListResponseDto = memberService.getMemberPosts(memberId,
+        MyPostListResponseDto myPostListResponseDto = memberService.getMyPosts(memberId,
                 PageRequest.of(page, size));
 
         return ApiResponse.success(myPostListResponseDto);

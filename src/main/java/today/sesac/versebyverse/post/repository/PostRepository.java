@@ -58,9 +58,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     /**
      * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다
      *
-     * @param authorId
-     * @param pageable
-     * @return
+     * @param authorId 게시글 작성자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 페이지로 가져온 작성자 게시글 목록
      */
     Page<Post> findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(Long authorId, Pageable pageable);
 }

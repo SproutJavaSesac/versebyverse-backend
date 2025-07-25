@@ -138,7 +138,14 @@ public class MemberService {
         return myInfoEditResponseDto;
     }
 
-    public MyPostListResponseDto getMemberPosts(Long memberId, Pageable pageable) {
+    /**
+     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     */
+    public MyPostListResponseDto getMyPosts(Long memberId, Pageable pageable) {
 
         getActiveMemberOrThrow(memberId);
 

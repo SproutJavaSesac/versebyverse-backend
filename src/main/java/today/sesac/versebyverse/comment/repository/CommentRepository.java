@@ -35,5 +35,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Comment> findByIdAndIsDeletedFalse(Long postId);
 
 
+    /**
+     * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다
+     *
+     * @param commenterId 댓글 작성자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 페이지로 가져온 작성자 댓글 목록
+     */
     Page<Comment> findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(Long commenterId, Pageable pageable);
 }
