@@ -150,7 +150,8 @@ public class MemberService {
 
         getActiveMemberOrThrow(memberId);
 
-        Page<Comment> pageByCommenterIdWithPageable = commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
+        Page<Comment> pageByCommenterIdWithPageable =
+                commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable
         );
 

@@ -36,7 +36,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 
     /**
-     * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다
+     * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다.
+     * 삭제된 댓글은 포함하지 않습니다.
      *
      * @param commenterId 댓글 작성자 ID
      * @param pageable 페이지네이션 정보
@@ -44,5 +45,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     Page<Comment> findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(Long commenterId, Pageable pageable);
 
+    /**
+     * 사용자가 작성한 총 댓글의 수를 조회합니다.
+     * 삭제된 댓글은 포함하지 않습니다.
+     *
+     * @param commenterId 댓글 작성자 ID
+     * @return 사용자가 작성한 총 댓글의 수
+     */
     int countByCommenterIdAndIsDeletedFalse(Long commenterId);
 }
