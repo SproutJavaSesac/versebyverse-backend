@@ -147,14 +147,15 @@ public class MemberService {
      * @return 사용자가 작성한 댓글 목록 응답 DTO
      */
     public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
+
         getActiveMemberOrThrow(memberId);
 
-        Page<Comment> pageByAuthorIdWithPageable = commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
+        Page<Comment> pageByCommenterIdWithPageable = commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable
         );
 
         return MyCommentListResponseDto.of(
-                pageByAuthorIdWithPageable
+                pageByCommenterIdWithPageable
         );
     }
 

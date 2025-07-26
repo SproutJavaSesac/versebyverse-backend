@@ -21,23 +21,33 @@ public class MyPostListResponseDto {
     /**
      * 페이지 객체를 사용하여 사용자가 작성한 게시글 목록 응답 DTO를 생성합니다.
      *
-     * @param posts 게시글 페이지 정보
+     * @param pagePosts 게시글 페이지 정보
      * @return 사용자가 작성한 게시글 목록 응답 DTO
      */
-    public static MyPostListResponseDto of(Page<Post> posts) {
-        List<MyPostSummaryDto> postSummaries = posts.getContent().stream()
-                .map(MyPostSummaryDto::of)
-                .toList();
+    public static MyPostListResponseDto of(Page<Post> pagePosts) {
 
-        PaginationDto paginationDto = new PaginationDto(
-                posts.getNumber(),
-                posts.getTotalPages(),
-                posts.getTotalElements(),
-                posts.getSize(),
-                posts.hasNext(),
-                posts.hasPrevious()
-        );
+        List<MyPostSummaryDto> postSummaries = convertPostsToSummaries(pagePosts);
+
+        PaginationDto paginationDto = getPaginationDto(pagePosts);
 
         return new MyPostListResponseDto(postSummaries, paginationDto);
     }
+
+    private static List<MyPostSummaryDto> convertPostsToSummaries(Page<Post> pagePosts) {
+        return pagePosts.getContent().stream()
+                .map(MyPostSummaryDto::of)
+                .toList();
+    }
+
+    private static PaginationDto getPaginationDto(Page<Post> pagePosts) {
+        return new PaginationDto(
+                pagePosts.getNumber(),
+                pagePosts.getTotalPages(),
+                pagePosts.getTotalElements(),
+                pagePosts.getSize(),
+                pagePosts.hasNext(),
+                pagePosts.hasPrevious()
+        );
+    }
+
 }

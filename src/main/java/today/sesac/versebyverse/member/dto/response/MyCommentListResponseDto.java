@@ -21,23 +21,35 @@ public class MyCommentListResponseDto {
     /**
      * 페이지 객체를 사용하여 사용자가 작성한 댓글 목록 응답 DTO를 생성합니다.
      *
-     * @param comments 댓글 페이지 정보
+     * @param pageComments 댓글 페이지 정보
      * @return 사용자가 작성한 댓글 목록 응답 DTO
      */
-    public static MyCommentListResponseDto of(Page<Comment> comments) {
-        List<MyCommentSummaryDto> commentSummaries = comments.getContent().stream()
-                .map(MyCommentSummaryDto::of)
-                .toList();
+    public static MyCommentListResponseDto of(Page<Comment> pageComments) {
 
-        PaginationDto paginationDto = new PaginationDto(
-                comments.getNumber(),
-                comments.getTotalPages(),
-                comments.getTotalElements(),
-                comments.getSize(),
-                comments.hasNext(),
-                comments.hasPrevious()
-        );
+        List<MyCommentSummaryDto> commentSummaries = convertCommentsToSummaries(
+                pageComments);
+
+        PaginationDto paginationDto = getPaginationDto(
+                pageComments);
 
         return new MyCommentListResponseDto(commentSummaries, paginationDto);
     }
+
+    private static List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
+        return pageComments.getContent().stream()
+                .map(MyCommentSummaryDto::of)
+                .toList();
+    }
+
+    private static PaginationDto getPaginationDto(Page<Comment> pageComments) {
+        return new PaginationDto(
+                pageComments.getNumber(),
+                pageComments.getTotalPages(),
+                pageComments.getTotalElements(),
+                pageComments.getSize(),
+                pageComments.hasNext(),
+                pageComments.hasPrevious()
+        );
+    }
+
 }
