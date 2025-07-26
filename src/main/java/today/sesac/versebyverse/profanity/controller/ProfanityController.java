@@ -118,7 +118,7 @@ public class ProfanityController {
     @DeleteMapping("{profanityId}")
     public ApiResponse<String> deleteProfanity(@PathVariable int profanityId) {
 
-        return ApiResponse.success("비속어 삭제가 성공했습니다.");
+        return ApiResponse.success(profanityService.deleteProfanity(profanityId));
     }
 
 }

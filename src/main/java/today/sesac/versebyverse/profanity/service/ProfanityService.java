@@ -46,4 +46,22 @@ public class ProfanityService {
         return ProfanityResponseDto.of(saved.getId(), saved.getOriginal(), saved.getReplacement(),
                 saved.getDescription(), saved.getCategory());
     }
+
+    /**
+     * 비속어 삭제(hard-delete).
+     *
+     * @param profanityId 클라인언트에서 요청한 비속어 ID
+     * @return 성공 메세지
+     * @throws ProfanityException 해당 비속어 id의 데이터가 없을 경우 발생
+     */
+    public String deleteProfanity(long profanityId) {
+
+        if (profanityRepository.deleteByIdIfExists(profanityId) != 1) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_NOT_FOUND,
+                    String.valueOf(profanityId));
+        } else {
+            return "비속어 삭제가 성공했습니다.";
+        }
+
+    }
 }
