@@ -21,18 +21,26 @@ public class ProfanityService {
 
     private final ProfanityRepository profanityRepository;
 
+    /**
+     * 비속어 등록.
+     *
+     * @param profanityRegisterRequestDto 클라이언트에서 입력 받은 비속어 정보 DTO
+     * @return 등록되 비속어 정보 DTO
+     * @throws ProfanityException original 값이 이미 존재할 경우 발생
+     */
     @Transactional
-    public ProfanityResponseDto registerProfanity(ProfanityRegisterRequestDto dto) {
+    public ProfanityResponseDto registerProfanity(
+            ProfanityRegisterRequestDto profanityRegisterRequestDto) {
 
-        if (profanityRepository.existsByOriginal(dto.original())) {
+        if (profanityRepository.existsByOriginal(profanityRegisterRequestDto.original())) {
             throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
-                    "original: " + dto.original());
+                    "original: " + profanityRegisterRequestDto.original());
         }
         Profanity profanity = Profanity.create(
-                dto.original(),
-                dto.replacement(),
-                dto.description(),
-                dto.category()
+                profanityRegisterRequestDto.original(),
+                profanityRegisterRequestDto.replacement(),
+                profanityRegisterRequestDto.description(),
+                profanityRegisterRequestDto.category()
         );
         Profanity saved = profanityRepository.save(profanity);
         return ProfanityResponseDto.of(saved.getId(), saved.getOriginal(), saved.getReplacement(),
