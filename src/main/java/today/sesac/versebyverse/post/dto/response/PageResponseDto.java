@@ -9,6 +9,6 @@ import today.sesac.versebyverse.global.response.PaginationDto;
  * @param <T> 항목 리스트 타입
  */
 public record PageResponseDto<T>(
-        List<T> items,
+        List<T> posts,
         PaginationDto pagination) {
 }
