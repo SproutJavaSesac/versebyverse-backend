@@ -19,6 +19,12 @@ public class AuthService {
 
     private final MemberService memberService;
 
+    /**
+     * 사용자의 인증 여부 및 인증 상태를 확인할 때 필요한 정보를 반환합니다.
+     *
+     * @param memberId 사용자의 ID
+     * @return 로그인 상태 반환 DTO
+     */
     public LoginStatusResponseDto getLoginStatus(Long memberId) {
 
         Member member = memberService.findById(memberId);

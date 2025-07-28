@@ -11,6 +11,9 @@ import today.sesac.versebyverse.auth.service.AuthService;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 
+/**
+ * 로그인 등 인증/인가 기능을 담당하는 컨트롤러.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -19,6 +22,12 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * 사용자의 인증 여부 및 인증 상태를 확인할 때 필요한 정보를 반환합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 로그인 상태 반환 DTO
+     */
     @GetMapping("/status")
     public ApiResponse<LoginStatusResponseDto> getLoginStatus(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
