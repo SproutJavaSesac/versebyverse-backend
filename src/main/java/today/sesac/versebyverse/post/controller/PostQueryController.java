@@ -45,7 +45,7 @@ public class PostQueryController {
     public ApiResponse<PageResponseDto<PostSummaryResponseDto>> getPostsList(
             @RequestParam(defaultValue = "ALL") Concept concept,
             // concept이 null 이면 all 인 경우와 같은 로직 사용(필터링 없이 최신순 조회)
-            @RequestParam(defaultValue = "latest") String sort,
+            @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
