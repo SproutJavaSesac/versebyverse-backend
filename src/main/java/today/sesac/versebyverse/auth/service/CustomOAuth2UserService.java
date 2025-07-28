@@ -43,6 +43,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String nickname = oAuth2User.getAttribute("name");
         log.info("nickname: {}", nickname); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
 
+        if (registrationId.equals("google")) {
+            throw new MemberNotFoundException(email + ", " + socialType,
+                    "해당 email을 가진 회원을 찾을 수 없습니다.");
+        }
+
         // 사용자 역할을 부여합니다.
         RoleType roleType = RoleType.ROLE_USER;
 
