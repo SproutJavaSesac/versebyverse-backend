@@ -10,7 +10,6 @@ import today.sesac.versebyverse.auth.dto.response.LoginStatusResponseDto;
 import today.sesac.versebyverse.auth.service.AuthService;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
-import today.sesac.versebyverse.member.service.MemberService;
 
 @Slf4j
 @RestController
@@ -19,8 +18,6 @@ import today.sesac.versebyverse.member.service.MemberService;
 public class AuthController {
 
     private final AuthService authService;
-
-    private final MemberService memberService;
 
     @GetMapping("/status")
     public ApiResponse<LoginStatusResponseDto> getLoginStatus(@AuthenticationPrincipal UserPrincipal userPrincipal) {
