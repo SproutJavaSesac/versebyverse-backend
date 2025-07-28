@@ -25,6 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p
+            WHERE p.isDeleted = false And p.isHidden = false And p.isReported = false
             ORDER BY p.createdAt DESC
             """)
     Page<Post> findAllOrderByCreatedAt(Pageable pageable);
@@ -37,6 +38,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Comment c ON p.id = c.post.id
+            WHERE p.isDeleted = false And p.isHidden = false And p.isReported = false
             GROUP BY p.id
             ORDER BY COUNT(c.id) DESC
             """)
@@ -61,6 +63,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             SELECT p FROM Post p 
             WHERE p.conceptType = :conceptType
+            AND p.isDeleted = false And p.isHidden = false And p.isReported = false
             """)
     Page<Post> findByConceptType(Concept conceptType, Pageable pageable);
 
@@ -74,6 +77,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT p FROM Post p
             LEFT JOIN Comment c ON p.id = c.post.id
             WHERE p.conceptType = :conceptType
+            AND p.isDeleted = false And p.isHidden = false And p.isReported = false
             GROUP BY p
             ORDER BY COUNT(c.id) DESC
             """)
