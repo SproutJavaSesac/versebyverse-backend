@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.ai.model;
+package today.sesac.versebyverse.ai.prompt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

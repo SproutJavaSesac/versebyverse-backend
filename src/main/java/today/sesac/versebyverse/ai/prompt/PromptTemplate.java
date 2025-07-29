@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.ai.dto.request.AiRequestDto;
-import today.sesac.versebyverse.ai.model.AiPromptPayload;
 
 /**
  * AI 프롬프트 메시지 구성을 위한 템플릿 클래스입니다.
@@ -15,8 +14,6 @@ import today.sesac.versebyverse.ai.model.AiPromptPayload;
  *     <li>주로 LLM 프롬프트 설계에 사용됩니다.</li>
  *     <li>프롬프트의 각 영역은 템플릿 파일에서 분리하여 읽어올 수 있습니다.</li>
  * </ul>
- *
- * </pre>
  *
  * @see today.sesac.versebyverse.ai.prompt.PromptTemplateLoader
  */
