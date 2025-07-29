@@ -1,37 +1,47 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import today.sesac.versebyverse.post.entity.Post;
 
 /**
- * 게시글 단건 조회 응답 dto.
+ * 게시글 단건 조회 응답 record.
  */
-@Getter
-@AllArgsConstructor(staticName = "of")
-public class PostSingleQueryResponseDto {
+public record PostSingleQueryResponseDto(
 
-    private final Long postId;
+        Long postId,
 
-    private final String title;
+        String afterTitle,
 
-    private final String afterContent;
+        String afterContent,
 
-    private final String nickname;
+        String nickname,
 
-    private final LocalDateTime createdAt;
+        LocalDateTime createdAt,
 
-    private final String imgUrl;
+        String imgUrl,
 
-    private final String conceptType;
+        String conceptType,
 
-    private final Boolean isMine;
+        Boolean isMine
 
-    // TODO comment와 reaction 부분 연결 필요
-//    private final int commentCount;
+        // TODO comment와 reaction 부분 연결 필요
+//    int commentCount;
 //
-//    private final int reactionCount;
+//    int reactionCount;
 //
-//    private final Map<String, Integer> reactionDetailCount;
+//    Map<String, Integer> reactionDetailCount;
 
+) {
+    public static PostSingleQueryResponseDto of(Post post, Long memberId) {
+        return new PostSingleQueryResponseDto(
+                post.getId(),
+                post.getAfterTitle(),
+                post.getAfterContent(),
+                post.getAuthor().getNickname(),
+                post.getCreatedAt(),
+                post.getImageUrl(),
+                post.getConceptType().toString(),
+                post.isMine(memberId)
+        );
+    }
 }

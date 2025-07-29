@@ -1,28 +1,47 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.post.entity.Post;
 
-@Getter
-@AllArgsConstructor
-public class PostSummaryResponseDto {
+/**
+ * 게시글 목록 조회 시 하나의 게시글을
+ * 나타내기 위한 record.
+ */
+//image 값이 null인 경우도 있어서 image는 final 제외 -> 빌더쓰면 안 붙여도 됨
 
-    private Long postId;
+public record PostSummaryResponseDto(
 
-    private String nickname;
+        String nickname,
 
-    private String afterTitle;
+        String afterTitle,
 
-    private String afterContent;
+        String afterContent,
 
-    private LocalDateTime createdAt;
+        LocalDateTime createdAt,
 
-    private int reactionCount;
+        int reactionCount,
 
-    private int commentCount;
+        Long commentCount,
 
-    private String conceptType;
+        Concept conceptType,
 
-    private String imageUrl;
+        Long postId,
+
+        String imageUrl
+
+) {
+    public static PostSummaryResponseDto of(Post post, Long commentCount, int reactionCount) {
+        return new PostSummaryResponseDto(
+                post.getAuthor().getNickname(),
+                post.getAfterTitle(),
+                post.getAfterContent(),
+                post.getCreatedAt(),
+                reactionCount,
+                commentCount,
+                post.getConceptType(),
+                post.getId(),
+                post.getImageUrl()
+        );
+    }
 }
