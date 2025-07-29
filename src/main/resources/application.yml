@@ -32,3 +32,6 @@ spring:
             scope:
               - email
               - profile
+
+client:
+  url: ${CLIENT_URL}
