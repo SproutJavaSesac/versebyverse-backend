@@ -59,12 +59,12 @@ public class RankingService {
                                                                  Pageable pageable) {
 
         DateTimeRange periodDateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(
-                periodValue,
-                periodType);
+                periodValue, periodType);
 
         Page<Ranking> rankings =
                 rankingRepository.findAllByCategoryAndPeriodTypeAndCreatedAtBetween(
                         category, periodType, periodDateTimeRange.startDateTime(),
+
                         periodDateTimeRange.endDateTime(),
                         pageable);
 
@@ -73,6 +73,7 @@ public class RankingService {
                         ranking,
                         getRankChangeWithSymbol(ranking.getRank(), ranking.getPreviousRank())
                 )).toList();
+
 
         return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
     }

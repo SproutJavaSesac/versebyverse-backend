@@ -16,15 +16,14 @@ import org.springframework.stereotype.Component;
  *
  * <ul>
  *   <li>템플릿 파일은 resources/templates/ 디렉토리에 [프롬프트타입].md 형식으로 존재해야 합니다.</li>
- *   <li>파일 내용은 "---" 구분자를 기준으로 role, condition, example 영역으로 분리되어야 합니다.</li>
  * </ul>
  *
  * <pre>
- * [role]
- * ---
- * [condition]
- * ---
- * [example]
+ * ## role
+ *
+ * ## condition
+ *
+ * ## example
  * </pre>
  */
 @Component
@@ -57,28 +56,106 @@ public class PromptTemplateLoader {
      *
      * @param type 프롬프트 타입
      * @return 파싱된 {@link PromptTemplate} 인스턴스
-     * TODO : 로직 메서드로 분리하기
      */
     private PromptTemplate loadTemplate(PromptType type) {
 
-        String filePath = TEMPLATE_PATH + type.name().toLowerCase() + ".md";
+        String filePath = buildFilePath(type);
+        String content = readTemplateFile(filePath);
+        return parseTemplateContent(content, filePath);
+    }
+
+    /**
+     * PromptType을 기반으로 템플릿 파일 경로를 생성합니다.
+     *
+     * @param type 프롬프트 타입
+     * @return 템플릿 파일 경로
+     */
+    private String buildFilePath(PromptType type) {
+
+        return TEMPLATE_PATH + type.name().toLowerCase() + ".md";
+    }
+
+    /**
+     * 템플릿 파일을 읽어 문자열로 반환합니다.
+     *
+     * @param filePath 읽을 파일 경로
+     * @return 파일 내용
+     * @throws RuntimeException 파일 읽기 실패 시
+     */
+    private String readTemplateFile(String filePath) {
+
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new ClassPathResource(filePath).getInputStream(),
                         StandardCharsets.UTF_8))) {
-            String content = reader.lines().collect(Collectors.joining("\n"));
-            String[] parts = content.split("---", 3);
-
-            if (parts.length < 3) {
-                throw new IllegalArgumentException("Invalid format in: " + filePath);
-            }
-
-            return PromptTemplate.of(parts[0].trim(), // role
-                    parts[1].trim(), // condition
-                    parts[2].trim()  // example
-            );
+            return reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
-            throw new RuntimeException("[PromptTemplateLoader] 템플릿 파일 로드 실패:" + filePath, e);
+            throw new IllegalArgumentException("[PromptTemplateLoader] 템플릿 파일 로드 실패: " + filePath,
+                    e);
         }
+    }
+
+    /**
+     * 템플릿 파일 내용을 파싱하여 PromptTemplate 객체를 생성합니다.
+     *
+     * @param content  템플릿 파일 내용
+     * @param filePath 파일 경로 (에러 메시지용)
+     * @return 파싱된 PromptTemplate 객체
+     * @throws IllegalArgumentException 템플릿 형식이 올바르지 않은 경우
+     */
+    private PromptTemplate parseTemplateContent(String content, String filePath) {
+
+        String[] sections = extractSections(content, filePath);
+        String role = extractSectionContent(sections[1], "role");
+        String condition = extractSectionContent(sections[2], "condition");
+        String example = extractSectionContent(sections[3], "example");
+
+        return PromptTemplate.of(role, condition, example);
+    }
+
+    /**
+     * 템플릿 내용을 ## 기준으로 섹션별로 분리합니다.
+     *
+     * @param content  템플릿 파일 내용
+     * @param filePath 파일 경로 (에러 메시지용)
+     * @return 분리된 섹션 배열
+     * @throws IllegalArgumentException 섹션이 부족한 경우
+     */
+    private String[] extractSections(String content, String filePath) {
+
+        String[] sections = content.split("##");
+
+        if (sections.length < 4) { // 첫 번째는 빈 문자열, 나머지 3개가 role, condition, example
+            throw new IllegalArgumentException(
+                    String.format("템플릿 파일 형식이 올바르지 않습니다. role, condition, example 섹션이 모두 필요합니다: %s",
+                            filePath));
+        }
+
+        return sections;
+    }
+
+    /**
+     * 섹션 내용에서 헤더를 제거하고 실제 내용만 추출합니다.
+     *
+     * @param section     섹션 원본 내용
+     * @param sectionName 섹션 이름 (에러 메시지용)
+     * @return 정제된 섹션 내용
+     */
+    private String extractSectionContent(String section, String sectionName) {
+
+        if (section == null || section.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("%s 섹션의 내용이 비어있습니다.", sectionName));
+        }
+
+        // 섹션 헤더 제거 (예: "role" 텍스트 제거)
+        String content = section.replaceFirst("^\\s*" + sectionName + "\\s*", "").trim();
+
+        if (content.isEmpty()) {
+            throw new IllegalArgumentException(
+                    String.format("%s 섹션의 내용이 헤더만 있고 실제 내용이 없습니다.", sectionName));
+        }
+
+        return content;
     }
 
     /**
@@ -91,5 +168,4 @@ public class PromptTemplateLoader {
 
         return templateMap.get(type);
     }
-
 }
