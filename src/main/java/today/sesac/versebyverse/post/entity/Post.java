@@ -102,8 +102,8 @@ public class Post extends BaseEntity {
      * Post 생성자.
      */
     private Post(Member author, String beforeContent, String afterContent, String beforeTitle,
-            String afterTitle,
-            String imageUrl, Emotion emotionType, Concept conceptType) {
+                 String afterTitle,
+                 String imageUrl, Emotion emotionType, Concept conceptType) {
 
         this.author = author;
         this.beforeContent = beforeContent;
@@ -122,9 +122,9 @@ public class Post extends BaseEntity {
      * Post 팩토리 메서드.
      */
     public static Post createPost(Member author, String beforeContent, String afterContent,
-            String beforeTitle, String afterTitle, String imageUrl,
-            Emotion emotionType,
-            Concept conceptType) {
+                                  String beforeTitle, String afterTitle, String imageUrl,
+                                  Emotion emotionType,
+                                  Concept conceptType) {
 
         return new Post(author, beforeContent, afterContent, beforeTitle, afterTitle, imageUrl,
                 emotionType, conceptType);
