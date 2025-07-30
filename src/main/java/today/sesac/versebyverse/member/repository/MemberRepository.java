@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.SocialType;
 
+/**
+ * 회원 관련 레포지토리 인터페이스.
+ */
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
