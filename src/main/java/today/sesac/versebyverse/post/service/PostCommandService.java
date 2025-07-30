@@ -34,7 +34,7 @@ public class PostCommandService {
      * @return PostCreateResponseDto 게시물 작성 dto
      */
     public PostCreateResponseDto savePost(PostCreateRequestDto postCreateRequestDto,
-            Long memberId) {
+                                          Long memberId) {
 
         //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);
@@ -67,11 +67,7 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
-        return PostCreateResponseDto.of(
-                savedPost.getId(),
-                savedPost.getAfterTitle(),
-                savedPost.getAfterContent()
-        );
+        return PostCreateResponseDto.of(savedPost);
     }
 
     /**

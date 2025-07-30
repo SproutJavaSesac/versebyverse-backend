@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class AiConfig {
 
     /**
-     * ChatClient Bean 주입
+     * ChatClient Bean 주입.
      *
      * @param chatClientBuilder chatClientBuilder
      * @return ChatClient chatClient

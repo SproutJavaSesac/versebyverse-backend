@@ -55,7 +55,7 @@ public class Profanity extends BaseEntity {
     private ProfanityCategory category;
 
     private Profanity(String original, String replacement, String description,
-            ProfanityCategory category) {
+                      ProfanityCategory category) {
 
         this.original = original;
         this.replacement = replacement;
@@ -73,9 +73,9 @@ public class Profanity extends BaseEntity {
      * @return 주어진 매개변수로 초기화된 새로운 {@link Profanity} 객체입니다.
      */
     public static Profanity create(String original,
-            String replacement,
-            String description,
-            ProfanityCategory category) {
+                                   String replacement,
+                                   String description,
+                                   ProfanityCategory category) {
 
         return new Profanity(original, replacement, description, category);
     }

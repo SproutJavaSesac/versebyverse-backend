@@ -27,7 +27,7 @@ import today.sesac.versebyverse.global.exception.LoginRequiredException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 
 /**
- * 전역 예외 처리 테스트
+ * 전역 예외 처리 테스트.
  */
 @Import(TestSecurityConfig.class) //TODO: 테스트 커스텀 유저 추가 애노테이션 구현 필요
 @WebMvcTest(controllers = GlobalExceptionHandlerTest.class)
@@ -115,7 +115,7 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * 테스트용 컨트롤러
+     * 테스트용 컨트롤러.
      */
     @RestController
     static class TestController {

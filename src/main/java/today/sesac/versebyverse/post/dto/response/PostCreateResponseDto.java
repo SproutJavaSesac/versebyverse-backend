@@ -1,18 +1,23 @@
 package today.sesac.versebyverse.post.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import today.sesac.versebyverse.post.entity.Post;
 
 /**
- * 게시글 작성 응답 dto.
+ * 게시글 작성 응답 record.
  */
-@Getter
-@AllArgsConstructor(staticName = "of")
-public class PostCreateResponseDto {
+public record PostCreateResponseDto(
 
-    private final Long postId;
+        Long postId,
 
-    private final String afterTitle;
+        String afterTitle,
 
-    private final String afterContent;
+        String afterContent
+) {
+    public static PostCreateResponseDto of(Post post) {
+        return new PostCreateResponseDto(
+                post.getId(),
+                post.getAfterTitle(),
+                post.getAfterContent()
+        );
+    }
 }
