@@ -131,12 +131,16 @@ public class MemberService {
 
         getActiveMemberOrThrow(memberId);
 
+        // 작성한 게시글을 Page 객체으로 조회
         Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable);
 
-        return MyPostListResponseDto.of(
+        // Page 객체를 DTO로 변환
+        MyPostListResponseDto myPostListResponseDto = MyPostListResponseDto.of(
                 pageByAuthorIdWithPageable
         );
+
+        return myPostListResponseDto;
     }
 
     /**
@@ -150,14 +154,18 @@ public class MemberService {
 
         getActiveMemberOrThrow(memberId);
 
+        // 작성한 댓글을 Page 객체로 조회
         Page<Comment> pageByCommenterIdWithPageable =
                 commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable
         );
 
-        return MyCommentListResponseDto.of(
+        // Page 객체를 DTO로 변환
+        MyCommentListResponseDto myCommentListResponseDto = MyCommentListResponseDto.of(
                 pageByCommenterIdWithPageable
         );
+
+        return myCommentListResponseDto;
     }
 
     /**
