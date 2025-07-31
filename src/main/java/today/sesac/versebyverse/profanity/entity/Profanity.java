@@ -93,8 +93,7 @@ public class Profanity extends BaseEntity {
      *
      * @param updateRequestDto 수정할 값이 담긴 요청 DTO
      */
-    public void updateProfanity(ProfanityUpdateRequestDto updateRequestDto)
-            throws ProfanityException {
+    public void updateProfanity(ProfanityUpdateRequestDto updateRequestDto) {
 
         if (updateRequestDto.getOriginal().equals(original)
                 && updateRequestDto.getReplacement().equals(replacement)

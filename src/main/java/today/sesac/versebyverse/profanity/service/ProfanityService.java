@@ -73,17 +73,15 @@ public class ProfanityService {
                         "ProfanityID: " + profanityId));
 
         // original 값이 변경되는 경우에만 중복 체크
-        if (profanityRepository.existsByOriginal(profanityUpdateRequestDto.getOriginal())) {
+        if (!profanityUpdateRequestDto.getOriginal().equals(profanity.getOriginal())
+                && profanityRepository.existsByOriginal(profanityUpdateRequestDto.getOriginal())) {
             log.warn("비속어 수정 실패 - 이미 존재하는 original: {}", profanityUpdateRequestDto.getOriginal());
             throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
                     profanityUpdateRequestDto.getOriginal());
         }
 
-        try {
-            profanity.updateProfanity(profanityUpdateRequestDto);
-        } catch (ProfanityException e) {
-            log.warn("비속어 수정 실패 - 변경 사항 없음: {}", e.getMessage());
-        }
+        profanity.updateProfanity(profanityUpdateRequestDto);
+
         return ProfanityResponseDto.of(profanity.getId(), profanity.getOriginal(),
                 profanity.getReplacement(),
                 profanity.getDescription(), profanity.getCategory());
