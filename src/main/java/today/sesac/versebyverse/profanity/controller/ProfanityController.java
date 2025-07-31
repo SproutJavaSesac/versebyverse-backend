@@ -99,9 +99,9 @@ public class ProfanityController {
      * @param profanityId 비속어 식별 id
      * @return 응답
      */
-    @PatchMapping("{profanityId}")
+    @PatchMapping("/{profanityId}")
     public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable long profanityId,
-            @RequestBody ProfanityUpdateRequestDto profanityUpdateRequestDto) {
+            @Valid @RequestBody ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
         return ApiResponse.success(profanityService.updateProfanity(profanityId, profanityUpdateRequestDto));
     }

@@ -1,13 +1,21 @@
 package today.sesac.versebyverse.profanity.entity;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.global.domain.BaseEntity;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityUpdateRequestDto;
+import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
+import today.sesac.versebyverse.profanity.exception.ProfanityException;
 
 /**
  * {@code Profanity} 엔티티는 비속어 정보를 관리하기 위한 도메인입니다.
@@ -55,7 +63,7 @@ public class Profanity extends BaseEntity {
     private ProfanityCategory category;
 
     private Profanity(String original, String replacement, String description,
-                      ProfanityCategory category) {
+            ProfanityCategory category) {
 
         this.original = original;
         this.replacement = replacement;
@@ -73,30 +81,31 @@ public class Profanity extends BaseEntity {
      * @return 주어진 매개변수로 초기화된 새로운 {@link Profanity} 객체입니다.
      */
     public static Profanity create(String original,
-                                   String replacement,
-                                   String description,
-                                   ProfanityCategory category) {
+            String replacement,
+            String description,
+            ProfanityCategory category) {
 
         return new Profanity(original, replacement, description, category);
     }
 
     /**
-     * 전달받은 요청 DTO의 값으로 Profanity 엔티티를 부분 업데이트합니다.
-     * null 또는 빈 문자열("") 값은 무시되며 기존 값이 유지됩니다.
+     * 전달받은 요청 DTO의 값으로 Profanity 엔티티를 부분 업데이트합니다. null 또는 빈 문자열("") 값은 무시되며 기존 값이 유지됩니다.
      *
      * @param updateRequestDto 수정할 값이 담긴 요청 DTO
      */
-    public void updateProfanity(ProfanityUpdateRequestDto updateRequestDto) {
-        if (updateRequestDto.getOriginal() != null && !updateRequestDto.getOriginal().isEmpty()) {
+    public void updateProfanity(ProfanityUpdateRequestDto updateRequestDto)
+            throws ProfanityException {
+
+        if (updateRequestDto.getOriginal().equals(original)
+                && updateRequestDto.getReplacement().equals(replacement)
+                && updateRequestDto.getDescription().equals(description)
+                && updateRequestDto.getCategory().equals(category)) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_NO_CHANGES,
+                    String.valueOf(this.id));
+        } else {
             this.original = updateRequestDto.getOriginal();
-        }
-        if (updateRequestDto.getReplacement() != null && !updateRequestDto.getReplacement().isEmpty()) {
             this.replacement = updateRequestDto.getReplacement();
-        }
-        if (updateRequestDto.getDescription() != null && !updateRequestDto.getDescription().isEmpty()) {
             this.description = updateRequestDto.getDescription();
-        }
-        if (updateRequestDto.getCategory() != null) {
             this.category = updateRequestDto.getCategory();
         }
     }
