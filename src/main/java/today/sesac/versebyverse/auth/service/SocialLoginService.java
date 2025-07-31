@@ -14,7 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import today.sesac.versebyverse.auth.exception.WithdrawFailureException;
+import today.sesac.versebyverse.member.exception.WithdrawFailureException;
 
 @Slf4j
 @Service
