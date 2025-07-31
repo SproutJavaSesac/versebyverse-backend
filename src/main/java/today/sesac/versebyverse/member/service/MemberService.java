@@ -26,7 +26,6 @@ import today.sesac.versebyverse.post.repository.PostRepository;
  */
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
