@@ -492,48 +492,46 @@ SELECT 200 + n,                -- id
        false,
        false,
        ELT(MOD(n, 6) + 1, 'HAPPY', 'SAD', 'ANGRY', 'EXCITED', 'CONFUSED', 'PROUD'),
-       ELT(MOD(n, 5) + 1, 'CLASSICAL_POETRY', 'POETRY', 'NOVEL', 'DRAMA', 'ESSAY'),
-       TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 2 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND,
-       TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 2 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND
+       ELT(MOD(n, 5) + 1, 'CLASSICAL_POETRY', 'POETRY', 'NOVEL', 'DRAMA',
+           'ESSAY'), TIMESTAMP (DATE_SUB(CURDATE(), INTERVAL 2 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND, TIMESTAMP (DATE_SUB(CURDATE(), INTERVAL 2 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND
 FROM (SELECT (n1.n + n10.n * 10) as n
-      FROM (SELECT 0 as n
-            UNION ALL
-            SELECT 1
-            UNION ALL
-            SELECT 2
-            UNION ALL
-            SELECT 3
-            UNION ALL
-            SELECT 4
-            UNION ALL
-            SELECT 5
-            UNION ALL
-            SELECT 6
-            UNION ALL
-            SELECT 7
-            UNION ALL
-            SELECT 8
-            UNION ALL
-            SELECT 9) n1,
-           (SELECT 0 as n
-            UNION ALL
-            SELECT 1
-            UNION ALL
-            SELECT 2
-            UNION ALL
-            SELECT 3
-            UNION ALL
-            SELECT 4
-            UNION ALL
-            SELECT 5
-            UNION ALL
-            SELECT 6
-            UNION ALL
-            SELECT 7
-            UNION ALL
-            SELECT 8
-            UNION ALL
-            SELECT 9) n10) nums
+    FROM (SELECT 0 as n
+    UNION ALL
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+    UNION ALL
+    SELECT 4
+    UNION ALL
+    SELECT 5
+    UNION ALL
+    SELECT 6
+    UNION ALL
+    SELECT 7
+    UNION ALL
+    SELECT 8
+    UNION ALL
+    SELECT 9) n1, (SELECT 0 as n
+    UNION ALL
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+    UNION ALL
+    SELECT 4
+    UNION ALL
+    SELECT 5
+    UNION ALL
+    SELECT 6
+    UNION ALL
+    SELECT 7
+    UNION ALL
+    SELECT 8
+    UNION ALL
+    SELECT 9) n10) nums
 WHERE n BETWEEN 1 AND 100;
 
 
@@ -553,48 +551,46 @@ SELECT 300 + n,                -- id
        false,
        false,
        ELT(MOD(n, 6) + 1, 'HAPPY', 'SAD', 'ANGRY', 'EXCITED', 'CONFUSED', 'PROUD'),
-       ELT(MOD(n, 5) + 1, 'CLASSICAL_POETRY', 'POETRY', 'NOVEL', 'DRAMA', 'ESSAY'),
-       TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND,
-       TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND
+       ELT(MOD(n, 5) + 1, 'CLASSICAL_POETRY', 'POETRY', 'NOVEL', 'DRAMA',
+           'ESSAY'), TIMESTAMP (DATE_SUB(CURDATE(), INTERVAL 1 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND, TIMESTAMP (DATE_SUB(CURDATE(), INTERVAL 1 DAY)) + INTERVAL FLOOR(RAND() * 86400) SECOND
 FROM (SELECT (n1.n + n10.n * 10) as n
-      FROM (SELECT 0 as n
-            UNION ALL
-            SELECT 1
-            UNION ALL
-            SELECT 2
-            UNION ALL
-            SELECT 3
-            UNION ALL
-            SELECT 4
-            UNION ALL
-            SELECT 5
-            UNION ALL
-            SELECT 6
-            UNION ALL
-            SELECT 7
-            UNION ALL
-            SELECT 8
-            UNION ALL
-            SELECT 9) n1,
-           (SELECT 0 as n
-            UNION ALL
-            SELECT 1
-            UNION ALL
-            SELECT 2
-            UNION ALL
-            SELECT 3
-            UNION ALL
-            SELECT 4
-            UNION ALL
-            SELECT 5
-            UNION ALL
-            SELECT 6
-            UNION ALL
-            SELECT 7
-            UNION ALL
-            SELECT 8
-            UNION ALL
-            SELECT 9) n10) nums
+    FROM (SELECT 0 as n
+    UNION ALL
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+    UNION ALL
+    SELECT 4
+    UNION ALL
+    SELECT 5
+    UNION ALL
+    SELECT 6
+    UNION ALL
+    SELECT 7
+    UNION ALL
+    SELECT 8
+    UNION ALL
+    SELECT 9) n1, (SELECT 0 as n
+    UNION ALL
+    SELECT 1
+    UNION ALL
+    SELECT 2
+    UNION ALL
+    SELECT 3
+    UNION ALL
+    SELECT 4
+    UNION ALL
+    SELECT 5
+    UNION ALL
+    SELECT 6
+    UNION ALL
+    SELECT 7
+    UNION ALL
+    SELECT 8
+    UNION ALL
+    SELECT 9) n10) nums
 WHERE n BETWEEN 1 AND 100;
 
 
@@ -881,8 +877,7 @@ VALUES (181, 10, 1, NULL, 'P10-L0-1', 'P10-L0-1', 0, '181', false, false, NOW(),
 
 -- ranking
 INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank,
-                     created_at) value
-    (1, 1, 1, 1000, 'DAILY', 'POST', NULL, '2025-07-13 00:00:00'),
+                     created_at) value (1, 1, 1, 1000, 'DAILY', 'POST', NULL, '2025-07-13 00:00:00'),
     (2, 2, 2, 900, 'DAILY', 'POST', NULL, '2025-07-13 23:59:59'),
     (3, 3, 3, 800, 'DAILY', 'POST', NULL, '2025-07-14 00:00:00'),
     (4, 4, 4, 700, 'DAILY', 'POST', NULL, NOW()),
@@ -892,6 +887,40 @@ INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previou
     (8, 8, 8, 300, 'DAILY', 'POST', NULL, NOW()),
     (9, 9, 9, 200, 'DAILY', 'POST', NULL, NOW()),
     (10, 10, 10, 100, 'DAILY', 'POST', NULL, NOW());
+
+-- Member 1의 10일치 DAILY POST 랭킹 데이터 (최근 10일)
+-- 각 날짜별로 다른 점수와 순위를 가지도록 설정
+INSERT INTO rankings(id, member_id, ranks, score, period_type, category, previous_rank, created_at)
+VALUES
+-- 오늘 (가장 높은 점수)
+(11, 1, 1, 950, 'DAILY', 'POST', 2, DATE_SUB(NOW(), INTERVAL 0 DAY)),
+
+-- 1일 전
+(12, 1, 2, 870, 'DAILY', 'POST', 3, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+
+-- 2일 전
+(13, 1, 3, 820, 'DAILY', 'POST', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+
+-- 3일 전
+(14, 1, 1, 910, 'DAILY', 'POST', 4, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+
+-- 4일 전
+(15, 1, 4, 750, 'DAILY', 'POST', 2, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+
+-- 5일 전
+(16, 1, 2, 880, 'DAILY', 'POST', 5, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+
+-- 6일 전
+(17, 1, 5, 680, 'DAILY', 'POST', 3, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+
+-- 7일 전
+(18, 1, 3, 800, 'DAILY', 'POST', 6, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+
+-- 8일 전
+(19, 1, 6, 620, 'DAILY', 'POST', 4, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+
+-- 9일 전 (가장 낮은 점수)
+(20, 1, 7, 580, 'DAILY', 'POST', 7, DATE_SUB(NOW(), INTERVAL 9 DAY));
 
 INSERT INTO profanities (original, replacement, description, category, created_at, updated_at)
 VALUES
