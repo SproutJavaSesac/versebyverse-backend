@@ -64,8 +64,9 @@ public class MemberService {
         log.info("회원 삭제 시작, memberId: {}", memberId);
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
-                () -> new MemberNotFoundException(String.valueOf(memberId),
-                        "해당 id를 가진 회원을 찾을 수 없습니다."));
+                () -> new MemberNotFoundException(null, String.format(
+                        "해당 id를 가진 회원을 찾을 수 없습니다. memberId: %d", memberId)));
+
         member.delete();
 
         log.info("회원 삭제 완료, memberId: {}", memberId);
