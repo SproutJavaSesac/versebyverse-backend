@@ -70,6 +70,22 @@ public class Reaction extends BaseEntity {
     private Emotion type;
 
     /**
+     * Reaction 생성자.
+     */
+    private Reaction(Member author, Post post, Emotion emotion) {
+        this.member = author;
+        this.post = post;
+        this.type = emotion;
+    }
+
+    /**
+     * 정적 팩토리 메서드.
+     */
+    public static Reaction createPostReaction(Member author, Post post, Emotion emotion) {
+        return new Reaction(author, post, emotion);
+    }
+
+    /**
      * 게시글/댓글 유무 검증 메서드.
      * 하나의 회원에 게시글 또는 댓글 중 하나 반드시 있어야함
      */
