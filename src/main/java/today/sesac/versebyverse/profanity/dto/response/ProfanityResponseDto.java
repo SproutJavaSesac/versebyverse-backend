@@ -2,20 +2,21 @@ package today.sesac.versebyverse.profanity.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import today.sesac.versebyverse.profanity.entity.ProfanityCategory;
 
 /**
  * 비속어 정보 DTO.
  */
-@Data
-@Builder
+@Builder        //TODO: 삭제예정
+@Getter
 @AllArgsConstructor(staticName = "of")
 public class ProfanityResponseDto {
 
     /**
      * 비속어 식별자.
      */
-    private int profanityId;
+    private long profanityId;
 
     /**
      * 비속어 원문.
@@ -35,5 +36,5 @@ public class ProfanityResponseDto {
     /**
      * 비속어 카테고리.
      */
-    private String category;
+    private ProfanityCategory category;
 }

@@ -3,6 +3,12 @@ package today.sesac.versebyverse.profanity.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
+import today.sesac.versebyverse.profanity.dto.response.ProfanityResponseDto;
+import today.sesac.versebyverse.profanity.entity.Profanity;
+import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
+import today.sesac.versebyverse.profanity.exception.ProfanityException;
 import today.sesac.versebyverse.profanity.repository.ProfanityRepository;
 
 /**
@@ -13,9 +19,31 @@ import today.sesac.versebyverse.profanity.repository.ProfanityRepository;
 @RequiredArgsConstructor
 public class ProfanityService {
 
-    /**
-     * 데이터베이스와 상호작용을 위해 ProfanityRepository를 의존성 주입받습니다.
-     */
     private final ProfanityRepository profanityRepository;
 
+    /**
+     * 비속어 등록.
+     *
+     * @param profanityRegisterRequestDto 클라이언트에서 입력 받은 비속어 정보 DTO
+     * @return 등록되 비속어 정보 DTO
+     * @throws ProfanityException original 값이 이미 존재할 경우 발생
+     */
+    @Transactional
+    public ProfanityResponseDto registerProfanity(
+            ProfanityRegisterRequestDto profanityRegisterRequestDto) {
+
+        if (profanityRepository.existsByOriginal(profanityRegisterRequestDto.original())) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_ALREADY_EXISTS,
+                    "original: " + profanityRegisterRequestDto.original());
+        }
+        Profanity profanity = Profanity.create(
+                profanityRegisterRequestDto.original(),
+                profanityRegisterRequestDto.replacement(),
+                profanityRegisterRequestDto.description(),
+                profanityRegisterRequestDto.category()
+        );
+        Profanity saved = profanityRepository.save(profanity);
+        return ProfanityResponseDto.of(saved.getId(), saved.getOriginal(), saved.getReplacement(),
+                saved.getDescription(), saved.getCategory());
+    }
 }

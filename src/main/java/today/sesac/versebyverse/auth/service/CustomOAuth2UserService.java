@@ -66,13 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     roleType, socialType, email, nickname);
         }
 
-        UserPrincipal userPrincipal = UserPrincipal.create(member.getId(), roleType, socialType,
+        return UserPrincipal.create(member.getId(), roleType, socialType,
                 email);
-
-        // TODO: 프론트 테스트를 위해 id 바꿔치기 - 다른 api 연동 완료되면 지울 것.
-        UserPrincipal mockUserPrincipal = UserPrincipal.create(1L, RoleType.ROLE_USER,
-                SocialType.GOOGLE, memberService.getMember(1L).getEmail());
-
-        return mockUserPrincipal;
     }
 }

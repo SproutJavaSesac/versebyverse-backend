@@ -13,7 +13,7 @@ public abstract class AbstractBaseException extends RuntimeException {
     private final String param;
 
     protected AbstractBaseException(IErrorCode iErrorCode, String param,
-            String errorMessageInStackTrace) {
+                                    String errorMessageInStackTrace) {
 
         super(errorMessageInStackTrace);
         this.iErrorCode = iErrorCode;

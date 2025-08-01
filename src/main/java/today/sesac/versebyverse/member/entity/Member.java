@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
-            String profileImageUrl) {
+                   String profileImageUrl) {
 
         this.roleType = roleType;
         this.socialType = socialType;
@@ -73,7 +73,7 @@ public class Member extends BaseEntity {
      * @return 생성된 회원 엔티티
      */
     public static Member create(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
+                                String nickname) {
 
         return new Member(roleType, socialType, email, nickname, null);
     }
