@@ -5,11 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.global.domain.Emotion;
 
-@Getter
-@AllArgsConstructor
 /**
  * 게시글 반응하기 응답 dto.
  */
+@Getter
+@AllArgsConstructor(staticName = "of")
 public class PostReactionResponseDto {
     //추가 or 변경 or 삭제된 감정
     public final Emotion type;
