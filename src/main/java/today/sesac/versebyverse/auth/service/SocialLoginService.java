@@ -28,23 +28,24 @@ public class SocialLoginService {
     /**
      * 소셜 로그인 플랫폼과의 연동 해제를 구현하는 메서드입니다.
      *
-     * @param username 사용자를 식별할 수 있는 이름.
+     * @param email 스프링 시큐리티에서 사용자를 식별할 때 사용하는 email
      */
-    public void revokeAccess(String username) {
-        OAuth2AccessToken accessToken = getAccessToken(username);
+    public void revokeAccess(String email) {
+        OAuth2AccessToken accessToken = getAccessToken(email);
         sendRevoke(accessToken);
     }
 
     /**
      * 사용자의 소셜 로그인 엑세스 토큰을 조회합니다.
      * TODO: refreshToken 문제 해결하기 - 로그인 후 시간 경과되면 탈퇴 안 될 것으로 추정
-     * @param username 사용자를 식별할 수 있는 이름
+     *
+     * @param email 스프링 시큐리티에서 사용자를 식별할 때 사용하는 email
      * @return OAuth2AccessToken 엑세스 토큰
      */
-    private OAuth2AccessToken getAccessToken(String username) {
+    private OAuth2AccessToken getAccessToken(String email) {
 
         OAuth2AuthorizedClient client = authorizedClientService
-                .loadAuthorizedClient("google", username);
+                .loadAuthorizedClient("google", email);
         if (client == null) {
             throw new WithdrawFailureException("client", "OAuth2AuthorizedClient가 존재하지 않습니다.");
         }
