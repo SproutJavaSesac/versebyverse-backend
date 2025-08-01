@@ -79,8 +79,6 @@ public class SocialLoginService {
             log.info("소셜 로그인 연동 해제에 성공했습니다: {}", response.getStatusCode());
         } catch (HttpClientErrorException e) {
             throw new WithdrawFailureException("clientError", "소셜 로그인 연동 해제 중 문제 발생");
-        } catch (Exception e) {
-            throw new WithdrawFailureException("serverError", "일시적 서버 문제");
         }
     }
 }
