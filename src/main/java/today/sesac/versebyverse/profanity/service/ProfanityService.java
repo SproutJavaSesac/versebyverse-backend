@@ -2,10 +2,13 @@ package today.sesac.versebyverse.profanity.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityUpdateRequestDto;
+import today.sesac.versebyverse.profanity.dto.response.ProfanityListResponseWrapperDto;
 import today.sesac.versebyverse.profanity.dto.response.ProfanityResponseDto;
 import today.sesac.versebyverse.profanity.entity.Profanity;
 import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
@@ -87,4 +90,10 @@ public class ProfanityService {
                 profanity.getDescription(), profanity.getCategory());
     }
 
+    public void getProfanityList(int page, int size, String sort) {
+
+        ProfanityListResponseWrapperDto profanityListResponseWrapperDto =
+                profanityRepository.findAll(
+                        PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createAt")));
+    }
 }
