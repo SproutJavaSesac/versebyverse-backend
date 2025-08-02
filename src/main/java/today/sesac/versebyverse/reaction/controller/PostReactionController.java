@@ -15,7 +15,7 @@ import today.sesac.versebyverse.reaction.service.PostReactionService;
  * 게시물 반응 관련 컨트롤러.
  */
 @RestController
-@RequestMapping("/api/v1/posts/{postId}")
+@RequestMapping("/api/v1/posts/{postId}/reactions")
 @RequiredArgsConstructor
 public class PostReactionController {
     private final PostReactionService postReactionService;
