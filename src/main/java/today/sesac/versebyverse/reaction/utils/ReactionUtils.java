@@ -14,7 +14,7 @@ public class ReactionUtils {
     ) {
         List<Object[]> counts;
 
-        if (type.equals(TargetType.POST)) {
+        if (targetType.equals(TargetType.POST)) {
             counts = reactionRepository.countReactionsByPostId(targetId);
         } else {
             counts = reactionRepository.countReactionsByCommentId(targetId);
