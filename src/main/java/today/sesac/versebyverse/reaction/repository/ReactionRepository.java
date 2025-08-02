@@ -13,17 +13,23 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
      * 게시글 id에 대한 반응별 갯수 조회.
      *
      * @param postId 게시글 id
-     * @return 반응 type 별 갯수
+     * @return 반응 type별 갯수
      */
     @Query("""
                     select r.type, count(r) from Reaction r where r.post.id = :postId group by r.type
             """)
     List<Object[]> countReactionsByPostId(@Param("postId") Long postId);
 
-//    @Query("""
-//                    select c.type, count(c) from Comment c where c.comments.id = :commnetId group by c.type
-//            """)
-//    List<Object[]> countReactionsByCommentId(@Param("commentId") Long commentId);
+    /**
+     * 댓글 id에 대한 반응별 갯수 조회
+     *
+     * @param commentId
+     * @return 반응 type별 갯수
+     */
+    @Query("""
+                    select r.type, count(r) from Reaction  r where r.comment.id = :commentId group by r.type
+            """)
+    List<Object[]> countReactionsByCommentId(@Param("commentId") Long commentId);
 
 
 }
