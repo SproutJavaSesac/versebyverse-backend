@@ -99,14 +99,11 @@ public class ProfanityController {
      * @param profanityId 비속어 식별 id
      * @return 응답
      */
-    @PatchMapping("{profanityId}")
-    public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable int profanityId,
-            @RequestBody ProfanityUpdateRequestDto dto) {
+    @PatchMapping("/{profanityId}")
+    public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable long profanityId,
+            @Valid @RequestBody ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
-        return ApiResponse.success(ProfanityResponseDto.of(
-                profanityId, dto.getOriginal(), dto.getReplacement(), dto.getDescription(),
-                dto.getCategory()
-        ));
+        return ApiResponse.success(profanityService.updateProfanity(profanityId, profanityUpdateRequestDto));
     }
 
     /**
