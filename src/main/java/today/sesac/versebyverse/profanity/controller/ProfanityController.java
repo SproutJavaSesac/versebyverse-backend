@@ -42,11 +42,13 @@ public class ProfanityController {
     public ApiResponse<ProfanityListResponseWrapperDto> profanity(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
-            @RequestParam(name = "sort", defaultValue = "latest") String sort) {
+            @RequestParam(name = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(name = "order", defaultValue = "latest") String order) {
 
-        profanityService.getProfanityList(page, size, sort);
+        ProfanityListResponseWrapperDto profanityPagingList =
+                profanityService.getProfanityList(page, size, sort, order);
 
-        return ApiResponse.success(null);
+        return ApiResponse.success(profanityPagingList);
     }
 
     /**
