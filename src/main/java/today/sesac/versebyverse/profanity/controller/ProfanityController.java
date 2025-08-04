@@ -35,7 +35,8 @@ public class ProfanityController {
      *
      * @param page 현재 페이지 기본 0
      * @param size 한 페이지에 나타낼 데이터 수 기본20/ 50/ 100
-     * @param sort 정렬 latest/ oldest
+     * @param sort 정렬 필드 (id, original, createdAt, updatedAt)
+     * @param order 정렬 순서 (latest, oldest)
      * @return 응답
      */
     @GetMapping

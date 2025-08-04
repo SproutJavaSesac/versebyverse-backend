@@ -104,8 +104,11 @@ public class ProfanityService {
         if (!isValidSort(sort)) {
             sort = "createdAt";
         }
-        Direction direction = "ASC".equalsIgnoreCase(order) ? Direction.ASC : Direction.DESC;
-
+        Direction direction = switch (order.toLowerCase()) {
+            case "latest" -> Direction.DESC;
+            case "oldest" -> Direction.ASC;
+            default -> Direction.DESC; // 기본값은 최신순
+        };
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(direction, sort));
 
