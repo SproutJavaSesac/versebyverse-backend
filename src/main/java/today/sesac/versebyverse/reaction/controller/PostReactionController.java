@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.reaction.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,10 @@ import today.sesac.versebyverse.reaction.service.PostReactionService;
 public class PostReactionController {
     private final PostReactionService postReactionService;
 
-
     /**
      * 게시물에 반응 추가하기.
+     *
+     * @param postId 반응을 추가할 게시글id
      */
 
     @PostMapping
@@ -33,5 +35,17 @@ public class PostReactionController {
                 postReactionService.addPostReaction(postReactionRequestDto, postId, memberId));
     }
 
-
+    /**
+     * 게시글 반응 삭제하기.
+     *
+     * @param postId 반응을 삭제할 게시글id
+     * @param type   삭제할 반응 타입
+     */
+    @DeleteMapping("/{type}")
+    public ApiResponse<PostReactionResponseDto> deleteEmotion(
+            @PathVariable Long postId, @PathVariable String type) {
+        Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
+        return ApiResponse.success(
+                postReactionService.deletePostReaction(type, postId, memberId));
+    }
 }
