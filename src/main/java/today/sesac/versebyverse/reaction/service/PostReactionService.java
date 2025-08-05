@@ -3,6 +3,7 @@ package today.sesac.versebyverse.reaction.service;
 import static today.sesac.versebyverse.reaction.utils.TargetType.POST;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.global.domain.Emotion;
@@ -28,7 +29,7 @@ public class PostReactionService {
     private final PostRepository postRepository;
 
     /**
-     * 게시글 반응하기.
+     * 게시글 반응 추가하기.
      */
     public PostReactionResponseDto addPostReaction(PostReactionRequestDto postReactionRequestDto,
                                                    Long postId, Long memberId) {
@@ -50,6 +51,23 @@ public class PostReactionService {
         //4. reaction 객체 저장
         reactionRepository.save(reaction);
 
+        return ReactionUtils.addCountbyReactionType(emotion, postId, POST, reactionRepository);
+    }
+
+    @Transactional
+    public PostReactionResponseDto deletePostReaction(String type, Long postId, Long memberId) {
+
+        //type을 대문자로 변환
+        Emotion emotion = Emotion.valueOf(type.toUpperCase());
+
+        //해당 postId와 memberId와 삭제될 reaction의 id 조회
+        Optional<Reaction> reaction =
+                reactionRepository.findByMemberIdAndPostIdAndType(memberId, postId, emotion);
+
+        //해당 감정 삭제, 이미 없으면 무시
+        if (reaction.isPresent()) {
+            reactionRepository.deleteById(reaction.get().getId());
+        }
         return ReactionUtils.addCountbyReactionType(emotion, postId, POST, reactionRepository);
     }
 }
