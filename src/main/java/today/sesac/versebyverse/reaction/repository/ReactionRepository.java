@@ -46,4 +46,13 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
      */
     Optional<Reaction> findByMemberIdAndPostIdAndType(Long memberId, Long postId, Emotion emotion);
 
+    /**
+     * 게시글에 반응했던 감정을 삭제하기 위한 메서드.
+     *
+     * @param memberId
+     * @param postId
+     * @return
+     */
+    Optional<Reaction> findByMember_IdAndPost_Id(Long memberId, Long postId);
+
 }
