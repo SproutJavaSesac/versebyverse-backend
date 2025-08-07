@@ -2,12 +2,12 @@ package today.sesac.versebyverse.post.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
-import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -24,6 +24,7 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostCommandService {
 
     private final PostRepository postRepository;
@@ -45,25 +46,21 @@ public class PostCommandService {
 
         //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);
-        //4. 사용자가 작성한 제목
+        //2. 사용자가 작성한 제목
         String beforeTitle = postCreateRequestDto.getTitle();
-        //2.사용자가 작성한 원본내용 설정
+        //3.사용자가 작성한 원본내용 설정
         String beforeContent = postCreateRequestDto.getContent();
-        Emotion emotion = null;
+        //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
                 PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConceptType(),
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
-        // todo: 예외 처리
-        if (postCreateRequestDto.getEmotionType() == null) {
-            emotion = Emotion.valueOf(
-                    postAiService.invokeAi(postAiRequestDto, PromptType.EMOTION_ANALYSIS)
-                            .toString());
-        }
+        //5. ai 호출 게시글 변환
         PostAiResponseDto postAiResponseDto =
-                postAiService.invokeAi(postAiRequestDto, PromptType.CONCEPT_TRANSFORM);
+                postAiService.executeAiWithValidation(postAiRequestDto,
+                        PromptType.CONCEPT_TRANSFORM);
 
-        //5. ai 처리된 afterTitle, afterContent 생성
+        //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
         String afterContent = postAiResponseDto.getContent();
 
@@ -75,7 +72,7 @@ public class PostCommandService {
                 beforeTitle,
                 afterTitle,
                 postCreateRequestDto.getImageUrl(),
-                emotion,
+                postAiResponseDto.getEmotionType(),
                 postCreateRequestDto.getConceptType()
         );
 
