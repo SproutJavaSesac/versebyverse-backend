@@ -2,10 +2,16 @@ package today.sesac.versebyverse.profanity.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityUpdateRequestDto;
+import today.sesac.versebyverse.profanity.dto.response.ProfanityListResponseWrapperDto;
 import today.sesac.versebyverse.profanity.dto.response.ProfanityResponseDto;
 import today.sesac.versebyverse.profanity.entity.Profanity;
 import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
@@ -23,15 +29,11 @@ public class ProfanityService {
     private final ProfanityRepository profanityRepository;
 
     /**
-     * 비속어를 등록합니다.
+     * 비속어 등록.
      *
-     * <p>전달받은 원문 비속어가 이미 등록되어 있는 경우 {@link ProfanityException} 예외를 발생시키며,
-     * 존재하지 않을 경우 새 비속어 엔티티를 생성하고 저장합니다. 저장된 비속어 정보를 응답 DTO로 반환합니다.
-     * </p>
-     *
-     * @param profanityRegisterRequestDto 등록할 비속어 정보가 담긴 DTO (원문, 대체어, 설명, 카테고리)
-     * @return 저장된 비속어 정보를 담은 응답 DTO
-     * @throws ProfanityException 이미 동일한 원문 비속어가 존재하는 경우 발생
+     * @param profanityRegisterRequestDto 클라이언트에서 입력 받은 비속어 정보 DTO
+     * @return 등록되 비속어 정보 DTO
+     * @throws ProfanityException original 값이 이미 존재할 경우 발생
      */
     @Transactional
     public ProfanityResponseDto registerProfanity(
@@ -87,4 +89,37 @@ public class ProfanityService {
                 profanity.getDescription(), profanity.getCategory());
     }
 
+    /**
+     * 비속어 목록을 페이지네이션과 함께 조회합니다.
+     *
+     * @param page  현재 페이지 (0부터 시작)
+     * @param size  페이지 크기
+     * @param sort  정렬 필드
+     * @param order 정렬 순서 (ASC, DESC)
+     * @return 비속어 목록과 페이지네이션 정보
+     */
+    public ProfanityListResponseWrapperDto getProfanityList(int page, int size, String sort,
+            String order) {
+
+        if (!isValidSort(sort)) {
+            sort = "createdAt";
+        }
+        Direction direction = switch (order.toLowerCase()) {
+            case "latest" -> Direction.DESC;
+            case "oldest" -> Direction.ASC;
+            default -> Direction.DESC; // 기본값은 최신순
+        };
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(direction, sort));
+
+        Page<Profanity> profanityPage = profanityRepository.findAll(pageable);
+
+        return ProfanityListResponseWrapperDto.of(profanityPage);
+    }
+
+    private boolean isValidSort(String sort) {
+
+        return sort != null && (sort.equals("createdAt") || sort.equals("updatedAt") || sort.equals(
+                "original") || sort.equals("id"));
+    }
 }
