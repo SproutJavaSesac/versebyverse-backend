@@ -54,6 +54,7 @@ public class ProfanityService {
      * @return 성공 메세지
      * @throws ProfanityException 해당 비속어 id의 데이터가 없을 경우 발생
      */
+    @Transactional
     public String deleteProfanity(long profanityId) {
 
         if (profanityRepository.deleteByIdIfExists(profanityId) != 1) {

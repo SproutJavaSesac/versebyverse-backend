@@ -1,6 +1,5 @@
 package today.sesac.versebyverse.profanity.repository;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +22,6 @@ public interface ProfanityRepository extends JpaRepository<Profanity, Long> {
      * @return 삭제된 행의 수 (성공 1, 존재하지 않을 시 0)
      */
     @Modifying
-    @Transactional
     @Query("DELETE FROM Profanity p WHERE p.id = :profanityId")
     int deleteByIdIfExists(long profanityId);
 }
