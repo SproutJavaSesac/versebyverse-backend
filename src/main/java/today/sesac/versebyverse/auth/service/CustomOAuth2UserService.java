@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.member.entity.Member;
@@ -26,26 +28,34 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+        // 사용자 정보를 가져옵니다.
         OAuth2User oAuth2User = super.loadUser(userRequest);
+
+        String email = oAuth2User.getAttribute("email");
+        if (email == null) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "이메일 정보가 존재하지 않습니다.", null
+            );
+        }
+
+        String nickname = oAuth2User.getAttribute("name"); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
+        if (nickname == null) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "닉네임 정보가 존재하지 않습니다.", null
+            );
+        }
 
         // 소셜 로그인 타입을 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        log.info("loadUser.registrationId: {}", registrationId); // ex.google
         SocialType socialType = null;
         if (registrationId.equals("google")) {
             socialType = SocialType.GOOGLE;
         }
-        log.info("socialType: {}", socialType);
 
-        // 사용자 정보를 가져옵니다.
-        String email = oAuth2User.getAttribute("email");
-        log.info("email: {}", email);
-        String nickname = oAuth2User.getAttribute("name");
-        log.info("nickname: {}", nickname); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
-
-        if (registrationId.equals("google")) {
-            throw new MemberNotFoundException(email + ", " + socialType,
-                    "해당 email을 가진 회원을 찾을 수 없습니다.");
+        if (socialType == null) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "지원하지 않는 소셜 로그인 제공자입니다.", null
+            );
         }
 
         // 사용자 역할을 부여합니다.

@@ -54,6 +54,8 @@ spring:
 logging:
   level:
     root: INFO
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
     org:
       springframework: info # slf4j 로그 레벨 설정
       hibernate:
