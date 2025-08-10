@@ -23,7 +23,9 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
             AuthenticationException exception) throws IOException, ServletException {
         log.info("----OAuth2AuthenticationFailureHandler 동작----");
 
+        String redirectUrl = "http://localhost:3000" + "/auth/callback" + "?status=error";
+
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-        redirectStrategy.sendRedirect(request, response, "http://localhost:3000");
+        redirectStrategy.sendRedirect(request, response, redirectUrl);
     }
 }
