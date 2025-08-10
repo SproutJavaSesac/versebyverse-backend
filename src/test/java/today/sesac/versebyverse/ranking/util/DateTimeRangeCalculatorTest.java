@@ -122,7 +122,7 @@ class DateTimeRangeCalculatorTest {
     })
     @DisplayName("각 기간 타입별로 올바른 시작/종료 시각을 계산한다")
     void calculatePeriodRange(RankingPeriodType periodType, LocalDate inputDate,
-            LocalDateTime expectedStart, LocalDateTime expectedEnd) {
+                              LocalDateTime expectedStart, LocalDateTime expectedEnd) {
         // when
         DateTimeRange result = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(inputDate,
                 periodType);

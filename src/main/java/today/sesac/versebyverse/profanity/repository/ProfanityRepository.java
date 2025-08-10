@@ -11,7 +11,10 @@ import today.sesac.versebyverse.profanity.entity.Profanity;
 public interface ProfanityRepository extends JpaRepository<Profanity, Long> {
 
     /**
-     * 비속어(original 필드)의 중복 여부 확인합니다.
+     * 비속어 수정시 변경 할 original의 중복 체크를 합니다.
+     *
+     * @param original 비속어 원문
+     * @return original 존재 여
      */
     boolean existsByOriginal(String original);
 
