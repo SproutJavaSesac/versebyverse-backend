@@ -56,9 +56,10 @@ public class PostCommandService {
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
         //5. ai 호출 게시글 변환
+        // TODO: AI 호출이 트랜잭션 범위 내에 있어서 ai 요청 지연시 데드락 가능성있음.(DB 커넥션 장시간 점유) => 어떻게 대처해야할지 고민하기-qkralstjr
         PostAiResponseDto postAiResponseDto =
                 postAiService.executeAiWithValidation(postAiRequestDto,
-                        PromptType.CONCEPT_TRANSFORM);
+                        PromptType.POST_CONCEPT_TRANSFORM);
 
         //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
@@ -73,7 +74,7 @@ public class PostCommandService {
                 afterTitle,
                 postCreateRequestDto.getImageUrl(),
                 postAiResponseDto.getEmotionType(),
-                postCreateRequestDto.getConceptType()
+                postAiResponseDto.getConceptType()
         );
 
         Post savedPost = postRepository.save(post);
