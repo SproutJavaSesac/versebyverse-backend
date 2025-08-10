@@ -46,7 +46,6 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
-    // TODO @prac2317 스키마 확인 필
     private boolean isDeleted;
 
     private String profileImageUrl;
@@ -81,5 +80,9 @@ public class Member extends BaseEntity {
     public void editProfile(String nickname) {
 
         this.nickname = nickname;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
