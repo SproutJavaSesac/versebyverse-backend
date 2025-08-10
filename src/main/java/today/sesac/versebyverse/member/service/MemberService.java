@@ -2,6 +2,7 @@ package today.sesac.versebyverse.member.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,13 +107,30 @@ public class MemberService {
         return member;
     }
 
-    public Member findByEmailAndSocialType(String email, SocialType socialType) {
+    /**
+     * 소셜 로그인 요청이 들어올 때, 회원이 존재하면 회원을 반환하고 없을 경우 회원을 새로 만들고 반환합니다.
+     *
+     * @param email 사용자의 이메일
+     * @param nickname 사용자의 닉네임
+     * @param roleType 회원을 새로 만들 경우, 회원의 역할
+     * @param socialType 회원을 새로 만들 경우, 회원 테이블에 저장될 소셜 로그인 타입(ex. 구글, 카카오)
+     * @return Member 객체
+     */
+    @Transactional
+    public Member findOrCreateMemberForSocial(String email, String nickname, RoleType roleType, SocialType socialType) {
 
-        Member member = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email, socialType).orElseThrow(
-                () -> new MemberNotFoundException(email + ", " + socialType,
-                        "해당 email을 가진 회원을 찾을 수 없습니다.")
-        );
-        return member;
+        Optional<Member> memberOptional = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email,
+                socialType);
+
+        if (memberOptional.isPresent()) {
+            return memberOptional.get();
+        }
+
+        Member member = Member.create(roleType, socialType, email, nickname);
+        Member savedMember = memberRepository.save(member);
+        log.info("회원 가입이 완료되었습니다. memberId = {}", savedMember.getId());
+
+        return savedMember;
     }
 
     public Member getMember(Long memberId) {

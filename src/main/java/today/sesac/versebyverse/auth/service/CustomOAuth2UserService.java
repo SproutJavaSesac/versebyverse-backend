@@ -28,7 +28,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        // 사용자 정보를 가져옵니다.
+        // 사용자의 정보를 가져옵니다.
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String email = oAuth2User.getAttribute("email");
@@ -45,7 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             );
         }
 
-        // 소셜 로그인 타입을 가져옵니다.
+        // 사용자의 소셜 로그인 타입을 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         SocialType socialType = null;
         if (registrationId.equals("google")) {
@@ -61,20 +61,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 사용자 역할을 부여합니다.
         RoleType roleType = RoleType.ROLE_USER;
 
-        // 사용자 정보가 없으면 db에 저장, 있으면 불러오기
-        // TODO: memberService 관련 기능 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 수정하기
-        Member member;
-        try {
-            member = memberService.findByEmailAndSocialType(email, socialType);
-            log.info(
-                    "findByEmailAndSocialType: roleType = {}, socialType = {}, email = {}, nickname = {}",
-                    member.getRoleType(), member.getSocialType(), member.getEmail(),
-                    member.getNickname()); // TODO: 프론트 화면 구현 이후 로그 지우기
-        } catch (MemberNotFoundException e) {
-            member = memberService.createMember(roleType, socialType, email, nickname);
-            log.info("createMember: roleType = {}, socialType = {}, email = {}, nickname = {}",
-                    roleType, socialType, email, nickname);
-        }
+        // 사용자 정보가 데이터베이스에 있으면 불러오고, 없으면 회원가입을 진행합니다.
+        Member member = memberService.findOrCreateMemberForSocial(email, nickname,
+                roleType, socialType);
 
         return UserPrincipal.create(member.getId(), roleType, socialType,
                 email);
