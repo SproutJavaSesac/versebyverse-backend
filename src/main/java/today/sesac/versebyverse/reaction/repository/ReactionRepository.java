@@ -37,7 +37,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Reaction> post(Post post);
 
     /**
-     * 게시글 id와 회원 id 감정을 기반으로 삭제할 reaction의 id 조회
+     * 게시글 id, 회원 id, 감정을 기반으로 삭제할 reaction의 id 조회
      *
      * @param memberId
      * @param postId
@@ -47,7 +47,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     Optional<Reaction> findByMemberIdAndPostIdAndType(Long memberId, Long postId, Emotion emotion);
 
     /**
-     * 댓글 id와 회원 id , 감정을 기반으로 삭제할 reaction의 id 조회
+     * 댓글 id, 회원 id , 감정을 기반으로 삭제할 reaction의 id 조회
      *
      * @param memberId
      * @param commentId

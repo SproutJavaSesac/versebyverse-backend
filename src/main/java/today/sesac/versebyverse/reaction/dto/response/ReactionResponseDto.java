@@ -6,7 +6,7 @@ import lombok.Getter;
 import today.sesac.versebyverse.global.domain.Emotion;
 
 /**
- * 게시글 반응하기 응답 dto.
+ * 게시글, 댓글 응답 dto
  */
 @Getter
 @AllArgsConstructor(staticName = "of")

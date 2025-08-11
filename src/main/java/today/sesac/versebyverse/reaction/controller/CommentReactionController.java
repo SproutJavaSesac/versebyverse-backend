@@ -21,6 +21,13 @@ public class CommentReactionController {
 
     private final ReactionService reactionService;
 
+    /**
+     * 댓글에 반응 추가하기.
+     *
+     * @param postId
+     * @param commentId
+     * @param reactionRequestDto
+     */
     @PostMapping
     public ApiResponse<ReactionResponseDto> addCommentReaction(
             @PathVariable Long postId,
@@ -32,6 +39,13 @@ public class CommentReactionController {
                         TargetType.COMMENT));
     }
 
+    /**
+     * 댓글에 반응 삭제하기.
+     *
+     * @param postId
+     * @param commentId
+     * @param type
+     */
     @DeleteMapping("/{type}")
     public ApiResponse<ReactionResponseDto> deleteCommentReaction(
             @PathVariable Long postId,
@@ -42,6 +56,13 @@ public class CommentReactionController {
                 reactionService.deleteReaction(type, commentId, memberId, TargetType.COMMENT));
     }
 
+    /**
+     * 댓글 반응 수정하기.
+     *
+     * @param postId
+     * @param commentId
+     * @param reactionRequestDto
+     */
     @PatchMapping
     public ApiResponse<ReactionResponseDto> updateCommentReaction(
             @PathVariable Long postId,

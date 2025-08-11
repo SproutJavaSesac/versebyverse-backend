@@ -37,7 +37,7 @@ public class ReactionService {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
-        return ReactionUtils.addCountbyReactionType(reactionRequestDto.getType(), targetId,
+        return ReactionUtils.addCountByReactionType(reactionRequestDto.getType(), targetId,
                 targetType, reactionRepository);
     }
 
@@ -59,12 +59,12 @@ public class ReactionService {
         //해당 postId에 회원이 눌렀던 감정을 삭제
         deleteReactionIfExists(targetType, targetId, memberId, emotion);
 
-        return ReactionUtils.addCountbyReactionType(emotion, targetId, targetType,
+        return ReactionUtils.addCountByReactionType(emotion, targetId, targetType,
                 reactionRepository);
     }
 
     /**
-     * 반응 수정하기
+     * 게시글과 댓글 반응 수정하기
      *
      * @param reactionRequestDto 수정된 감정 타입
      * @param targetType         수정된 게시글 or 댓글
@@ -89,13 +89,13 @@ public class ReactionService {
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
 
-        return ReactionUtils.addCountbyReactionType(reactionRequestDto.getType(), targetId,
+        return ReactionUtils.addCountByReactionType(reactionRequestDto.getType(), targetId,
                 targetType,
                 reactionRepository);
     }
 
     /**
-     * 감정 삭제.
+     * 감정 삭제 메서드.
      *
      * @param targetId 게시물이나 댓글 id
      * @param memberId 회원 id
@@ -113,7 +113,7 @@ public class ReactionService {
     }
 
     /**
-     * 감정 추가
+     * 감정 추가 메서드.
      *
      * @param memberId           회원 id
      * @param targetType         게시글 or 댓글
@@ -142,12 +142,12 @@ public class ReactionService {
                             .orElseThrow(() -> new RuntimeException("comment not found"));
             reaction = Reaction.createCommentReaction(author, comment, emotion);
         }
-        //3. reaction 객체 저장
+        //4. reaction 객체 저장
         reactionRepository.save(reaction);
     }
 
     /**
-     * 사용자가 해당 대상에 특정 감정으로 표시했는지 확인
+     * 사용자가 해당 대상에 특정 감정으로 표시했는지 확인.
      *
      * @param targetType
      * @param targetId
@@ -166,12 +166,11 @@ public class ReactionService {
     }
 
     /**
-     * 사용자가 해당 대상에 대해 감정타입과 무관하게 반응했는지 확인
+     * 사용자가 해당 대상에 대해 반응했는지 확인 (감정타입과 무관)
      *
      * @param targetType
      * @param targetId
      * @param memberId
-     * @return
      */
     private Optional<Reaction> findExistingReaction(TargetType targetType, Long targetId,
                                                     Long memberId) {

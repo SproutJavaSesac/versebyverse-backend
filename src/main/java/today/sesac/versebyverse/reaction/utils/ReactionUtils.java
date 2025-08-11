@@ -7,8 +7,11 @@ import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
 
+/**
+ * 게시글,댓글별 감정의 총 갯수, 감정별 갯수 표시를 위한 메서드.
+ */
 public class ReactionUtils {
-    public static ReactionResponseDto addCountbyReactionType(Emotion type, Long targetId,
+    public static ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
                                                              TargetType targetType,
                                                              ReactionRepository reactionRepository
     ) {
