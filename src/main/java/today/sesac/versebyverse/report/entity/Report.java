@@ -47,14 +47,14 @@ public class Report extends BaseEntity {
      * 신고된 게시글입니다. 댓글 신고 시에는 null입니다.
      */
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = true)
+    @JoinColumn(name = "post_id")
     private Post post;
 
     /**
      * 신고된 댓글입니다. 게시글 신고 시에는 null입니다.
      */
     @ManyToOne
-    @JoinColumn(name = "comment_id", nullable = true)
+    @JoinColumn(name = "comment_id")
     private Comment comment;
 
     /**
