@@ -70,8 +70,9 @@ public class ProfanityService {
         } else {
             return "비속어 삭제가 성공했습니다.";
         }
-      
-     /**
+    }
+
+    /**
      * 주어진 profanityId에 해당하는 {@link Profanity} 엔티티를 조회한 뒤, 전달받은 {@link ProfanityUpdateRequestDto}의
      * 값으로 엔티티를 부분 업데이트합니다.
      *
