@@ -3,6 +3,7 @@ package today.sesac.versebyverse.global.config;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,9 @@ import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
+    private String clientUrl;
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
@@ -76,7 +80,7 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(clientUrl));
         configuration.setAllowedMethods(
                 Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*")); //TODO: 헤더 설정 고민하기
