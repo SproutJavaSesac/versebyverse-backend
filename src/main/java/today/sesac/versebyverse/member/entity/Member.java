@@ -46,13 +46,12 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
-    // TODO @prac2317 스키마 확인 필
     private boolean isDeleted;
 
     private String profileImageUrl;
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
-            String profileImageUrl) {
+                   String profileImageUrl) {
 
         this.roleType = roleType;
         this.socialType = socialType;
@@ -73,7 +72,7 @@ public class Member extends BaseEntity {
      * @return 생성된 회원 엔티티
      */
     public static Member create(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
+                                String nickname) {
 
         return new Member(roleType, socialType, email, nickname, null);
     }
@@ -81,5 +80,9 @@ public class Member extends BaseEntity {
     public void editProfile(String nickname) {
 
         this.nickname = nickname;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }

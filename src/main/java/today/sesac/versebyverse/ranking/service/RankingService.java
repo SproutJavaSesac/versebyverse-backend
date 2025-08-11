@@ -54,15 +54,17 @@ public class RankingService {
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
-            RankingPeriodType periodType, LocalDate periodValue, Pageable pageable) {
+                                                                 RankingPeriodType periodType,
+                                                                 LocalDate periodValue,
+                                                                 Pageable pageable) {
 
         DateTimeRange periodDateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(
-                periodValue,
-                periodType);
+                periodValue, periodType);
 
         Page<Ranking> rankings =
                 rankingRepository.findAllByCategoryAndPeriodTypeAndCreatedAtBetween(
                         category, periodType, periodDateTimeRange.startDateTime(),
+
                         periodDateTimeRange.endDateTime(),
                         pageable);
 
@@ -71,6 +73,7 @@ public class RankingService {
                         ranking,
                         getRankChangeWithSymbol(ranking.getRank(), ranking.getPreviousRank())
                 )).toList();
+
 
         return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
     }
@@ -98,7 +101,8 @@ public class RankingService {
      * @return 해당 회원의 순위(랭킹) 정보
      */
     public MyRankingListResponseDto getMyRankingByMemberId(Long memberId, RankingCategory category,
-            RankingPeriodType periodType, int maxCount) {
+                                                           RankingPeriodType periodType,
+                                                           int maxCount) {
 
         memberService.validateMemberActiveExists(memberId);
 
@@ -122,7 +126,8 @@ public class RankingService {
     }
 
     private LocalDateTime getStartTimeFromEndTimeAndPeriod(LocalDateTime endDateTime,
-            RankingPeriodType periodType, int maxCount) {
+                                                           RankingPeriodType periodType,
+                                                           int maxCount) {
 
         return switch (periodType) {
             case DAILY -> endDateTime.minusDays(maxCount);
@@ -141,7 +146,7 @@ public class RankingService {
      */
     @Transactional
     public void calculatePostsRanking(LocalDateTime startDateTime, LocalDateTime endDateTime,
-            RankingPeriodType periodType) {
+                                      RankingPeriodType periodType) {
 
         List<AuthorPostCountDto> authorPostCountList = postQueryService
                 .getAuthorAndPostCount(startDateTime, endDateTime);

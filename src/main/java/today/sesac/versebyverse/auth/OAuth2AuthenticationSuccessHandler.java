@@ -31,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication)
+                                        Authentication authentication)
             throws IOException, ServletException {
 
         //TODO: 팀원 확인용 로그 - 테스트코드 직성 이후 삭제하기
