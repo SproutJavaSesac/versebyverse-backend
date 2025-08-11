@@ -85,10 +85,10 @@ public class ProfanityController {
      * @param profanityId 비속어 식별 id
      * @return 응답
      */
-    @DeleteMapping("{profanityId}")
-    public ApiResponse<String> deleteProfanity(@PathVariable int profanityId) {
+    @DeleteMapping("/{profanityId}")
+    public ApiResponse<String> deleteProfanity(@PathVariable long profanityId) {
 
-        return ApiResponse.success("비속어 삭제가 성공했습니다.");
+        return ApiResponse.success(profanityService.deleteProfanity(profanityId));
     }
 
 }
