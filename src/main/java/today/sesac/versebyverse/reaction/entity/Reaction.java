@@ -70,7 +70,7 @@ public class Reaction extends BaseEntity {
     private Emotion type;
 
     /**
-     * Reaction 생성자.
+     * Reaction 게시글 생성자.
      */
     private Reaction(Member author, Post post, Emotion emotion) {
         this.member = author;
@@ -79,10 +79,26 @@ public class Reaction extends BaseEntity {
     }
 
     /**
-     * 정적 팩토리 메서드.
+     * Reaction 댓글 생성자
+     */
+    private Reaction(Member author, Comment comment, Emotion emotion) {
+        this.member = author;
+        this.comment = comment;
+        this.type = emotion;
+    }
+
+    /**
+     * 게시글 반응 추가 정적 팩토리 메서드.
      */
     public static Reaction createPostReaction(Member author, Post post, Emotion emotion) {
         return new Reaction(author, post, emotion);
+    }
+
+    /**
+     * 댓글 반응 추가 정적 팩토리 메서드.
+     */
+    public static Reaction createCommentReaction(Member author, Comment comment, Emotion emotion) {
+        return new Reaction(author, comment, emotion);
     }
 
     /**

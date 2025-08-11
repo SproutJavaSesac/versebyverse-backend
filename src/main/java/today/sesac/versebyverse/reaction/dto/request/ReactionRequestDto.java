@@ -6,6 +6,6 @@ import today.sesac.versebyverse.global.domain.Emotion;
 
 @Getter
 @AllArgsConstructor
-public class PostReactionRequestDto {
+public class ReactionRequestDto {
     private final Emotion type;
 }

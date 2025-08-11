@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import today.sesac.versebyverse.global.domain.Emotion;
-import today.sesac.versebyverse.reaction.dto.response.PostReactionResponseDto;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
 
 public class ReactionUtils {
-    public static PostReactionResponseDto addCountbyReactionType(Emotion type, Long targetId,
-                                                                 TargetType targetType,
-                                                                 ReactionRepository reactionRepository
+    public static ReactionResponseDto addCountbyReactionType(Emotion type, Long targetId,
+                                                             TargetType targetType,
+                                                             ReactionRepository reactionRepository
     ) {
         List<Object[]> counts;
 
@@ -31,6 +31,6 @@ public class ReactionUtils {
                 .mapToInt(Integer::parseInt)
                 .sum();
 
-        return PostReactionResponseDto.of(type, reactionCount, reactionDetails);
+        return ReactionResponseDto.of(type, reactionCount, reactionDetails);
     }
 }

@@ -10,7 +10,7 @@ import today.sesac.versebyverse.global.domain.Emotion;
  */
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class PostReactionResponseDto {
+public class ReactionResponseDto {
     //추가 or 변경 or 삭제된 감정
     public final Emotion type;
 

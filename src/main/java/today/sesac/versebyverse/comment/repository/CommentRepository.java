@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.comment.repository;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             WHERE c.post.id = :postId ORDER BY c.path ASC
             """)
     Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
+
+    Optional<Comment> findByIdAndIsDeletedFalseAndIsReportedFalse(Long targetId);
 }
