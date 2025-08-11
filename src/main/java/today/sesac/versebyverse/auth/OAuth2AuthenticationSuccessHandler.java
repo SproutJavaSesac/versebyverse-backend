@@ -16,6 +16,7 @@ import today.sesac.versebyverse.member.entity.SocialType;
 
 /**
  * 소셜 로그인이 성공했을 떄 마지막으로 작동하는 동작들을 설정하는 클래스입니다.
+ * //TODO: handler 패키지로 이동하기
  */
 @Slf4j
 @Component
@@ -30,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        //TODO: 팀원 확인용 로그 - 테스트코드 직성 이후 삭제하기
+        //TODO: 팀원 확인용 로그 - 테스트코드 직성 이후 삭제하기, 필요한 내용은 debug로 조정하기
         boolean authenticated = authentication.isAuthenticated();
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Long memberId = userPrincipal.getMemberId();
@@ -42,6 +43,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 memberId, roleType, socialType, email);
         log.info("-----authentication success!!-----");
 
+        //TODO: 하드코딩된 도메인 환경변수로 교체하기
         String redirectUrl = "http://localhost:3000" + "/auth/callback" + "?status=success";
 
         //TODO: 소설 로그인 이후 새로 아이디 생성되었으면 201 반환, 아닐 경우 200 반환 구현하기

@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 사용자의 소셜 로그인 타입을 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        SocialType socialType = null;
+        SocialType socialType = null;   //TODO: 다른 소셜 로그인 추가할 때 메서드로 추출하고 리팩토링
         if (registrationId.equals("google")) {
             socialType = SocialType.GOOGLE;
         }
