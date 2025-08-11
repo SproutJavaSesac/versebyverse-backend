@@ -55,6 +55,24 @@ public class ProfanityService {
     }
 
     /**
+     * 비속어 삭제(hard-delete).
+     *
+     * @param profanityId 클라인언트에서 요청한 비속어 ID
+     * @return 성공 메세지
+     * @throws ProfanityException 해당 비속어 id의 데이터가 없을 경우 발생
+     */
+    @Transactional
+    public String deleteProfanity(long profanityId) {
+
+        if (profanityRepository.deleteByIdIfExists(profanityId) != 1) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_NOT_FOUND,
+                    String.valueOf(profanityId));
+        } else {
+            return "비속어 삭제가 성공했습니다.";
+        }
+    }
+
+    /**
      * 주어진 profanityId에 해당하는 {@link Profanity} 엔티티를 조회한 뒤, 전달받은 {@link ProfanityUpdateRequestDto}의
      * 값으로 엔티티를 부분 업데이트합니다.
      *
@@ -66,6 +84,7 @@ public class ProfanityService {
      * @param profanityUpdateRequestDto 수정할 필드 값을 담은 요청 DTO
      * @throws ProfanityException 비속어가 존재하지 않을 경우
      */
+
     @Transactional
     public ProfanityResponseDto updateProfanity(long profanityId,
             ProfanityUpdateRequestDto profanityUpdateRequestDto) {
@@ -99,18 +118,14 @@ public class ProfanityService {
      * @return 비속어 목록과 페이지네이션 정보
      */
     public ProfanityListResponseWrapperDto getProfanityList(int page, int size, String sort,
-            String order) {
+            Direction order) {
 
         if (!isValidSort(sort)) {
             sort = "createdAt";
         }
-        Direction direction = switch (order.toLowerCase()) {
-            case "latest" -> Direction.DESC;
-            case "oldest" -> Direction.ASC;
-            default -> Direction.DESC; // 기본값은 최신순
-        };
+
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by(direction, sort));
+                Sort.by(order, sort));
 
         Page<Profanity> profanityPage = profanityRepository.findAll(pageable);
 
