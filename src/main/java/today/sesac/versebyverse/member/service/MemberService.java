@@ -105,7 +105,7 @@ public class MemberService {
      * @return Member 객체
      */
     @Transactional
-    public Member findOrCreateMemberForSocial(String email, String nickname, RoleType roleType, SocialType socialType) {
+    public Member findOrCreateSocialMember(String email, String nickname, RoleType roleType, SocialType socialType) {
 
         Optional<Member> memberOptional = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email,
                 socialType);

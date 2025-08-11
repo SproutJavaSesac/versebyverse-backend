@@ -62,7 +62,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         RoleType roleType = RoleType.ROLE_USER;
 
         // 사용자 정보가 데이터베이스에 있으면 불러오고, 없으면 회원가입을 진행합니다.
-        Member member = memberService.findOrCreateMemberForSocial(email, nickname,
+        Member member = memberService.findOrCreateSocialMember(email, nickname,
                 roleType, socialType);
 
         return UserPrincipal.create(member.getId(), roleType, socialType,
