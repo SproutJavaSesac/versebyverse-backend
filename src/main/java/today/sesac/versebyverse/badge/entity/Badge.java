@@ -31,7 +31,7 @@ public class Badge extends BaseEntity {
     private String description;
 
     @Column(length = 500)
-    private String imageUrl;
+    private String imageUrl;    //TODO: 이미지 동적으로 추가할 경우를 생각해 imageUrl 필드 미리 추가, 현재는 프론트에서 이미지 구현
 
     private Badge(String name, String description, String imageUrl) {
         this.name = name;
