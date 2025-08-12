@@ -84,6 +84,7 @@ public class ProfanityService {
      * @param profanityUpdateRequestDto 수정할 필드 값을 담은 요청 DTO
      * @throws ProfanityException 비속어가 존재하지 않을 경우
      */
+
     @Transactional
     public ProfanityResponseDto updateProfanity(long profanityId,
             ProfanityUpdateRequestDto profanityUpdateRequestDto) {
@@ -117,18 +118,14 @@ public class ProfanityService {
      * @return 비속어 목록과 페이지네이션 정보
      */
     public ProfanityListResponseWrapperDto getProfanityList(int page, int size, String sort,
-            String order) {
+            Direction order) {
 
         if (!isValidSort(sort)) {
             sort = "createdAt";
         }
-        Direction direction = switch (order.toLowerCase()) {
-            case "latest" -> Direction.DESC;
-            case "oldest" -> Direction.ASC;
-            default -> Direction.DESC; // 기본값은 최신순
-        };
+
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by(direction, sort));
+                Sort.by(order, sort));
 
         Page<Profanity> profanityPage = profanityRepository.findAll(pageable);
 

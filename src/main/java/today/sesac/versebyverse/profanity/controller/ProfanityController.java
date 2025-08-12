@@ -3,6 +3,7 @@ package today.sesac.versebyverse.profanity.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,11 +41,11 @@ public class ProfanityController {
      * @return 응답
      */
     @GetMapping
-    public ApiResponse<ProfanityListResponseWrapperDto> profanity(
+    public ApiResponse<ProfanityListResponseWrapperDto> getProfanityList(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
             @RequestParam(name = "sort", defaultValue = "createdAt") String sort,
-            @RequestParam(name = "order", defaultValue = "latest") String order) {
+            @RequestParam(name = "order", defaultValue = "DESC") Direction order) {
 
         ProfanityListResponseWrapperDto profanityPagingList =
                 profanityService.getProfanityList(page, size, sort, order);
