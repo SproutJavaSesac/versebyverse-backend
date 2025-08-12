@@ -34,13 +34,11 @@ public class ReactionService {
      * 게시글과 댓글 반응 추가하기.
      */
     public ReactionResponseDto addReaction(ReactionRequestDto reactionRequestDto,
-                                           Long targetId, Long memberId,
-                                           TargetType targetType) {
+                                           Long targetId, Long memberId, TargetType targetType) {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
-        return addCountByReactionType(reactionRequestDto.getType(), targetId,
-                targetType, reactionRepository);
+        return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
     }
 
     /**
@@ -61,7 +59,7 @@ public class ReactionService {
         //해당 postId에 회원이 눌렀던 감정을 삭제
         deleteReactionIfExists(targetType, targetId, memberId, emotion);
 
-        return addCountByReactionType(emotion, targetId, targetType, reactionRepository);
+        return addCountByReactionType(emotion, targetId, targetType);
     }
 
     /**
@@ -90,9 +88,7 @@ public class ReactionService {
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
 
-        return addCountByReactionType(reactionRequestDto.getType(), targetId,
-                targetType,
-                reactionRepository);
+        return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
     }
 
     /**
@@ -148,10 +144,10 @@ public class ReactionService {
     /**
      * 사용자가 해당 대상에 특정 감정으로 표시했는지 확인.
      *
-     * @param targetType
-     * @param targetId
-     * @param memberId
-     * @param emotion
+     * @param targetType 게시글 or 댓글
+     * @param targetId   게시글 or 댓글 id
+     * @param memberId   회원 id
+     * @param emotion    감정
      */
     private Optional<Reaction> findReactionByType(TargetType targetType, Long targetId,
                                                   Long memberId, Emotion emotion) {
@@ -167,9 +163,9 @@ public class ReactionService {
     /**
      * 사용자가 해당 대상에 대해 반응했는지 확인 (감정타입과 무관)
      *
-     * @param targetType
-     * @param targetId
-     * @param memberId
+     * @param targetType 게시글 or 댓글
+     * @param targetId   게시글 or 댓글id
+     * @param memberId   회원 id
      */
     private Optional<Reaction> findExistingReaction(TargetType targetType, Long targetId,
                                                     Long memberId) {
@@ -182,16 +178,14 @@ public class ReactionService {
     }
 
     /**
-     * @param type
-     * @param targetId
-     * @param targetType
-     * @param reactionRepository
-     * @return
+     * 게시글,댓글 하나당 반응 총 갯수와 반응별 갯수를 세는 메서드
+     *
+     * @param type       감정 타입
+     * @param targetId   게시글 or 댓글 id
+     * @param targetType 게시글 or 댓글
      */
     private ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
-                                                       TargetType targetType,
-                                                       ReactionRepository reactionRepository
-    ) {
+                                                       TargetType targetType) {
         List<Object[]> counts;
 
         if (targetType.equals(TargetType.POST)) {
