@@ -10,11 +10,6 @@ import today.sesac.versebyverse.global.exception.IErrorCode;
 @Getter
 public enum ReportErrorCode implements IErrorCode {
     /**
-     * 신고 대상이 유효하지 않을 때 발생합니다. 게시글과 댓글 중 하나만 선택해야 합니다.
-     */
-    INVALID_REPORT_TARGET(HttpStatus.BAD_REQUEST, "게시글 또는 댓글 중 하나만 선택해야 합니다."),
-
-    /**
      * 존재하지 않는 신고를 조회하려고 할 때 발생합니다.
      */
     REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 신고입니다."),
