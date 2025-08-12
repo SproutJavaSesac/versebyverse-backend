@@ -10,7 +10,7 @@ public enum StatusType {
     PENDING,
 
     /**
-     * 신고가 승인되어 조치가 취해진 상태입니다.
+     * 신고가 승인된 상태입니다.
      */
     ACCEPTED,
 
