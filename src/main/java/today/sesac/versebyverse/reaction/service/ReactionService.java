@@ -107,9 +107,7 @@ public class ReactionService {
         Optional<Reaction> reaction = findReactionByType(targetType, targetId, memberId, emotion);
 
         //해당 감정 삭제, 이미 없으면 무시
-        if (reaction.isPresent()) {
-            reactionRepository.deleteById(reaction.get().getId());
-        }
+        reaction.ifPresent(value -> reactionRepository.deleteById(value.getId()));
     }
 
     /**
