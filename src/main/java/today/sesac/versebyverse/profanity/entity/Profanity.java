@@ -13,6 +13,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.global.domain.BaseEntity;
+import today.sesac.versebyverse.profanity.dto.request.ProfanityUpdateRequestDto;
+import today.sesac.versebyverse.profanity.exception.ProfanityErrorCode;
+import today.sesac.versebyverse.profanity.exception.ProfanityException;
 
 /**
  * {@code Profanity} 엔티티는 비속어 정보를 관리하기 위한 도메인입니다.
@@ -85,4 +88,24 @@ public class Profanity extends BaseEntity {
         return new Profanity(original, replacement, description, category);
     }
 
+    /**
+     * 전달받은 요청 DTO의 값으로 Profanity 엔티티를 부분 업데이트합니다. null 또는 빈 문자열("") 값은 무시되며 기존 값이 유지됩니다.
+     *
+     * @param updateRequestDto 수정할 값이 담긴 요청 DTO
+     */
+    public void updateProfanity(ProfanityUpdateRequestDto updateRequestDto) {
+
+        if (updateRequestDto.getOriginal().equals(original)
+                && updateRequestDto.getReplacement().equals(replacement)
+                && updateRequestDto.getDescription().equals(description)
+                && updateRequestDto.getCategory().equals(category)) {
+            throw new ProfanityException(ProfanityErrorCode.PROFANITY_NO_CHANGES,
+                    String.valueOf(this.id));
+        } else {
+            this.original = updateRequestDto.getOriginal();
+            this.replacement = updateRequestDto.getReplacement();
+            this.description = updateRequestDto.getDescription();
+            this.category = updateRequestDto.getCategory();
+        }
+    }
 }

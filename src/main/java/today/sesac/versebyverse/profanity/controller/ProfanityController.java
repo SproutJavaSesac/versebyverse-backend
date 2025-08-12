@@ -1,9 +1,9 @@
 package today.sesac.versebyverse.profanity.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.global.response.ApiResponse;
-import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityRegisterRequestDto;
 import today.sesac.versebyverse.profanity.dto.request.ProfanityUpdateRequestDto;
 import today.sesac.versebyverse.profanity.dto.response.ProfanityListResponseWrapperDto;
@@ -35,66 +34,37 @@ public class ProfanityController {
     /**
      * 비속어 목록 조회 API입니다.
      *
-     * @param page 현재 페이지
-     * @param size 한 페이지에 나타낼 데이터 수
-     * @param sort 정렬
+     * @param page  현재 페이지 기본 0
+     * @param size  한 페이지에 나타낼 데이터 수 기본20/ 50/ 100
+     * @param sort  정렬 필드 (id, original, createdAt, updatedAt)
+     * @param order 정렬 순서 (latest, oldest)
      * @return 응답
      */
     @GetMapping
-    public ApiResponse<?> profanity(@RequestParam(name = "page", defaultValue = "0") int page,
+    public ApiResponse<ProfanityListResponseWrapperDto> getProfanityList(
+            @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "20") int size,
-            @RequestParam(name = "sort", defaultValue = "latest") String sort) {
+            @RequestParam(name = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(name = "order", defaultValue = "DESC") Direction order) {
 
-        List<ProfanityResponseDto> profanities = new ArrayList<>();
-        for (int i = 1; i <= size; i++) {
-            int id = ((page) * size) + i;
-            profanities.add(
-                    ProfanityResponseDto.builder()
-                            .profanityId(id)
-                            .original("비속어" + id)
-                            .replacement("순화어" + id)
-                            .description("설명" + id)
-                            .category("GENERAL_SWEAR")
-                            .build()
-            );
-        }
+        ProfanityListResponseWrapperDto profanityPagingList =
+                profanityService.getProfanityList(page, size, sort, order);
 
-        PaginationDto pagination = new PaginationDto(
-                page,
-                size,
-                1000,
-                (int) Math.ceil(1000.0 / size),
-                page * size < 1000,
-                page > 0
-        );
-
-        ProfanityListResponseWrapperDto response = ProfanityListResponseWrapperDto.builder()
-                .profanities(profanities)
-                .pagination(pagination)
-                .build();
-
-        return ApiResponse.success(response);
+        return ApiResponse.success(profanityPagingList);
     }
 
     /**
      * 비속어 등록 API.
      *
-     * @param dto 클라이언트 입력 비속어등록 Dto
+     * @param profanityRegisterRequestDto 클라이언트 입력 비속어등록 Dto
      * @return 응답
      */
     @PostMapping
-    public ApiResponse<?> registerProfanity(
-            @RequestBody ProfanityRegisterRequestDto dto) {
+    //@PreAuthorize("hasRole('ADMIN')")  //Spring Security 권한 제어 어노테이션 TODO: 회원 권한 완료되면 주석풀기
+    public ApiResponse<ProfanityResponseDto> registerProfanity(
+            @Valid @RequestBody ProfanityRegisterRequestDto profanityRegisterRequestDto) {
 
-        return ApiResponse.success(
-                ProfanityResponseDto.builder()
-                        .profanityId((int) (Math.random() * 100) + 1)
-                        .original(dto.getOriginal())
-                        .replacement(dto.getReplacement())
-                        .description(dto.getDescription())
-                        .category(dto.getCategory())
-                        .build()
-        );
+        return ApiResponse.success(profanityService.registerProfanity(profanityRegisterRequestDto));
     }
 
     /**
@@ -103,14 +73,13 @@ public class ProfanityController {
      * @param profanityId 비속어 식별 id
      * @return 응답
      */
-    @PatchMapping("{profanityId}")
-    public ApiResponse<?> updateProfanity(@PathVariable int profanityId,
-            @RequestBody ProfanityUpdateRequestDto dto) {
+    @PatchMapping("/{profanityId}")
+    public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable long profanityId,
+                                                             @Valid @RequestBody
+                                                             ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
-        return ApiResponse.success(ProfanityResponseDto.of(
-                profanityId, dto.getOriginal(), dto.getReplacement(), dto.getDescription(),
-                dto.getCategory()
-        ));
+        return ApiResponse.success(
+                profanityService.updateProfanity(profanityId, profanityUpdateRequestDto));
     }
 
     /**
@@ -119,10 +88,10 @@ public class ProfanityController {
      * @param profanityId 비속어 식별 id
      * @return 응답
      */
-    @DeleteMapping("{profanityId}")
-    public ApiResponse<?> deleteProfanity(@PathVariable int profanityId) {
+    @DeleteMapping("/{profanityId}")
+    public ApiResponse<String> deleteProfanity(@PathVariable long profanityId) {
 
-        return ApiResponse.success("비속어 삭제가 성공했습니다.");
+        return ApiResponse.success(profanityService.deleteProfanity(profanityId));
     }
 
 }
