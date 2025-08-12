@@ -69,6 +69,18 @@ public class Post extends BaseEntity {
     private String imageUrl;
 
     /**
+     * 신고 횟수. 기본값 = 0
+     */
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED DEFAULT 0")
+    private int reportCount;
+
+    /**
+     * 관리자에 의해 차단된 상태 여부. 기본값 = 0
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private boolean isBlocked;
+
+    /**
      * 게시글 신고 유무. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
@@ -111,6 +123,8 @@ public class Post extends BaseEntity {
         this.beforeTitle = beforeTitle;
         this.afterTitle = afterTitle;
         this.imageUrl = imageUrl;
+        this.reportCount = 0;
+        this.isBlocked = false;
         this.isReported = false;
         this.isDeleted = false;
         this.isHidden = false;

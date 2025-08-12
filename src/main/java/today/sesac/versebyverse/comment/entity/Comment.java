@@ -83,16 +83,29 @@ public class Comment extends BaseEntity {
     private String path;
 
     /**
-     * 댓글 삭제 여부.
+     * 신고 횟수. 기본값 = 0
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean isDeleted;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED DEFAULT 0")
+    private int reportCount;
+
+    /**
+     * 관리자에 의해 차단된 상태 여부. 기본값 = 0
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private boolean isBlocked;
 
     /**
      * 신고된 댓글인지 여부.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isReported;
+
+    /**
+     * 댓글 삭제 여부.
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    private boolean isDeleted;
+
 
     private Comment(
             String beforeContent, String afterContent, int level,
@@ -104,6 +117,8 @@ public class Comment extends BaseEntity {
         this.commenter = commenter;
         this.parentComment = parentComment;
         this.level = level;
+        this.reportCount = 0;
+        this.isBlocked = false;
         this.isDeleted = false;
         this.isReported = false;
     }

@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
+import org.hibernate.annotations.ColumnDefault;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.global.domain.BaseEntity;
 import today.sesac.versebyverse.member.entity.Member;
@@ -33,6 +34,7 @@ public class Report extends BaseEntity {
      * 신고의 고유 식별자입니다.
      */
     @Id
+    @Column(columnDefinition = "bigint unsigned")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -58,13 +60,6 @@ public class Report extends BaseEntity {
     private Comment comment;
 
     /**
-     * 신고 유형입니다. 게시글 또는 댓글 중 하나입니다.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReportType reportType;
-
-    /**
      * 신고 사유입니다. 스팸, 부적절한 내용 등이 포함됩니다.
      */
     @Enumerated(EnumType.STRING)
@@ -82,7 +77,8 @@ public class Report extends BaseEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusType statusType = StatusType.PENDING;
+    @ColumnDefault("'PENDING'")
+    private StatusType statusType;
 
     /**
      * 신고를 생성하는 생성자입니다.
@@ -90,17 +86,15 @@ public class Report extends BaseEntity {
      * @param reporter     신고를 한 회원
      * @param post         신고된 게시글 (댓글 신고 시 null)
      * @param comment      신고된 댓글 (게시글 신고 시 null)
-     * @param reportType   신고 유형
      * @param reasonType   신고 사유
      * @param reasonDetail 신고 상세 사유
      */
     private Report(Member reporter, Post post, Comment comment,
-            ReportType reportType, ReasonType reasonType, String reasonDetail) {
+            ReasonType reasonType, String reasonDetail) {
 
         this.reporter = reporter;
         this.post = post;
         this.comment = comment;
-        this.reportType = reportType;
         this.reasonType = reasonType;
         this.reasonDetail = reasonDetail;
     }
@@ -117,7 +111,7 @@ public class Report extends BaseEntity {
     public static Report createPostReport(Member reporter, Post post,
             ReasonType reasonType, String reasonDetail) {
 
-        return new Report(reporter, post, null, ReportType.POST, reasonType, reasonDetail);
+        return new Report(reporter, post, null, reasonType, reasonDetail);
     }
 
     /**
@@ -132,14 +126,14 @@ public class Report extends BaseEntity {
     public static Report createCommentReport(Member reporter, Comment comment,
             ReasonType reasonType, String reasonDetail) {
 
-        return new Report(reporter, null, comment, ReportType.COMMENT, reasonType, reasonDetail);
+        return new Report(reporter, null, comment, reasonType, reasonDetail);
     }
 
     /**
      * 신고 상태를 승인으로 변경합니다.
      */
     public void accept() {
-
+        //TODO: isReported 필드 변경 메서드 호출.
         this.statusType = StatusType.ACCEPTED;
     }
 
@@ -154,9 +148,9 @@ public class Report extends BaseEntity {
     /**
      * 신고 상태를 이미 삭제됨으로 변경합니다.
      */
-    public void alreadyDeleted() {
+    public void postpone() {
 
-        this.statusType = StatusType.ALREADY_DELETED;
+        this.statusType = StatusType.POSTPONE;
     }
 
 }

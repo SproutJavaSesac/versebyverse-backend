@@ -22,5 +22,5 @@ public enum StatusType {
     /**
      * 신고된 게시글이나 댓글이 이미 삭제된 상태입니다.
      */
-    ALREADY_DELETED
+    POSTPONE
 }
