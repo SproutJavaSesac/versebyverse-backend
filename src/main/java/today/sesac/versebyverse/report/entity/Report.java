@@ -133,7 +133,7 @@ public class Report extends BaseEntity {
      * 신고 상태를 승인으로 변경합니다.
      */
     public void accept() {
-        //TODO: isReported 필드 변경 메서드 호출.
+        //TODO: isBlocked 필드 변경 메서드 호출.
         this.statusType = StatusType.ACCEPTED;
     }
 

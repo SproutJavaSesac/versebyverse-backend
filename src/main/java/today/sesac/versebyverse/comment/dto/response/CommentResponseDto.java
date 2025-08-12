@@ -37,7 +37,7 @@ public class CommentResponseDto {
 
     private final Boolean isDeleted;
 
-    private final Boolean isReported;
+    private final Boolean isBlocked;
 
     private final LocalDateTime createdAt;
 
@@ -67,7 +67,7 @@ public class CommentResponseDto {
                         Emotion.EXCITED, 2
                 ), // TODO: reactions 필드 구현 필요
                 comment.isDeleted(),
-                comment.isReported(),
+                comment.isBlocked(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );
