@@ -1,7 +1,10 @@
 package today.sesac.versebyverse.reaction.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
@@ -15,7 +18,6 @@ import today.sesac.versebyverse.reaction.dto.request.ReactionRequestDto;
 import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
 import today.sesac.versebyverse.reaction.entity.Reaction;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
-import today.sesac.versebyverse.reaction.utils.ReactionUtils;
 import today.sesac.versebyverse.reaction.utils.TargetType;
 
 @Service
@@ -37,7 +39,7 @@ public class ReactionService {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
-        return ReactionUtils.addCountByReactionType(reactionRequestDto.getType(), targetId,
+        return addCountByReactionType(reactionRequestDto.getType(), targetId,
                 targetType, reactionRepository);
     }
 
@@ -59,8 +61,7 @@ public class ReactionService {
         //해당 postId에 회원이 눌렀던 감정을 삭제
         deleteReactionIfExists(targetType, targetId, memberId, emotion);
 
-        return ReactionUtils.addCountByReactionType(emotion, targetId, targetType,
-                reactionRepository);
+        return addCountByReactionType(emotion, targetId, targetType, reactionRepository);
     }
 
     /**
@@ -89,7 +90,7 @@ public class ReactionService {
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
 
-        return ReactionUtils.addCountByReactionType(reactionRequestDto.getType(), targetId,
+        return addCountByReactionType(reactionRequestDto.getType(), targetId,
                 targetType,
                 reactionRepository);
     }
@@ -178,5 +179,38 @@ public class ReactionService {
             return reactionRepository.findByMember_IdAndComment_Id(memberId, targetId);
         }
         return Optional.empty();
+    }
+
+    /**
+     * @param type
+     * @param targetId
+     * @param targetType
+     * @param reactionRepository
+     * @return
+     */
+    private ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
+                                                       TargetType targetType,
+                                                       ReactionRepository reactionRepository
+    ) {
+        List<Object[]> counts;
+
+        if (targetType.equals(TargetType.POST)) {
+            counts = reactionRepository.countReactionsByPostId(targetId);
+        } else {
+            counts = reactionRepository.countReactionsByCommentId(targetId);
+        }
+
+        Map<Emotion, String> reactionDetails = counts.stream().collect(
+                Collectors.toMap(
+                        row -> (Emotion) row[0],
+                        row -> String.valueOf(row[1])
+                )
+        );
+
+        int reactionCount = reactionDetails.values().stream()
+                .mapToInt(Integer::parseInt)
+                .sum();
+
+        return ReactionResponseDto.of(type, reactionCount, reactionDetails);
     }
 }
