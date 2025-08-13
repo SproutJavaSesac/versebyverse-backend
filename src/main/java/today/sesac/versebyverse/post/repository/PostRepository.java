@@ -129,4 +129,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물의 Optional
      */
     Optional<Post> findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
+
+    /**
+     * 작성자가 작성한 게시물 수를 조회합니다. 삭제된 게시물은 포함하지 않습니다.
+     *
+     * @param authorId 작성자 ID
+     * @return 작성자가 작성한 게시물 수
+     */
+    long countByAuthorIdAndIsDeletedFalse(Long authorId);
 }

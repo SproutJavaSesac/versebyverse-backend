@@ -1,8 +1,13 @@
 package today.sesac.versebyverse.post.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import today.sesac.versebyverse.badge.entity.Badge;
+import today.sesac.versebyverse.badge.entity.MemberBadge;
+import today.sesac.versebyverse.badge.repository.BadgeRepository;
+import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -25,6 +30,10 @@ public class PostCommandService {
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
 
     private final MemberService memberService;
+
+    private final MemberBadgeRepository memberBadgeRepository;
+
+    private final BadgeRepository badgeRepository;
 
     /**
      * 게시물 작성 api.
@@ -66,6 +75,20 @@ public class PostCommandService {
         );
 
         Post savedPost = postRepository.save(post);
+
+        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
+        List<MemberBadge> filteredMemberBadgeList = memberBadgeList.stream().filter(
+                memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글")
+        ).toList();
+
+        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(memberId);
+        if (postCount > 0 && filteredMemberBadgeList.isEmpty()) {
+            Badge badge = badgeRepository.findByName("첫 게시글")
+                    .orElseThrow(() -> new RuntimeException("error"));
+
+            MemberBadge memberBadge = MemberBadge.create(author, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
 
         return PostCreateResponseDto.of(savedPost);
     }
