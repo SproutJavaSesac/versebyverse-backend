@@ -47,7 +47,7 @@ public class MemberService {
      */
     @Transactional
     public Member createMember(RoleType roleType, SocialType socialType, String email,
-                               String nickname) {
+            String nickname) {
 
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
@@ -55,12 +55,12 @@ public class MemberService {
     }
 
     /**
-     * 회원을 삭제합니다.
-     * soft-delete 방식으로 isDeleted 필드만 변경합니다.
+     * 회원을 삭제합니다. soft-delete 방식으로 isDeleted 필드만 변경합니다.
      *
      * @param memberId 회원의 id
      */
     private void deleteMember(Long memberId) {
+
         log.info("회원 삭제 시작, memberId: {}", memberId);
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
@@ -90,7 +90,6 @@ public class MemberService {
 
         log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
     }
-
 
     /**
      * 회원의 id로 db에서 회원의 정보를 조회합니다.

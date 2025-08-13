@@ -20,8 +20,8 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      * CommentAiService 생성자.
      */
     public CommentAiService(ChatClient chatClient,
-                            PromptTemplateLoader promptTemplateLoader,
-                            ObjectMapper objectMapper) {
+            PromptTemplateLoader promptTemplateLoader,
+            ObjectMapper objectMapper) {
 
         super(chatClient, promptTemplateLoader, objectMapper);
     }

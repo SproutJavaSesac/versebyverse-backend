@@ -35,7 +35,7 @@ public class UserPrincipal implements OAuth2User {
     }
 
     public static UserPrincipal create(Long memberId, RoleType roleType, SocialType socialType,
-                                       String email) {
+            String email) {
 
         return new UserPrincipal(memberId, roleType, socialType, email);
     }

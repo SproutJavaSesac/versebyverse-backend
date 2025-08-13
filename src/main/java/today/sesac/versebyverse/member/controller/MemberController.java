@@ -37,6 +37,7 @@ import today.sesac.versebyverse.ranking.service.RankingService;
 public class MemberController {
 
     private final MemberService memberService;
+
     private final RankingService rankingService;
 
     /**
@@ -47,8 +48,8 @@ public class MemberController {
      */
     @DeleteMapping("/me")
     public ApiResponse<String> withdraw(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
         // 1. 회원 탈퇴(소셜 로그인 연동 해제, db에서 회원 삭제)
         memberService.withdraw(userPrincipal.getMemberId(), userPrincipal.getName());

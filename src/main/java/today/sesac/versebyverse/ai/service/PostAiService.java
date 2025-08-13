@@ -19,7 +19,7 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
      * PostAiService 생성자.
      */
     public PostAiService(ChatClient chatClient, PromptTemplateLoader promptTemplateLoader,
-                         ObjectMapper objectMapper) {
+            ObjectMapper objectMapper) {
 
         super(chatClient, promptTemplateLoader, objectMapper);
     }

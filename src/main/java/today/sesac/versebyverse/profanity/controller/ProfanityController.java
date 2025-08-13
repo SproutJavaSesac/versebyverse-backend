@@ -75,8 +75,8 @@ public class ProfanityController {
      */
     @PatchMapping("/{profanityId}")
     public ApiResponse<ProfanityResponseDto> updateProfanity(@PathVariable long profanityId,
-                                                             @Valid @RequestBody
-                                                             ProfanityUpdateRequestDto profanityUpdateRequestDto) {
+            @Valid @RequestBody
+            ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
         return ApiResponse.success(
                 profanityService.updateProfanity(profanityId, profanityUpdateRequestDto));

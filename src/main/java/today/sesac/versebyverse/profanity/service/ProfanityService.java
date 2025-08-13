@@ -87,7 +87,7 @@ public class ProfanityService {
 
     @Transactional
     public ProfanityResponseDto updateProfanity(long profanityId,
-                                                ProfanityUpdateRequestDto profanityUpdateRequestDto) {
+            ProfanityUpdateRequestDto profanityUpdateRequestDto) {
 
         Profanity profanity = profanityRepository.findById(profanityId)
                 .orElseThrow(() -> new ProfanityException(ProfanityErrorCode.PROFANITY_NOT_FOUND,
@@ -118,7 +118,7 @@ public class ProfanityService {
      * @return 비속어 목록과 페이지네이션 정보
      */
     public ProfanityListResponseWrapperDto getProfanityList(int page, int size, String sort,
-                                                            Direction order) {
+            Direction order) {
 
         if (!isValidSort(sort)) {
             sort = "createdAt";

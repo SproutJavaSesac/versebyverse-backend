@@ -19,12 +19,12 @@ public class LoginStatusResponseDto {
     private String email;
 
     /**
-     * 사용자가 인증되지 않았을 경우의 DTO를 생성합니다.
-     * idAuthenticated만 false를 입력하고, 나머지 필드에는 null을 입력합니다.
+     * 사용자가 인증되지 않았을 경우의 DTO를 생성합니다. idAuthenticated만 false를 입력하고, 나머지 필드에는 null을 입력합니다.
      *
      * @return 로그인 상태 반환 DTO
      */
     public static LoginStatusResponseDto createUnauthenticated() {
+
         return new LoginStatusResponseDto(false, null, null, null);
     }
 
@@ -37,7 +37,8 @@ public class LoginStatusResponseDto {
      * @return 로그인 상태 반환 DTO.
      */
     public static LoginStatusResponseDto createAuthenticated(Long memberId, String nickname,
-                                                             String email) {
+            String email) {
+
         return new LoginStatusResponseDto(true, memberId, nickname, email);
     }
 

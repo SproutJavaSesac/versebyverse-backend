@@ -14,6 +14,7 @@ public class WithdrawFailureException extends AbstractBaseException {
      * @param errorMessage 예외 스택에 남길 메시지
      */
     public WithdrawFailureException(String param, String errorMessage) {
+
         super(MemberErrorCode.WITHDRAW_FAILURE, param, errorMessage);
     }
 }
