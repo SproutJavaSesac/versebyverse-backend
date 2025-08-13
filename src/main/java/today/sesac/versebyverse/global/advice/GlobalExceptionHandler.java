@@ -1,6 +1,5 @@
 package today.sesac.versebyverse.global.advice;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import today.sesac.versebyverse.global.exception.AbstractBaseException;
 import today.sesac.versebyverse.global.exception.GlobalErrorCode;
 import today.sesac.versebyverse.global.response.ApiResponse;
+import today.sesac.versebyverse.global.response.ErrorResponse;
 
 /**
  * 모든 Controller 에서 발생하는 예외를 처리하기 위한 클래스입니다. 기본적으로 에러를 던진 곳에서 로그를 남깁니다.
@@ -43,8 +43,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * AbstractBaseException을 상속받은 예외를 처리합니다. http 상태 코드는 AbstractBaseException에서 정의된 IErrorCode의 상태
-     * 코드로 반환됩니다.
+     * AbstractBaseException을 상속받은 예외를 처리합니다.
+     *
+     * <p>http 상태 코드는 AbstractBaseException에서 정의된 IErrorCode의 상태 코드로 반환됩니다.</p>
      *
      * @param exception AbstractBaseException 구현 예외
      * @return {@link ApiResponse} 객체
@@ -88,7 +89,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * &#064;Valid  어노테이션을 사용하여 검증할 때 발생하는 예외를 처리합니다. 여러 개의 필드에서 에러가 발생할 수 있기에 List로 반환합니다.
+     * &#064;Valid 어노테이션을 사용하여 검증할 때 발생하는 예외를 처리합니다.
+     *
+     * <p>여러 개의 필드에서 에러가 발생할 수 있기에 List로 반환합니다.</p>
      *
      * @param exception MethodArgumentNotValidException
      * @return {@link ApiResponse} 객체
@@ -123,7 +126,7 @@ public class GlobalExceptionHandler {
      * </ul>
      * </p>
      *
-     * 예외 발생 시 400 Bad Request 응답을 반환하며, 오류 메시지는 {@link GlobalErrorCode#INVALID_REQUEST}를 따릅니다.
+     * <p>예외 발생 시 400 Bad Request 응답을 반환하며, 오류 메시지는 {@link GlobalErrorCode#INVALID_REQUEST}를 따릅니다.</p>
      *
      * @param exception 변환 실패로 인해 발생한 예외
      * @return 400 응답과 함께 반환할 오류 정보
@@ -141,32 +144,5 @@ public class GlobalExceptionHandler {
                         null
                 )
         );
-    }
-
-    /**
-     * API 요청 실패 시 사용자에게 알려줄 오류 정보를 담습니다.
-     */
-    public record ErrorResponse(
-            // 오류를 식별할 수 있는 오류 이름
-            String name,
-            // 오류에 대한 설명
-            String message,
-            // 사용자가 보낸 내용 중 오류가 발생한 파라미터
-            String param,
-            // 오류가 발생한 시각
-            LocalDateTime timestamp
-    ) {
-
-        /**
-         * timestamp를 현재 시각으로 설정하는 생성자입니다.
-         *
-         * @param name    오류 이름
-         * @param message 오류 메시지
-         * @param param   오류가 발생한 파라미터
-         */
-        public ErrorResponse(String name, String message, String param) {
-
-            this(name, message, param, LocalDateTime.now());
-        }
     }
 }
