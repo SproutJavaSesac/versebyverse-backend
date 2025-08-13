@@ -38,7 +38,7 @@ public abstract class AbstractAiService<T extends AiRequestDto, R extends AiResp
      * @return AI 응답 결과 DTO
      * @throws IllegalStateException 응답 파싱 실패 시 발생
      */
-    public R invokeAi(T requestDto, PromptType promptType) {
+    public R executeAi(T requestDto, PromptType promptType) {
 
         PromptTemplate template = promptTemplateLoader.getTemplate(promptType);
         String prompt = template.buildPromptMessage(requestDto);
