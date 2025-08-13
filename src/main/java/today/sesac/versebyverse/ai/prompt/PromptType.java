@@ -13,7 +13,12 @@ public enum PromptType {
      */
     EMOTION_ANALYSIS,
     /**
-     * 글 컨셉 변환.
+     * 게시글 컨셉 변환.
      */
-    CONCEPT_TRANSFORM
+    POST_CONCEPT_TRANSFORM,
+
+    /**
+     * 댓글 컨셉 변환.
+     */
+    COMMENT_CONCEPT_TRANSFORM
 }
