@@ -78,6 +78,7 @@ public class PostCommandService {
 
         List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
         checkAndGrantFirstPostBadge(memberBadgeList, author);
+        checkAndGrantTenthPostBadge(memberBadgeList, author);
 
         return PostCreateResponseDto.of(savedPost);
     }
@@ -93,6 +94,24 @@ public class PostCommandService {
 
         if (postCount > 0 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName("첫 게시글")
+                    .orElseThrow(() -> new RuntimeException("error"));
+
+            MemberBadge memberBadge = MemberBadge.create(author, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    private void checkAndGrantTenthPostBadge(List<MemberBadge> memberBadgeList, Member author) {
+
+        Long authorId = author.getId();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("활발한 작가"));
+
+        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
+
+        if (postCount >= 10 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName("활발한 작가")
                     .orElseThrow(() -> new RuntimeException("error"));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
