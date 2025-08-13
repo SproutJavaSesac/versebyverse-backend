@@ -3,11 +3,13 @@ package today.sesac.versebyverse.post.service;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.badge.entity.Badge;
 import today.sesac.versebyverse.badge.entity.MemberBadge;
 import today.sesac.versebyverse.badge.repository.BadgeRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
+import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -31,9 +33,7 @@ public class PostCommandService {
 
     private final MemberService memberService;
 
-    private final MemberBadgeRepository memberBadgeRepository;
-
-    private final BadgeRepository badgeRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 게시물 작성 api.
@@ -76,48 +76,11 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
-        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
-        checkAndGrantFirstPostBadge(memberBadgeList, author);
-        checkAndGrantTenthPostBadge(memberBadgeList, author);
+        eventPublisher.publishEvent(new PostCreatedEvent(author));
 
         return PostCreateResponseDto.of(savedPost);
     }
 
-    private void checkAndGrantFirstPostBadge(List<MemberBadge> memberBadgeList, Member author) {
-
-        Long authorId = author.getId();
-
-        boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글"));
-
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
-
-        if (postCount > 0 && !hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("첫 게시글")
-                    .orElseThrow(() -> new RuntimeException("error"));
-
-            MemberBadge memberBadge = MemberBadge.create(author, badge);
-            memberBadgeRepository.save(memberBadge);
-        }
-    }
-
-    private void checkAndGrantTenthPostBadge(List<MemberBadge> memberBadgeList, Member author) {
-
-        Long authorId = author.getId();
-
-        boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("활발한 작가"));
-
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
-
-        if (postCount >= 10 && !hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("활발한 작가")
-                    .orElseThrow(() -> new RuntimeException("error"));
-
-            MemberBadge memberBadge = MemberBadge.create(author, badge);
-            memberBadgeRepository.save(memberBadge);
-        }
-    }
 
     /**
      * 게시물 삭제.
