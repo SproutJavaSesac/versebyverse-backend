@@ -77,20 +77,27 @@ public class PostCommandService {
         Post savedPost = postRepository.save(post);
 
         List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
-        List<MemberBadge> filteredMemberBadgeList = memberBadgeList.stream().filter(
-                memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글")
-        ).toList();
+        checkAndGrantFirstPostBadge(memberBadgeList, author);
 
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(memberId);
-        if (postCount > 0 && filteredMemberBadgeList.isEmpty()) {
+        return PostCreateResponseDto.of(savedPost);
+    }
+
+    private void checkAndGrantFirstPostBadge(List<MemberBadge> memberBadgeList, Member author) {
+
+        Long authorId = author.getId();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글"));
+
+        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
+
+        if (postCount > 0 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName("첫 게시글")
                     .orElseThrow(() -> new RuntimeException("error"));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
             memberBadgeRepository.save(memberBadge);
         }
-
-        return PostCreateResponseDto.of(savedPost);
     }
 
     /**
