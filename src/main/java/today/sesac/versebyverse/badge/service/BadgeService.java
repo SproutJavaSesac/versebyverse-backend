@@ -68,11 +68,36 @@ public class BadgeService {
         long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
 
         if (postCount >= 10 && !hasTargetBadge) {
-            log.info("활발한 작가");
             Badge badge = badgeRepository.findByName("활발한 작가")
                     .orElseThrow(() -> new RuntimeException("error"));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    /**
+     * 회원이 생성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
+     *
+     * @param member 가입한 회원 객체.
+     */
+    public void checkAndGrantMemberBadges(Member member) {
+
+        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(member.getId());
+
+        checkAndGrantMemberCreatedBadge(memberBadgeList, member);
+    }
+
+    private void checkAndGrantMemberCreatedBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("새로운 가족"));
+
+        if (!hasTargetBadge) {
+            Badge badge = badgeRepository.findByName("새로운 가족")
+                    .orElseThrow(() -> new RuntimeException("error"));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
             memberBadgeRepository.save(memberBadge);
         }
     }

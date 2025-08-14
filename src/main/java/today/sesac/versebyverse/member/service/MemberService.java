@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.service.SocialLoginService;
+import today.sesac.versebyverse.badge.entity.MemberBadge;
+import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.event.MemberCreatedEvent;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.member.dto.response.MyBadgeListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentSummary;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
@@ -42,6 +47,10 @@ public class MemberService {
 
     private final SocialLoginService socialLoginService;
 
+    private final MemberBadgeRepository memberBadgeRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
+
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
@@ -51,6 +60,9 @@ public class MemberService {
 
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
+
+        eventPublisher.publishEvent(new MemberCreatedEvent(savedMember));
+
         return savedMember;
     }
 
@@ -312,5 +324,18 @@ public class MemberService {
                             memberId
                     ));
         }
+    }
+
+    /**
+     * 사용자가 보유한 배지 목록을 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @return 사용자가 보유한 배지 목록 응답 DTO
+     */
+    public MyBadgeListResponseDto getMyBadges(Long memberId) {
+
+        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
+
+        return MyBadgeListResponseDto.of(memberBadgeList);
     }
 }
