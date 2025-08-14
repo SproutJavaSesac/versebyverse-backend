@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.badge.entity.Badge;
+import today.sesac.versebyverse.badge.entity.BadgeType;
 import today.sesac.versebyverse.badge.entity.MemberBadge;
 import today.sesac.versebyverse.badge.repository.BadgeRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
@@ -42,15 +43,17 @@ public class BadgeService {
 
     private void checkAndGrantFirstPostBadge(List<MemberBadge> memberBadgeList, Member author) {
 
+        String targetBadgeName = BadgeType.FIRST_POST.getBadgeName();
+
         Long authorId = author.getId();
 
         boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글"));
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
 
         long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
 
         if (postCount > 0 && !hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("첫 게시글")
+            Badge badge = badgeRepository.findByName(targetBadgeName)
                     .orElseThrow(() -> new RuntimeException("첫 게시글 배지를 찾을 수 없습니다"));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
@@ -60,15 +63,17 @@ public class BadgeService {
 
     private void checkAndGrantTenthPostBadge(List<MemberBadge> memberBadgeList, Member author) {
 
+        String targetBadgeName = BadgeType.NOVICE_WRITER.getBadgeName();
+
         Long authorId = author.getId();
 
         boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("활발한 작가"));
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
 
         long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
 
         if (postCount >= 10 && !hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("활발한 작가")
+            Badge badge = badgeRepository.findByName(targetBadgeName)
                     .orElseThrow(() -> new RuntimeException("error"));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
@@ -90,11 +95,13 @@ public class BadgeService {
 
     private void checkAndGrantMemberCreatedBadge(List<MemberBadge> memberBadgeList, Member member) {
 
+        String targetBadgeName = BadgeType.FIRST_SIGNUP.getBadgeName();
+
         boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("새로운 가족"));
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
 
         if (!hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("새로운 가족")
+            Badge badge = badgeRepository.findByName(targetBadgeName)
                     .orElseThrow(() -> new RuntimeException("error"));
 
             MemberBadge memberBadge = MemberBadge.create(member, badge);
