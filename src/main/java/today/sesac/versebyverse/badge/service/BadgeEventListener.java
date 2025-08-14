@@ -24,11 +24,7 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 @RequiredArgsConstructor
 public class BadgeEventListener {
 
-    private final PostRepository postRepository;
-
-    private final MemberBadgeRepository memberBadgeRepository;
-
-    private final BadgeRepository badgeRepository;
+    private final BadgeService badgeService;
 
     /**
      * 게시글이 생성되었을 때 실행되는 메서드.
@@ -40,45 +36,8 @@ public class BadgeEventListener {
 
         Member member = postCreatedEvent.getMember();
 
-        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(member.getId());
-        checkAndGrantFirstPostBadge(memberBadgeList, member);
-        checkAndGrantTenthPostBadge(memberBadgeList, member);
+        badgeService.checkAndGrantPostBadges(member);
+
     }
 
-    private void checkAndGrantFirstPostBadge(List<MemberBadge> memberBadgeList, Member author) {
-
-        Long authorId = author.getId();
-
-        boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("첫 게시글"));
-
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
-
-        if (postCount > 0 && !hasTargetBadge) {
-            Badge badge = badgeRepository.findByName("첫 게시글")
-                    .orElseThrow(() -> new RuntimeException("첫 게시글 배지를 찾을 수 없습니다"));
-
-            MemberBadge memberBadge = MemberBadge.create(author, badge);
-            memberBadgeRepository.save(memberBadge);
-        }
-    }
-
-    private void checkAndGrantTenthPostBadge(List<MemberBadge> memberBadgeList, Member author) {
-
-        Long authorId = author.getId();
-
-        boolean hasTargetBadge = memberBadgeList.stream()
-                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals("활발한 작가"));
-
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
-
-        if (postCount >= 10 && !hasTargetBadge) {
-            log.info("활발한 작가");
-            Badge badge = badgeRepository.findByName("활발한 작가")
-                    .orElseThrow(() -> new RuntimeException("error"));
-
-            MemberBadge memberBadge = MemberBadge.create(author, badge);
-            memberBadgeRepository.save(memberBadge);
-        }
-    }
 }
