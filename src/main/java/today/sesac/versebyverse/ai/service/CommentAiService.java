@@ -6,6 +6,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.CommentAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.CommentAiResponseDto;
+import today.sesac.versebyverse.ai.exception.AiErrorCode;
+import today.sesac.versebyverse.ai.exception.AiException;
 import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
 import today.sesac.versebyverse.ai.prompt.PromptType;
 
@@ -43,27 +45,24 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
     /**
      * AI 요청을 실행하고 응답을 검증하여 안전한 결과를 반환합니다.
      *
-     * <p>AI 처리 실패 시 또는 필수 필드가 누락된 경우 원본 데이터로 대체하여
-     * 서비스 안정성을 보장합니다.</p>
-     *
      * @param requestDto AI 요청 데이터 전송 객체
      * @param promptType 사용할 프롬프트 타입
-     * @return AI 응답 DTO 또는 원본 요청 DTO
+     * @return responseDto AI 응답 DTO
+     * @throws AiException 응답의 필수 필드(conceptType, content)가 null인 경우
      */
     public CommentAiResponseDto executeAiWithValidation(CommentAiRequestDto requestDto,
             PromptType promptType) {
 
-        try {
-            CommentAiResponseDto responseDto = executeAi(requestDto, promptType);
-            if (responseDto.getConceptType() == null || responseDto.getContent() == null) {
-                log.warn("AI 응답 필수 필드 누락, 원본 데이터로 대체");
-                return createFallbackResponse(requestDto);
-            }
-            return responseDto;
-        } catch (IllegalStateException e) {
-            log.warn("AI 처리 실패, 원본 데이터로 대체: ", e);
-            return createFallbackResponse(requestDto);
+        CommentAiResponseDto responseDto = executeAi(requestDto, promptType);
+        if (responseDto.getConceptType() == null || responseDto.getContent() == null) {
+            log.warn("AI 응답 필수 필드 누락");
+            throw new AiException(AiErrorCode.REQUIRED_FIELD_MISSING,
+                    (responseDto.getConceptType() == null)
+                            ? "conceptType"
+                            : "content");
         }
+        return responseDto;
+
     }
 
     /**
