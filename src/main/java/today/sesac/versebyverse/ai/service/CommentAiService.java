@@ -73,6 +73,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      */
     private CommentAiResponseDto createFallbackResponse(CommentAiRequestDto requestDto) {
 
-        return CommentAiResponseDto.of(requestDto.getConceptType(), requestDto.getContent());
+        return CommentAiResponseDto.of(requestDto.getConceptType(), requestDto.getContent(),
+                requestDto.getEmotion());
     }
 }
