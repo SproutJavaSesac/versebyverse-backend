@@ -56,7 +56,7 @@ public class CommentService {
 
         CommentAiRequestDto commentAiRequestDto =
                 CommentAiRequestDto.of(activePost.getConceptType(),
-                        commentCreateRequestDto.content());
+                        commentCreateRequestDto.content(), null);
         String afterContent = commentAiService.executeAiWithValidation(commentAiRequestDto,
                 PromptType.COMMENT_CONCEPT_TRANSFORM).getContent();
 
