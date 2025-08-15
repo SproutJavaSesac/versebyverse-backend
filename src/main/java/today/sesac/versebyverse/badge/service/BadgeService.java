@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.badge.entity.Badge;
 import today.sesac.versebyverse.badge.entity.BadgeType;
 import today.sesac.versebyverse.badge.entity.MemberBadge;
+import today.sesac.versebyverse.badge.exception.BadgeErrorCode;
+import today.sesac.versebyverse.badge.exception.BadgeException;
 import today.sesac.versebyverse.badge.repository.BadgeRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
 import today.sesac.versebyverse.member.entity.Member;
@@ -54,7 +56,7 @@ public class BadgeService {
 
         if (postCount > 0 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName)
-                    .orElseThrow(() -> new RuntimeException("첫 게시글 배지를 찾을 수 없습니다"));
+                    .orElseThrow(() -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.FIRST_POST.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
             memberBadgeRepository.save(memberBadge);
@@ -74,7 +76,7 @@ public class BadgeService {
 
         if (postCount >= 10 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName)
-                    .orElseThrow(() -> new RuntimeException("error"));
+                    .orElseThrow(() -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.NOVICE_WRITER.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
             memberBadgeRepository.save(memberBadge);
@@ -102,7 +104,7 @@ public class BadgeService {
 
         if (!hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName)
-                    .orElseThrow(() -> new RuntimeException("error"));
+                    .orElseThrow(() -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.FIRST_SIGNUP.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(member, badge);
             memberBadgeRepository.save(memberBadge);
