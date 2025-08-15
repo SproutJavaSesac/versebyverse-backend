@@ -175,7 +175,7 @@ public class MemberService {
      */
     public MyPostListResponseDto getMyPosts(Long memberId, Pageable pageable) {
 
-        getActiveMemberOrThrow(memberId);
+        validateMemberActiveExists(memberId);
 
         // 작성한 게시글을 Page 객체으로 조회
         Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
@@ -221,7 +221,7 @@ public class MemberService {
      */
     public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
 
-        getActiveMemberOrThrow(memberId);
+        validateMemberActiveExists(memberId);
 
         // 작성한 댓글을 Page 객체로 조회
         Page<Comment> pageByCommenterIdWithPageable =
