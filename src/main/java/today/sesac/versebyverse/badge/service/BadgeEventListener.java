@@ -35,7 +35,7 @@ public class BadgeEventListener {
 
         Member member = postCreatedEvent.getMember();
 
-        badgeService.checkAndGrantPostBadges(member);
+        badgeService.grantPostBadges(member);
 
     }
 
@@ -52,7 +52,7 @@ public class BadgeEventListener {
 
         Member member = memberCreatedEvent.getMember();
 
-        badgeService.checkAndGrantMemberBadges(member);
+        badgeService.grantMemberBadges(member);
     }
 
 }

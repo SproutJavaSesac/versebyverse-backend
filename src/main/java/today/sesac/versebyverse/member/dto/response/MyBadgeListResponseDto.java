@@ -29,7 +29,10 @@ public class MyBadgeListResponseDto {
 
     private static List<MyBadgeSummaryDto> convertBadgesToSummaries(List<MemberBadge> badges) {
         return badges.stream()
-                .map(badge -> MyBadgeSummaryDto.of(badge.getId(), badge.getBadge().getName(), badge.getBadge().getDescription()))
+                .map(badge -> MyBadgeSummaryDto.of(
+                        badge.getId(),
+                        badge.getBadge().getName(),
+                        badge.getBadge().getDescription()))
                 .toList();
     }
 }
