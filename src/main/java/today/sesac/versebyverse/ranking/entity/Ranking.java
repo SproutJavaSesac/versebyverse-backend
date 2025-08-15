@@ -133,8 +133,9 @@ public class Ranking extends BaseEntityOnlyCreatedAt {
      * @return 랭킹 객체
      */
     public static Ranking createWithPreviousRank(Member member, RankingCategory rankingCategory,
-            int postCount,
-            int rank, int previousRank, RankingPeriodType periodType) {
+                                                 int postCount,
+                                                 int rank, int previousRank,
+                                                 RankingPeriodType periodType) {
 
         return new Ranking(
                 member,

@@ -7,6 +7,7 @@ import lombok.Getter;
  */
 @Getter
 public enum Concept {
+    ALL,
     CLASSICAL_POETRY,
     POETRY,
     NOVEL,

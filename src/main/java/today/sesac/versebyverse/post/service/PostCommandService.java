@@ -2,7 +2,12 @@ package today.sesac.versebyverse.post.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
+import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
+import today.sesac.versebyverse.ai.prompt.PromptType;
+import today.sesac.versebyverse.ai.service.PostAiService;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -19,12 +24,15 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostCommandService {
 
     private final PostRepository postRepository;
     // TODO PostService는  memberService만을 의존하고 member관련 오류는 memberService에선만 post관련은 PostService에서만 수행
 
     private final MemberService memberService;
+
+    private final PostAiService postAiService;
 
     /**
      * 게시물 작성 api.
@@ -38,20 +46,24 @@ public class PostCommandService {
 
         //1.작성자 정보 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);
-        //2.사용자가 작성한 원본내용 설정
-        String beforeContent = postCreateRequestDto.getContent();
-        //3.ai 처리된 afterContent 생성
-        String afterContent = processAI(beforeContent);
-        //4. 사용자가 작성한 제목
+        //2. 사용자가 작성한 제목
         String beforeTitle = postCreateRequestDto.getTitle();
-        //5. ai 처리된 afterTitle 생성
-        String afterTitle = processAI(beforeTitle);
+        //3.사용자가 작성한 원본내용 설정
+        String beforeContent = postCreateRequestDto.getContent();
+        //4.executeAi()﹒ai 요청dto of 생성자
+        PostAiRequestDto postAiRequestDto =
+                PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConceptType(),
+                        postCreateRequestDto.getEmotionType(), beforeContent);
 
-        //감정선택하지 않았을 경우 ai 처리후 string 값을 객체 값으로 전환
-        //TODO ai 코드로 수정 예정
-//        if (request.getEmotionType() == null) {
-//            ai 감정 선택 코드 호출
-//        }
+        //5. ai 호출 게시글 변환
+        // TODO: AI 호출이 트랜잭션 범위 내에 있어서 ai 요청 지연시 데드락 가능성있음.(DB 커넥션 장시간 점유) => 어떻게 대처해야할지 고민하기-qkralstjr
+        PostAiResponseDto postAiResponseDto =
+                postAiService.executeAiWithValidation(postAiRequestDto,
+                        PromptType.POST_CONCEPT_TRANSFORM);
+
+        //6. ai 처리된 afterTitle, afterContent 생성
+        String afterTitle = postAiResponseDto.getTitle();
+        String afterContent = postAiResponseDto.getContent();
 
         //정적 팩토리 메서드
         Post post = Post.createPost(
@@ -61,17 +73,13 @@ public class PostCommandService {
                 beforeTitle,
                 afterTitle,
                 postCreateRequestDto.getImageUrl(),
-                postCreateRequestDto.getEmotionType(),
-                postCreateRequestDto.getConceptType()
+                postAiResponseDto.getEmotionType(),
+                postAiResponseDto.getConceptType()
         );
 
         Post savedPost = postRepository.save(post);
 
-        return PostCreateResponseDto.of(
-                savedPost.getId(),
-                savedPost.getAfterTitle(),
-                savedPost.getAfterContent()
-        );
+        return PostCreateResponseDto.of(savedPost);
     }
 
     /**
@@ -118,14 +126,6 @@ public class PostCommandService {
         validatePostOwnership(post, memberId);
         post.unhide();
         postRepository.save(post);
-    }
-
-    /**
-     * 내용 변환 ai 호출 임시 함수.
-     */
-    private String processAI(String content) {
-
-        return content;
     }
 
     /**

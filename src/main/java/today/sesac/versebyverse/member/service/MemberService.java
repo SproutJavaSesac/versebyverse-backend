@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
@@ -26,6 +27,7 @@ import today.sesac.versebyverse.post.repository.PostRepository;
  */
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -35,9 +37,12 @@ public class MemberService {
 
     private final CommentRepository commentRepository;
 
+    private final SocialLoginService socialLoginService;
+
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
      */
+    @Transactional
     public Member createMember(RoleType roleType, SocialType socialType, String email,
             String nickname) {
 
@@ -47,6 +52,44 @@ public class MemberService {
     }
 
     /**
+     *  회원을 삭제합니다.
+     *  soft-delete 방식으로 isDeleted 필드만 변경합니다.
+     *
+     * @param memberId 회원의 id
+     */
+    private void deleteMember(Long memberId) {
+        log.info("회원 삭제 시작, memberId: {}", memberId);
+
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
+                () -> new MemberNotFoundException(null, String.format(
+                        "해당 id를 가진 회원을 찾을 수 없습니다. memberId: %d", memberId)));
+
+        member.delete();
+
+        log.info("회원 삭제 완료, memberId: {}", memberId);
+    }
+
+    /**
+     * 탈퇴 요청을 수행합니다.
+     *
+     * @param username 사용자를 구분하기 위해 사용되는 이름입니다.
+     */
+    @Transactional
+    public void withdraw(Long memberId, String username) {
+
+        log.info("회원 탈퇴 시작, memberId: {}, username: {}", memberId, username);
+
+        // 1. DB에서 회원 삭제
+        deleteMember(memberId);
+
+        // 2. 소셜 로그인 연동 해제 API 호출
+        socialLoginService.revokeAccess(username);
+
+        log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
+    }
+
+
+    /**
      * 회원의 id로 db에서 회원의 정보를 조회합니다.
      *
      * @param memberId 회원의 id
@@ -54,7 +97,7 @@ public class MemberService {
      */
     public Member findById(Long memberId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다."));
         return member;
@@ -62,7 +105,7 @@ public class MemberService {
 
     public Member findByEmailAndSocialType(String email, SocialType socialType) {
 
-        Member member = memberRepository.findByEmailAndSocialType(email, socialType).orElseThrow(
+        Member member = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email, socialType).orElseThrow(
                 () -> new MemberNotFoundException(email + ", " + socialType,
                         "해당 email을 가진 회원을 찾을 수 없습니다.")
         );
@@ -85,7 +128,7 @@ public class MemberService {
      */
     public MyInfoGetResponseDto getMyInformation(Long memberId) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );
@@ -181,4 +224,20 @@ public class MemberService {
                         String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
     }
 
+    /**
+     * 주어진 memberId가 존재하고, 활성 상태의 회원인지 확인합니다.
+     *
+     * @param memberId 확인할 회원의 ID
+     * @throws MemberNotFoundException 해당 ID를 가진 회원이 존재하지 않거나 삭제된 경우 예외 발생
+     */
+    public void validateMemberActiveExists(Long memberId) {
+
+        if (!memberRepository.existsByIdAndIsDeletedFalse(memberId)) {
+            throw new MemberNotFoundException(null,
+                    String.format(
+                            "해당 id를 가진 회원을 찾을 수 없습니다. memberId: %d",
+                            memberId
+                    ));
+        }
+    }
 }
