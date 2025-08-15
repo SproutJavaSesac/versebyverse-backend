@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.member.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -9,10 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MyPostSummaryDto;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
@@ -177,12 +181,35 @@ public class MemberService {
         Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
                 memberId, pageable);
 
-        // Page 객체를 DTO로 변환
-        MyPostListResponseDto myPostListResponseDto = MyPostListResponseDto.of(
-                pageByAuthorIdWithPageable
-        );
+        List<MyPostSummaryDto> postSummaries = convertPostsToSummaries(pageByAuthorIdWithPageable);
 
-        return myPostListResponseDto;
+        PaginationDto paginationDto = getPaginationDto(pageByAuthorIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MyPostListResponseDto.of(
+                postSummaries,
+                paginationDto
+        );
+    }
+
+    private List<MyPostSummaryDto> convertPostsToSummaries(Page<Post> pagePosts) {
+        return pagePosts.getContent().stream()
+                .map(post -> {
+                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    return MyPostSummaryDto.of(post, commentCount);
+                })
+                .toList();
+    }
+
+    private PaginationDto getPaginationDto(Page<?> page) {
+        return new PaginationDto(
+                page.getNumber(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getSize(),
+                page.hasNext(),
+                page.hasPrevious()
+        );
     }
 
     /**
@@ -202,12 +229,20 @@ public class MemberService {
                 memberId, pageable
         );
 
-        // Page 객체를 DTO로 변환
-        MyCommentListResponseDto myCommentListResponseDto = MyCommentListResponseDto.of(
-                pageByCommenterIdWithPageable
-        );
+        List<MyCommentSummaryDto> commentSummaries = convertCommentsToSummaries(pageByCommenterIdWithPageable);
 
-        return myCommentListResponseDto;
+        PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MyCommentListResponseDto.of(
+                commentSummaries, paginationDto
+        );
+    }
+
+    private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
+        return pageComments.getContent().stream()
+                .map(MyCommentSummaryDto::of)
+                .toList();
     }
 
     /**

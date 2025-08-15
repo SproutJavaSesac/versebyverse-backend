@@ -44,7 +44,7 @@ public class MyPostSummaryDto {
      * @param post 변환할 post 객체
      * @return 사용자가 작성한 게시글 응답 DTO
      */
-    public static MyPostSummaryDto of(Post post) {
+    public static MyPostSummaryDto of(Post post, int commentCount) {
 
         return new MyPostSummaryDto(
                 post.getId(),
@@ -56,7 +56,7 @@ public class MyPostSummaryDto {
                 post.getEmotionType(),
                 post.getConceptType(),
                 3,  // TODO: 반응하기 미구현된 관계로 하드코딩 - 삭제하기
-                5,  // TODO: 댓글 개수 하드코딩
+                commentCount,
                 post.getImageUrl(),
                 post.isHidden()
         );
