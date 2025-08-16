@@ -39,6 +39,25 @@ public class ReactionService {
     //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
+     * 게시글과 댓글 반응 조회하기.
+     *
+     * @param targetType 게시글 or 댓글
+     * @param targetId   게시글 or 댓글 id
+     */
+    public ReactionResponseDto getReactions(TargetType targetType, Long targetId,
+            Long memberId) {
+
+        Optional<Reaction> currentMemberReaction =
+                findReactionByMemberIdAndTargetId(targetType, memberId, targetId);
+
+        //현재 사용자의 반응 타입
+        Emotion currentMemberEmotionType =
+                currentMemberReaction.map(Reaction::getType).orElse(null);
+
+        return addCountByReactionType(currentMemberEmotionType, targetId, targetType);
+    }
+
+    /**
      * 게시글과 댓글 반응 추가하기.
      *
      * @param reactionRequestDto 추가할 반응 타입

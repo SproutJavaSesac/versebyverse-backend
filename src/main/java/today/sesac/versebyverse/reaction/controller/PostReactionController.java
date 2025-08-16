@@ -24,6 +24,23 @@ public class PostReactionController {
     private final ReactionService reactionService;
 
     /**
+     * 반응하기 조회.
+     *
+     * @param postId 게시글 id
+     */
+
+    @GetMapping("/reactions")
+    public ApiResponse<ReactionResponseDto> getPostReaction(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        Long memberId = userPrincipal.getMemberId();
+
+        return ApiResponse.success(
+                reactionService.getReactions(TargetType.POST, postId, memberId));
+    }
+
+    /**
      * 게시물에 반응 추가하기.
      *
      * @param postId 반응을 추가할 게시글 id

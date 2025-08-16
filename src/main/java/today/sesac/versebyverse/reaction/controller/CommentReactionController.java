@@ -22,6 +22,22 @@ public class CommentReactionController {
     private final ReactionService reactionService;
 
     /**
+     * 반응하기 조회.
+     *
+     * @param commentId 댓글 id
+     */
+
+    @GetMapping
+    public ApiResponse<ReactionResponseDto> getCommentReaction(@PathVariable Long postId,
+            @PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        Long memberId = userPrincipal.getMemberId();
+
+        return ApiResponse.success(
+                reactionService.getReactions(TargetType.POST, commentId, memberId));
+    }
+
+    /**
      * 댓글에 반응 추가하기.
      *
      * @param postId
