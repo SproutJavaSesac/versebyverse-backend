@@ -1,12 +1,13 @@
 package today.sesac.versebyverse.member.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+/**
+ * 내 정보 수정 응답 DTO.
+ */
 @Getter
-@Setter
-@NoArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class MyInfoEditResponseDto {
 
     private Long memberId;
