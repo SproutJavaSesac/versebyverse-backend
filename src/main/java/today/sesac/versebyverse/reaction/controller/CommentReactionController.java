@@ -52,9 +52,10 @@ public class CommentReactionController {
      */
     @PostMapping
     public ApiResponse<ReactionResponseDto> addCommentReaction(@PathVariable Long postId,
-            @PathVariable Long commentId, @RequestBody ReactionRequestDto reactionRequestDto) {
+            @PathVariable Long commentId, @RequestBody ReactionRequestDto reactionRequestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.addReaction(reactionRequestDto, commentId, memberId,
                         TargetType.COMMENT));
@@ -69,9 +70,10 @@ public class CommentReactionController {
      */
     @DeleteMapping("/{type}")
     public ApiResponse<ReactionResponseDto> deleteCommentReaction(@PathVariable Long postId,
-            @PathVariable Long commentId, @PathVariable String type) {
+            @PathVariable Long commentId, @PathVariable String type,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.deleteReaction(type, commentId, memberId, TargetType.COMMENT));
     }
@@ -85,9 +87,10 @@ public class CommentReactionController {
      */
     @PatchMapping
     public ApiResponse<ReactionResponseDto> updateCommentReaction(@PathVariable Long postId,
-            @PathVariable Long commentId, @RequestBody ReactionRequestDto reactionRequestDto) {
+            @PathVariable Long commentId, @RequestBody ReactionRequestDto reactionRequestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.updateReaction(TargetType.COMMENT, commentId, reactionRequestDto,
                         memberId));

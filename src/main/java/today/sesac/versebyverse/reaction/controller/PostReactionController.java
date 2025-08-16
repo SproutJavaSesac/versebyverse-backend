@@ -53,9 +53,10 @@ public class PostReactionController {
     @PostMapping("/reactions")
     public ApiResponse<ReactionResponseDto> addPostEmotion(
             @PathVariable Long postId,
-            @RequestBody ReactionRequestDto reactionRequestDto) {
+            @RequestBody ReactionRequestDto reactionRequestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.addReaction(reactionRequestDto, postId, memberId,
                         TargetType.POST));
@@ -69,15 +70,16 @@ public class PostReactionController {
      */
     @DeleteMapping("/reactions/{type}")
     public ApiResponse<ReactionResponseDto> deleteEmotion(
-            @PathVariable Long postId, @PathVariable String type) {
+            @PathVariable Long postId, @PathVariable String type,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.deleteReaction(type, postId, memberId, TargetType.POST));
     }
 
     /**
-     * 게시물 반응 수정하기
+     * 게시물 반응 수정하기.
      *
      * @param postId             게시물 id
      * @param reactionRequestDto 추가될 감정 dto
@@ -85,9 +87,10 @@ public class PostReactionController {
     @PatchMapping("/reactions")
     public ApiResponse<ReactionResponseDto> updateEmotion(
             @PathVariable Long postId,
-            @RequestBody ReactionRequestDto reactionRequestDto) {
+            @RequestBody ReactionRequestDto reactionRequestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 2L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
         return ApiResponse.success(
                 reactionService.updateReaction(TargetType.POST, postId, reactionRequestDto,
                         memberId));
