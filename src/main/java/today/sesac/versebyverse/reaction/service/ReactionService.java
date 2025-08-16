@@ -206,9 +206,9 @@ public class ReactionService {
         List<Object[]> counts;
 
         if (targetType.equals(TargetType.POST)) {
-            counts = reactionRepository.countReactionsByPostId(targetId);
+            counts = reactionRepository.countReactionsByTypeForPost(targetId);
         } else {
-            counts = reactionRepository.countReactionsByCommentId(targetId);
+            counts = reactionRepository.countReactionsByTypeForComment(targetId);
         }
 
         Map<Emotion, String> reactionDetails = counts.stream().collect(
