@@ -69,13 +69,13 @@ public class PostReactionController {
      * @param type   삭제할 반응 타입
      */
     @DeleteMapping("/reactions/{type}")
-    public ApiResponse<ReactionResponseDto> deleteEmotion(
+    public ApiResponse<String> deleteEmotion(
             @PathVariable Long postId, @PathVariable String type,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         Long memberId = userPrincipal.getMemberId();
-        return ApiResponse.success(
-                reactionService.deleteReaction(type, postId, memberId, TargetType.POST));
+        reactionService.deleteReaction(type, postId, memberId, TargetType.POST);
+        return ApiResponse.success("게시글의 반응이 성공적으로 삭제됐습니다");
     }
 
     /**
@@ -95,5 +95,4 @@ public class PostReactionController {
                 reactionService.updateReaction(TargetType.POST, postId, reactionRequestDto,
                         memberId));
     }
-
 }

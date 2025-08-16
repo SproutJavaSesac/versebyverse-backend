@@ -82,7 +82,7 @@ public class ReactionService {
      * @param targetType 댓글 or 게시글
      */
     @Transactional
-    public ReactionResponseDto deleteReaction(String type, Long targetId, Long memberId,
+    public void deleteReaction(String type, Long targetId, Long memberId,
             TargetType targetType) {
 
         //type을 대문자로 변환
@@ -90,8 +90,6 @@ public class ReactionService {
 
         //해당 postId에 회원이 눌렀던 감정을 삭제
         deleteReactionIfExists(targetType, targetId, memberId, emotion);
-
-        return addCountByReactionType(emotion, targetId, targetType);
     }
 
     /**

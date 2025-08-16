@@ -69,13 +69,15 @@ public class CommentReactionController {
      * @param type      삭제할 반응 타입
      */
     @DeleteMapping("/{type}")
-    public ApiResponse<ReactionResponseDto> deleteCommentReaction(@PathVariable Long postId,
+    public ApiResponse<String> deleteCommentReaction(@PathVariable Long postId,
             @PathVariable Long commentId, @PathVariable String type,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         Long memberId = userPrincipal.getMemberId();
-        return ApiResponse.success(
-                reactionService.deleteReaction(type, commentId, memberId, TargetType.COMMENT));
+
+        reactionService.deleteReaction(type, commentId, memberId, TargetType.COMMENT);
+
+        return ApiResponse.success("댓글 반응이 성공적으로 삭제됐습니다.");
     }
 
     /**
