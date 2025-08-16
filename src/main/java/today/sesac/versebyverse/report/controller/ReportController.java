@@ -1,10 +1,12 @@
 package today.sesac.versebyverse.report.controller;
 
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.report.dto.request.ReportActionRequestDto;
@@ -22,6 +25,7 @@ import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportActionResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.service.ReportService;
 
 /**
  * 신고 컨트롤러.
@@ -34,6 +38,8 @@ public class ReportController {
 
     private String reportType = "";
 
+    private final ReportService reportService;
+
     /**
      * 게시글 신고.
      *
@@ -42,20 +48,12 @@ public class ReportController {
      * @return 응답
      */
     @PostMapping("/reports/posts/{postId}")
-    public ApiResponse<?> postReport(@PathVariable("postId") int postId,
-            @RequestBody ReportRequestDto reportRequestDto) {
+    public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") long postId,
+            @Valid @RequestBody ReportRequestDto reportRequestDto,
+            @AuthenticationPrincipal UserPrincipal reporter) {
 
-        reportType = "POST";
-        PostReportResponseDto postReportResponseDto = PostReportResponseDto.builder()
-                .reportId((int) (Math.random() * 10) + 1)
-                .postId(postId)
-                .reportType(reportType)
-                .reasonType(reportRequestDto.getReasonType())
-                .reasonDetail(reportRequestDto.getReasonDetail())
-                .statusType("PENDING")
-                .createdAt(LocalDateTime.now())
-                .build();
-        return ApiResponse.success(postReportResponseDto);
+        return ApiResponse.success(
+                reportService.reportPost(reportRequestDto, reporter.getMemberId(), postId));
     }
 
     /**
@@ -74,7 +72,6 @@ public class ReportController {
                 .reportId((int) (Math.random() * 10) + 1)
                 .commentId(commentId)
                 .reportType(reportType)
-                .reasonType(reportRequestDto.getReasonType())
                 .reasonDetail(reportRequestDto.getReasonDetail())
                 .statusType("PENDING")
                 .createdAt(LocalDateTime.now())
