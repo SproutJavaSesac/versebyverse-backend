@@ -14,6 +14,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.comment.entity.Comment;
@@ -31,7 +32,7 @@ import today.sesac.versebyverse.post.entity.Post;
         @UniqueConstraint(name = "uk_member_comment_reaction", columnNames = {"member_id",
                 "comment_id"})})
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reaction extends BaseEntity {
 
     @Id
@@ -39,24 +40,21 @@ public class Reaction extends BaseEntity {
     private Long id;
 
     /**
-     * 다대일로 연결된 member 객체 .
-     * 외래키 id 대신 객체 연관관계(객체 전체를 참조)
+     * 다대일로 연결된 member 객체 . 외래키 id 대신 객체 연관관계(객체 전체를 참조)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     /**
-     * 다대일로 연결된 post 객체 .
-     * 외래키 id 대신 객체 연관관계(객체 전체를 참조)
+     * 다대일로 연결된 post 객체 . 외래키 id 대신 객체 연관관계(객체 전체를 참조)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     /**
-     * 다대일로 연결된 comment 객체 .
-     * 외래키 id 대신 객체 연관관계(객체 전체를 참조)
+     * 다대일로 연결된 comment 객체 . 외래키 id 대신 객체 연관관계(객체 전체를 참조)
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
@@ -73,15 +71,17 @@ public class Reaction extends BaseEntity {
      * Reaction 게시글 생성자.
      */
     private Reaction(Member author, Post post, Emotion emotion) {
+
         this.member = author;
         this.post = post;
         this.type = emotion;
     }
 
     /**
-     * Reaction 댓글 생성자
+     * Reaction 댓글 생성자.
      */
     private Reaction(Member author, Comment comment, Emotion emotion) {
+
         this.member = author;
         this.comment = comment;
         this.type = emotion;
@@ -91,6 +91,7 @@ public class Reaction extends BaseEntity {
      * 게시글 반응 추가 정적 팩토리 메서드.
      */
     public static Reaction createPostReaction(Member author, Post post, Emotion emotion) {
+
         return new Reaction(author, post, emotion);
     }
 
@@ -98,17 +99,28 @@ public class Reaction extends BaseEntity {
      * 댓글 반응 추가 정적 팩토리 메서드.
      */
     public static Reaction createCommentReaction(Member author, Comment comment, Emotion emotion) {
+
         return new Reaction(author, comment, emotion);
     }
 
     /**
-     * 게시글/댓글 유무 검증 메서드.
-     * 하나의 회원에 게시글 또는 댓글 중 하나 반드시 있어야함
+     * 해당 반응 타입으로 새로운 타입으로 변경.
+     *
+     * @param type 새로 바뀔 반응의 타입
+     */
+    public void updateReaction(Emotion type) {
+
+        this.type = type;
+    }
+
+    /**
+     * 게시글/댓글 유무 검증 메서드. 하나의 회원에 게시글 또는 댓글 중 하나 반드시 있어야함
      */
     // TODO 에러 처리 임시로 설정 추후 변경 예정
     @PrePersist
     @PreUpdate
     private void validateReaction() {
+
         if (post == null && comment == null) {
             throw new IllegalArgumentException("게시글 또는 댓글 중 하나는 반드시 필요합니다.");
         }
