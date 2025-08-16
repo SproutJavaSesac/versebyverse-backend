@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.reaction.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,11 @@ public class ReactionService {
 
     /**
      * 게시글과 댓글 반응 추가하기.
+     *
+     * @param reactionRequestDto 추가할 반응 타입
+     * @param targetId           게시글 or 댓글 id
+     * @param memberId           회원 id
+     * @param targetType         게시글 or 댓글
      */
     public ReactionResponseDto addReaction(ReactionRequestDto reactionRequestDto,
             Long targetId, Long memberId, TargetType targetType) {
