@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import today.sesac.versebyverse.global.domain.Emotion;
-import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.reaction.entity.Reaction;
 
 /**
@@ -25,7 +24,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     @Query("""
                     select r.type, count(r) from Reaction r where r.post.id = :postId group by r.type
             """)
-    List<Object[]> countReactionsByPostId(@Param("postId") Long postId);
+    List<Object[]> countReactionsByTypeForPost(@Param("postId") Long postId);
 
     /**
      * 댓글 id에 대한 반응별 갯수 조회.
@@ -36,9 +35,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     @Query("""
                     select r.type, count(r) from Reaction  r where r.comment.id = :commentId group by r.type
             """)
-    List<Object[]> countReactionsByCommentId(@Param("commentId") Long commentId);
-
-    List<Reaction> post(Post post);
+    List<Object[]> countReactionsByTypeForComment(@Param("commentId") Long commentId);
 
     /**
      * 게시글 id, 회원 id, 감정을 기반으로 reaction의 id 조회.
