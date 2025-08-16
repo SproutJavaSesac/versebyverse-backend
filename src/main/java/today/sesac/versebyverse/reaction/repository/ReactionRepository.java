@@ -10,8 +10,12 @@ import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.reaction.entity.Reaction;
 
+/**
+ * 반응하기 repository.
+ */
 @Repository
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
+
     /**
      * 게시글 id에 대한 반응별 갯수 조회.
      *
@@ -24,9 +28,9 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Object[]> countReactionsByPostId(@Param("postId") Long postId);
 
     /**
-     * 댓글 id에 대한 반응별 갯수 조회
+     * 댓글 id에 대한 반응별 갯수 조회.
      *
-     * @param commentId
+     * @param commentId 댓글 id
      * @return 반응 type별 갯수
      */
     @Query("""
@@ -37,25 +41,23 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Reaction> post(Post post);
 
     /**
-     * 게시글 id, 회원 id, 감정을 기반으로 삭제할 reaction의 id 조회
+     * 게시글 id, 회원 id, 감정을 기반으로 reaction의 id 조회.
      *
-     * @param memberId
-     * @param postId
-     * @param emotion
-     * @return 삭제할 id의 optional 객체
+     * @param memberId 회원 id
+     * @param postId   게시글 id
+     * @param emotion  감정
      */
     Optional<Reaction> findByMemberIdAndPostIdAndType(Long memberId, Long postId, Emotion emotion);
 
     /**
-     * 댓글 id, 회원 id , 감정을 기반으로 삭제할 reaction의 id 조회
+     * 댓글 id, 회원 id , 감정을 기반으로 reaction의 id 조회.
      *
-     * @param memberId
-     * @param commentId
-     * @param emotion
-     * @return 삭제할 id의 optional 객체
+     * @param memberId  회원 id
+     * @param commentId 댓글 id
+     * @param emotion   감정
      */
     Optional<Reaction> findByMemberIdAndCommentIdAndType(Long memberId, Long commentId,
-                                                         Emotion emotion);
+            Emotion emotion);
 
     /**
      * 사용자가 게시글에 한 모든 반응 조회
