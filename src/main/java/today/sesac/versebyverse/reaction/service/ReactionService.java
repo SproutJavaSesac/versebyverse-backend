@@ -116,14 +116,6 @@ public class ReactionService {
         return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
     }
 
-//    public ReactionQueryResponseDto getReactions(TargetType targetType, Long targetId) {
-//
-//        if (targetType == TargetType.POST) {
-//            Reaction reaction = reactionRepository.findByPostId(targetId)
-//                    .orElseThrow(() -> new RuntimeException("post not found"));
-//        }
-//    }
-
     /**
      * 감정 삭제 메서드.
      *

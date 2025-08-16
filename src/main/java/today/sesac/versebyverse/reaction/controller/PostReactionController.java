@@ -1,13 +1,16 @@
 package today.sesac.versebyverse.reaction.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.reaction.dto.request.ReactionRequestDto;
 import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
@@ -21,6 +24,7 @@ import today.sesac.versebyverse.reaction.utils.TargetType;
 @RequestMapping("/api/v1/posts/{postId}")
 @RequiredArgsConstructor
 public class PostReactionController {
+
     private final ReactionService reactionService;
 
     /**
@@ -50,6 +54,7 @@ public class PostReactionController {
     public ApiResponse<ReactionResponseDto> addPostEmotion(
             @PathVariable Long postId,
             @RequestBody ReactionRequestDto reactionRequestDto) {
+
         Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
         return ApiResponse.success(
                 reactionService.addReaction(reactionRequestDto, postId, memberId,
@@ -65,6 +70,7 @@ public class PostReactionController {
     @DeleteMapping("/reactions/{type}")
     public ApiResponse<ReactionResponseDto> deleteEmotion(
             @PathVariable Long postId, @PathVariable String type) {
+
         Long memberId = 2L; // TODO: 현재 사용자 memberId 2로 하드코딩, 추후 변경 예정
         return ApiResponse.success(
                 reactionService.deleteReaction(type, postId, memberId, TargetType.POST));
@@ -80,11 +86,11 @@ public class PostReactionController {
     public ApiResponse<ReactionResponseDto> updateEmotion(
             @PathVariable Long postId,
             @RequestBody ReactionRequestDto reactionRequestDto) {
+
         Long memberId = 2L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
         return ApiResponse.success(
                 reactionService.updateReaction(TargetType.POST, postId, reactionRequestDto,
                         memberId));
     }
-
 
 }
