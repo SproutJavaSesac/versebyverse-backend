@@ -88,8 +88,9 @@ public class ReactionService {
             ReactionRequestDto reactionRequestDto,
             Long memberId) {
 
-        Reaction existingReaction = reactionRepository.findByTargetTypeAndTargetIdAndMemberId(
-                targetType, targetId, memberId);
+        Reaction existingReaction =
+                findReactionByMemberIdAndTargetId(targetType, memberId, targetId)
+                        .orElseThrow(() -> new EntityNotFoundException("Reaction not found"));
 
         existingReaction.updateReaction(reactionRequestDto.getType());
 
@@ -170,6 +171,24 @@ public class ReactionService {
         } else if (targetType == TargetType.COMMENT) {
             return reactionRepository.findByMemberIdAndCommentIdAndType(memberId, targetId,
                     emotion);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 회원과 게시글 또는 댓글 id로 반응 조회.
+     *
+     * @param targetType 게시글 or 댓글
+     * @param memberId   회원 id
+     * @param targetId   게시글 or 댓글 id
+     */
+    private Optional<Reaction> findReactionByMemberIdAndTargetId(TargetType targetType,
+            Long memberId, Long targetId) {
+
+        if (targetType == TargetType.POST) {
+            return reactionRepository.findByMemberIdAndPostId(memberId, targetId);
+        } else if (targetType == TargetType.COMMENT) {
+            return reactionRepository.findByMemberIdAndCommentId(memberId, targetId);
         }
         return Optional.empty();
     }
