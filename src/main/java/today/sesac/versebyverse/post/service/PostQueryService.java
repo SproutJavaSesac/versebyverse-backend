@@ -77,7 +77,7 @@ public class PostQueryService {
         }
         //Post 객체를 dto객체로 변환
         return postPage.map(post -> {
-            Long commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsReportedFalse(
+            Long commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
                     post.getId());
             // TODO reaction개수 임시 0으로 고정
             int reactionCount = 0;
@@ -128,7 +128,7 @@ public class PostQueryService {
     public Post getActivePostById(Long postId) {
 
         return postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId)
                 .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND, "postId"));
     }
 
@@ -140,7 +140,7 @@ public class PostQueryService {
      */
     public void validateActivePostByIdOrThrow(Long postId) {
 
-        if (!postRepository.existsByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId)) {
+        if (!postRepository.existsByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId)) {
             throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
         }
     }
