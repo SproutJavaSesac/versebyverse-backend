@@ -75,7 +75,7 @@ class CommentControllerTest {
                 0, // reactionTotalCount
                 Map.of(), // reactions
                 false, // isDeleted
-                false, // isReported
+                false, // isBlocked
                 LocalDateTime.now(), // createdAt
                 LocalDateTime.now() // updatedAt
         );
@@ -99,7 +99,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.result.reactionTotalCount").value(0))
                 .andExpect(jsonPath("$.result.reactions").isEmpty())
                 .andExpect(jsonPath("$.result.isDeleted").value(false))
-                .andExpect(jsonPath("$.result.isReported").value(false))
+                .andExpect(jsonPath("$.result.isBlocked").value(false))
                 .andExpect(jsonPath("$.result.createdAt").isNotEmpty())
                 .andExpect(jsonPath("$.result.updatedAt").isNotEmpty());
     }
@@ -210,7 +210,7 @@ class CommentControllerTest {
         when(comment.getPost()).thenReturn(post);
         when(comment.getCommenter()).thenReturn(commenter);
         when(comment.isDeleted()).thenReturn(false);
-        when(comment.isReported()).thenReturn(false);
+        when(comment.isBlocked()).thenReturn(false);
         when(comment.getCreatedAt()).thenReturn(LocalDateTime.now());
         when(comment.getUpdatedAt()).thenReturn(LocalDateTime.now());
         when(comment.getLevel()).thenReturn(0); // Root level comment
