@@ -20,21 +20,28 @@ import today.sesac.versebyverse.reaction.entity.Reaction;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
 import today.sesac.versebyverse.reaction.utils.TargetType;
 
+/**
+ * 게시글과 댓글 반응하기 service.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ReactionService {
 
     private final ReactionRepository reactionRepository;
+
     private final MemberService memberService;
+
     private final PostRepository postRepository;
+
     private final CommentRepository commentRepository;
+    //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
      * 게시글과 댓글 반응 추가하기.
      */
     public ReactionResponseDto addReaction(ReactionRequestDto reactionRequestDto,
-                                           Long targetId, Long memberId, TargetType targetType) {
+            Long targetId, Long memberId, TargetType targetType) {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
@@ -42,7 +49,7 @@ public class ReactionService {
     }
 
     /**
-     * 게시글과 댓글 반응 삭제하기
+     * 게시글과 댓글 반응 삭제하기.
      *
      * @param type       감정 타입
      * @param targetId   댓글 or 게시글 id
@@ -51,7 +58,7 @@ public class ReactionService {
      */
     @Transactional
     public ReactionResponseDto deleteReaction(String type, Long targetId, Long memberId,
-                                              TargetType targetType) {
+            TargetType targetType) {
 
         //type을 대문자로 변환
         Emotion emotion = Emotion.valueOf(type.toUpperCase());
@@ -63,7 +70,7 @@ public class ReactionService {
     }
 
     /**
-     * 게시글과 댓글 반응 수정하기
+     * 게시글과 댓글 반응 수정하기.
      *
      * @param reactionRequestDto 수정된 감정 타입
      * @param targetType         수정된 게시글 or 댓글
@@ -72,24 +79,24 @@ public class ReactionService {
      */
     @Transactional
     public ReactionResponseDto updateReaction(TargetType targetType, Long targetId,
-                                              ReactionRequestDto reactionRequestDto,
-                                              Long memberId) {
+            ReactionRequestDto reactionRequestDto,
+            Long memberId) {
 
-        //1.회원이 기존에 눌렀던 감정 삭제
-        Optional<Reaction>
-                existingReaction = findExistingReaction(targetType, targetId, memberId);
+        Reaction existingReaction = reactionRepository.findByTargetTypeAndTargetIdAndMemberId(
+                targetType, targetId, memberId);
 
-        if (existingReaction.isPresent()) {
-            reactionRepository.deleteById(existingReaction.get().getId());
-            reactionRepository.flush();
-        }
-
-        //2.해당 targetId에 memberId가 추가한 감정 삽입
-        saveReaction(targetType, targetId, memberId, reactionRequestDto);
-
+        existingReaction.updateReaction(reactionRequestDto.getType());
 
         return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
     }
+
+//    public ReactionQueryResponseDto getReactions(TargetType targetType, Long targetId) {
+//
+//        if (targetType == TargetType.POST) {
+//            Reaction reaction = reactionRepository.findByPostId(targetId)
+//                    .orElseThrow(() -> new RuntimeException("post not found"));
+//        }
+//    }
 
     /**
      * 감정 삭제 메서드.
@@ -99,7 +106,7 @@ public class ReactionService {
      * @param emotion  감정 타입
      */
     private void deleteReactionIfExists(TargetType targetType, Long targetId, Long memberId,
-                                        Emotion emotion) {
+            Emotion emotion) {
         //해당 targetType, targetId, 회원 id , 감정에 맞는 reaction optional 객체
         Optional<Reaction> reaction = findReactionByType(targetType, targetId, memberId, emotion);
 
@@ -116,7 +123,7 @@ public class ReactionService {
      * @param reactionRequestDto 추가될 감정 dto
      */
     private void saveReaction(TargetType targetType, Long targetId, Long memberId,
-                              ReactionRequestDto reactionRequestDto) {
+            ReactionRequestDto reactionRequestDto) {
         //1.작성자 정보 member 객체로 가져오기 (현재 사용자는 id=1로 하드코딩)
         Member author = memberService.getMember(memberId);
 
@@ -150,7 +157,8 @@ public class ReactionService {
      * @param emotion    감정
      */
     private Optional<Reaction> findReactionByType(TargetType targetType, Long targetId,
-                                                  Long memberId, Emotion emotion) {
+            Long memberId, Emotion emotion) {
+
         if (targetType == TargetType.POST) {
             return reactionRepository.findByMemberIdAndPostIdAndType(memberId, targetId, emotion);
         } else if (targetType == TargetType.COMMENT) {
@@ -161,31 +169,15 @@ public class ReactionService {
     }
 
     /**
-     * 사용자가 해당 대상에 대해 반응했는지 확인 (감정타입과 무관)
-     *
-     * @param targetType 게시글 or 댓글
-     * @param targetId   게시글 or 댓글id
-     * @param memberId   회원 id
-     */
-    private Optional<Reaction> findExistingReaction(TargetType targetType, Long targetId,
-                                                    Long memberId) {
-        if (targetType == TargetType.POST) {
-            return reactionRepository.findByMember_IdAndPost_Id(memberId, targetId);
-        } else if (targetType == TargetType.COMMENT) {
-            return reactionRepository.findByMember_IdAndComment_Id(memberId, targetId);
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * 게시글,댓글 하나당 반응 총 갯수와 반응별 갯수를 세는 메서드
+     * 게시글,댓글 하나당 반응 총 갯수와 반응별 갯수를 세는 메서드.
      *
      * @param type       감정 타입
      * @param targetId   게시글 or 댓글 id
      * @param targetType 게시글 or 댓글
      */
     private ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
-                                                       TargetType targetType) {
+            TargetType targetType) {
+
         List<Object[]> counts;
 
         if (targetType.equals(TargetType.POST)) {
