@@ -20,7 +20,7 @@ public record ReactionResponseDto(
     /**
      * of 정적 팩토리 메서드.
      */
-    public ReactionResponseDto of(Emotion type, int recationTotalCount,
+    public static ReactionResponseDto of(Emotion type, int recationTotalCount,
             Map<Emotion, String> reactionDetails) {
 
         return new ReactionResponseDto(type, recationTotalCount, reactionDetails);
