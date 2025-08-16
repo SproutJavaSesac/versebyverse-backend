@@ -87,7 +87,7 @@ public class CommentService {
                                 CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
 
         // 신고된 경우, 신고된 댓글에서는 답글을 작성할 수 없습니다.
-        if (parentComment.isReported()) {
+        if (parentComment.isBlocked()) {
             throw new CommentException(CommentErrorCode.INVALID_REPLY_REFERENCE, "parentId");
         }
 

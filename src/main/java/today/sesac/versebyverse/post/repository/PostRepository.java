@@ -25,7 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p
-            WHERE p.isDeleted = false And p.isHidden = false And p.isReported = false
+            WHERE p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             ORDER BY p.createdAt DESC
             """)
     Page<Post> findAllOrderByCreatedAt(Pageable pageable);
@@ -38,7 +38,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Comment c ON p.id = c.post.id
-            WHERE p.isDeleted = false And p.isHidden = false And p.isReported = false
+            WHERE p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             GROUP BY p.id
             ORDER BY COUNT(c.id) DESC
             """)
@@ -63,7 +63,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
             SELECT p FROM Post p 
             WHERE p.conceptType = :conceptType
-            AND p.isDeleted = false And p.isHidden = false And p.isReported = false
+            AND p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             """)
     Page<Post> findByConceptType(Concept conceptType, Pageable pageable);
 
@@ -77,7 +77,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT p FROM Post p
             LEFT JOIN Comment c ON p.id = c.post.id
             WHERE p.conceptType = :conceptType
-            AND p.isDeleted = false And p.isHidden = false And p.isReported = false
+            AND p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             GROUP BY p
             ORDER BY COUNT(c.id) DESC
             """)
@@ -93,12 +93,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    Page<Post> findByConceptTypeOrderByReactionCount(Concept conceptType, Pageable pageable);
 
     /**
-     * 게시글 ID로 게시글이 존재하는지 확인합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
+     * 게시글 ID로 게시글이 존재하는지 확인합니다. 삭제되지 않고, 차단되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
      *
      * @param postId 게시글 ID
      * @return 존재하면 true, 아니면 false
      */
-    boolean existsByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
+    boolean existsByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(Long postId);
 
     /**
      * 특정 기간 동안 작성된 게시글의 작성자별 게시글 수를 조회하고, 작성자별로 랭킹을 매깁니다.
@@ -112,7 +112,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             COUNT(p.id) AS postCount
             FROM Post p JOIN Member m ON p.author= m
             WHERE (p.createdAt BETWEEN :startDate AND :endDate)
-            AND p.isDeleted = false And p.isHidden = false And p.isReported = false
+            AND p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             AND m.isDeleted = false
             GROUP BY p.author
             ORDER BY postCount DESC
@@ -123,12 +123,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     );
 
     /**
-     * 게시물 ID로 게시물을 조회합니다. 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물만 조회합니다.
+     * 게시물 ID로 게시물을 조회합니다. 삭제되지 않고, 차단되지 않았으며, 숨겨지지 않은 게시물만 조회합니다.
      *
      * @param postId 게시물 ID
-     * @return 삭제되지 않고, 신고되지 않았으며, 숨겨지지 않은 게시물의 Optional
+     * @return 삭제되지 않고, 차단되지 않았으며, 숨겨지지 않은 게시물의 Optional
      */
-    Optional<Post> findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(Long postId);
+    Optional<Post> findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(Long postId);
 
     /**
      * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다.
