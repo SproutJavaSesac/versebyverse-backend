@@ -57,18 +57,18 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             Emotion emotion);
 
     /**
-     * 사용자가 게시글에 한 모든 반응 조회
+     * 회원 id, 게시글 id로 reaction 조회.
      *
-     * @param memberId
-     * @param postId
+     * @param memberId 회원 id
+     * @param targetId 게시글 id
      */
-    Optional<Reaction> findByMember_IdAndPost_Id(Long memberId, Long postId);
+    Optional<Reaction> findByMemberIdAndPostId(Long memberId, Long targetId);
 
     /**
-     * 사용자가 댓글에 한 모든 반응 조회
+     * 회원 id, 댓글 id로 reaction 조회.
      *
-     * @param memberId
-     * @param targetId
+     * @param memberId 회원 id
+     * @param targetId 댓글 id
      */
-    Optional<Reaction> findByMember_IdAndComment_Id(Long memberId, Long targetId);
+    Optional<Reaction> findByMemberIdAndCommentId(Long memberId, Long targetId);
 }
