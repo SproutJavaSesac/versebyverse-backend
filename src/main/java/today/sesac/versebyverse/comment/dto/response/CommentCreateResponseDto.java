@@ -35,7 +35,7 @@ public class CommentCreateResponseDto {
 
     private final Boolean isDeleted;
 
-    private final Boolean isReported;
+    private final Boolean isBlocked;
 
     private final LocalDateTime createdAt;
 
@@ -60,7 +60,7 @@ public class CommentCreateResponseDto {
                 6, // TODO comment.getReactions().size(),
                 Map.of(), // TODO: 리액션 기능 추가 예정
                 comment.isDeleted(),
-                comment.isReported(),
+                comment.isBlocked(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()
         );

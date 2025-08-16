@@ -5,8 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +31,9 @@ import today.sesac.versebyverse.ranking.entity.RankingCategory;
 import today.sesac.versebyverse.ranking.entity.RankingPeriodType;
 import today.sesac.versebyverse.ranking.service.RankingService;
 
+/**
+ * 회원과 관련된 기능을 처리하는 컨트롤러.
+ */
 @Slf4j
 @Validated
 @RestController
@@ -67,33 +72,48 @@ public class MemberController {
     private final RankingService rankingService;
 
     // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
+    /**
+     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     */
     @GetMapping("/me/posts")
-    public ApiResponse<?> getMemberPosts(
+    public ApiResponse<MyPostListResponseDto> getMyPosts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyPostListResponseDto myPostListResponseDto = memberService.getMemberPosts(memberId, page,
-                size);
+        MyPostListResponseDto myPostListResponseDto = memberService.getMyPosts(memberId,
+                PageRequest.of(page, size));
 
         return ApiResponse.success(myPostListResponseDto);
     }
 
-    // TODO: 프론트 테스트를 위한 임시 마이페이지 댓글 확인 메서드 - 수정하기
+    /**
+     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     */
     @GetMapping("/me/comments")
-    public ApiResponse<?> getMemberComments(
+    public ApiResponse<MyCommentListResponseDto> getMyComments(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,    //TODO: size 별도로 입력해야 할지 논의 필요
+            @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyCommentListResponseDto myCommentListResponseDto = memberService.getMemberComments(
-                memberId, page, size);
+        MyCommentListResponseDto myCommentListResponseDto = memberService.getMyComments(
+                memberId, PageRequest.of(page, size));
 
         return ApiResponse.success(myCommentListResponseDto);
     }
@@ -122,27 +142,40 @@ public class MemberController {
         return ApiResponse.success(myRankingListResponseDto);
     }
 
+    /**
+     * 사용자의 정보를 조회합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 사용자의 정보 응답 DTO
+     */
     @GetMapping("/me")
-    public ApiResponse<MyInfoGetResponseDto> getMemberInformation(
+    public ApiResponse<MyInfoGetResponseDto> getMyInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMemberInformation(memberId);
+        MyInfoGetResponseDto myInfoGetResponseDto = memberService.getMyInformation(memberId);
 
         return ApiResponse.success(myInfoGetResponseDto);
     }
 
+    /**
+     * 사용자의 정보를 수정합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @param myInfoEditRequestDto 사용자의 정보 수정 요청 DTO
+     * @return 사용자의 정보 수정 응답 DTO
+     */
     @PutMapping("/me")
-    public ApiResponse<MyInfoEditResponseDto> editMemberInformation(
+    public ApiResponse<MyInfoEditResponseDto> editMyInformation(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
+            @Valid @RequestBody MyInfoEditRequestDto myInfoEditRequestDto
     ) {
 
         Long memberId = userPrincipal.getMemberId();
 
-        MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMemberInformation(memberId,
+        MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMyInformation(memberId,
                 myInfoEditRequestDto.getNickname());
         return ApiResponse.success(myInfoEditResponseDto);
     }
