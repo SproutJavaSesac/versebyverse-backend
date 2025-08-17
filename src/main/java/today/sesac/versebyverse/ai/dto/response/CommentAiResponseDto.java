@@ -3,6 +3,7 @@ package today.sesac.versebyverse.ai.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Emotion;
 
 /**
  * 댓글 AI 응답 데이터 전송 객체(DTO)입니다.
@@ -26,4 +27,9 @@ public class CommentAiResponseDto extends AiResponseDto {
      * AI가 처리한 댓글 내용.
      */
     private String content;
+
+    /**
+     * AI가 처리한 댓글 감정.
+     */
+    private Emotion emotion;
 }
