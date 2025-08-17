@@ -70,7 +70,7 @@ public class ReactionService {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
-        return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
+        return addCountByReactionType(reactionRequestDto.type(), targetId, targetType);
     }
 
     /**
@@ -109,9 +109,9 @@ public class ReactionService {
                 findReactionByMemberIdAndTargetId(targetType, memberId, targetId)
                         .orElseThrow(() -> new EntityNotFoundException("Reaction not found"));
 
-        existingReaction.updateReaction(reactionRequestDto.getType());
+        existingReaction.updateReaction(reactionRequestDto.type());
 
-        return addCountByReactionType(reactionRequestDto.getType(), targetId, targetType);
+        return addCountByReactionType(reactionRequestDto.type(), targetId, targetType);
     }
 
     /**
@@ -144,12 +144,12 @@ public class ReactionService {
         Member author = memberService.getMember(memberId);
 
         //2. dto 내의 emotion 객체의 감정 꺼내기
-        Emotion emotion = reactionRequestDto.getType();
+        Emotion emotion = reactionRequestDto.type();
 
         //3. targetId로 post나 comment 객체 정보 가져오고 reaction 객체 생성
         Reaction reaction;
         if (targetType == TargetType.POST) {
-            Post post = postRepository.findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(
+            Post post = postRepository.findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(
                             targetId)
                     .orElseThrow(() -> new RuntimeException("post not found"));
             //dto로 온 감정에 대해 postId에 대한 author의 반응 reaction 객체 생성
