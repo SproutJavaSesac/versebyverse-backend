@@ -55,11 +55,11 @@ class PostRepositoryTest {
 
     @Test
     @DisplayName("[정상] - 게시물 ID로 게시물을 조회한다.")
-    void findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse() {
+    void findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse() {
 
         // when
         Optional<Post> foundPost = postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(savedPost.getId());
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(savedPost.getId());
 
         // then
         assertThat(foundPost).isPresent();
@@ -76,13 +76,13 @@ class PostRepositoryTest {
 
     @Test
     @DisplayName("[예외] - 삭제된 게시물 ID로 조회 시 조회되지 않는다.")
-    void findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse_deleted() {
+    void findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse_deleted() {
         // given
         savedPost.delete();
 
         // when
         Optional<Post> foundPost = postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(savedPost.getId());
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(savedPost.getId());
 
         // then
         assertThat(foundPost).isEmpty();
@@ -90,27 +90,27 @@ class PostRepositoryTest {
 
     @Test
     @DisplayName("[예외] - 숨겨진 게시물 ID로 조회 시 조회되지 않는다.")
-    void findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse_hidden() {
+    void findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse_hidden() {
         // given
         savedPost.hide();
 
         // when
         Optional<Post> foundPost = postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(savedPost.getId());
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(savedPost.getId());
 
         // then
         assertThat(foundPost).isEmpty();
     }
 
     @Test
-    @DisplayName("[예외] - 신고된 게시물 ID로 조회 시 조회되지 않는다.")
-    void findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse_reported() {
+    @DisplayName("[예외] - 차단된 게시물 ID로 조회 시 조회되지 않는다.")
+    void findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse_blocked() {
         // given
         savedPost.report();
 
         // when
         Optional<Post> foundPost = postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(savedPost.getId());
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(savedPost.getId());
 
         // then
         assertThat(foundPost).isEmpty();

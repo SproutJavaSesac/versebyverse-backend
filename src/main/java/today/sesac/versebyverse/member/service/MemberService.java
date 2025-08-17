@@ -1,10 +1,10 @@
 package today.sesac.versebyverse.member.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.service.SocialLoginService;
@@ -12,11 +12,11 @@ import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyCommentSummary;
+import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyPostListResponseDto;
-import today.sesac.versebyverse.member.dto.response.MyPostSummary;
+import today.sesac.versebyverse.member.dto.response.MyPostSummaryDto;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
@@ -26,6 +26,7 @@ import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.repository.PostRepository;
 
 /**
+ * 회원 관련 비즈니스 로직을 처리하는 서비스.
  * TODO: 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가.
  */
 @Slf4j
@@ -124,126 +125,125 @@ public class MemberService {
                         () -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 
-    public MyInfoGetResponseDto getMemberInformation(Long memberId) {
+    /**
+     * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
+     *
+     * @param memberId 사용자의 ID
+     * @return 내 정보 조회 응답 DTO
+     */
+    public MyInfoGetResponseDto getMyInformation(Long memberId) {
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
                 () -> new MemberNotFoundException(String.valueOf(memberId),
                         "해당 id를 가진 회원을 찾을 수 없습니다.")
         );
 
-        MyInfoGetResponseDto myInfoGetResponseDto = convertMemberToInfo(member);
+        int postCount = postRepository.countByAuthorIdAndIsDeletedFalse(memberId);
 
-        return myInfoGetResponseDto;
+        int commentCount = commentRepository.countByCommenterIdAndIsDeletedFalse(memberId);
+
+        return MyInfoGetResponseDto.of(member, postCount, commentCount);
     }
 
-    private MyInfoGetResponseDto convertMemberToInfo(Member member) {
-
-        MyInfoGetResponseDto myInfoGetResponseDto = new MyInfoGetResponseDto();
-        myInfoGetResponseDto.setMemberId(member.getId());
-        myInfoGetResponseDto.setNickname(member.getNickname());
-        myInfoGetResponseDto.setEmail(member.getEmail());
-        myInfoGetResponseDto.setProfileImageUrl(null);
-
-        List<Post> memberPosts = postRepository.findAll().stream()
-                .filter(post -> post.getAuthor().getId().equals(member.getId()))
-                .filter(post -> !post.isDeleted())
-                .collect(Collectors.toList());
-        List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getCommenter().getId().equals(member.getId()))
-                .filter(comment -> !comment.isDeleted())
-                .collect(Collectors.toList());
-
-        myInfoGetResponseDto.setPostCount(memberPosts.size());
-        myInfoGetResponseDto.setReactionCount(
-                (int) (Math.random() * 20) + 1); //TODO: 프론트 테스트 - 회원이 받은 총 리액션 개수 하드코딩
-        myInfoGetResponseDto.setCommentCount(memberComments.size());
-
-        return myInfoGetResponseDto;
-    }
-
+    /**
+     * 사용자의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
+     *
+     * @param memberId 사용자의 ID
+     * @param nickname 변경할 사용자의 닉네임
+     * @return 내 정보 수정 응답 DTO
+     */
     @Transactional
-    public MyInfoEditResponseDto editMemberInformation(Long memberId, String nickname) {
+    public MyInfoEditResponseDto editMyInformation(Long memberId, String nickname) {
 
-        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
-                () -> new MemberNotFoundException(String.valueOf(memberId),
-                        "해당 id를 가진 회원을 찾을 수 없습니다.")
-        );
+        Member member = getActiveMemberOrThrow(memberId);
+
         member.editProfile(nickname);
-        memberRepository.save(member);
 
-        MyInfoEditResponseDto myInfoEditResponseDto = new MyInfoEditResponseDto();
-        myInfoEditResponseDto.setMemberId(member.getId());
-        myInfoEditResponseDto.setNickname(member.getNickname());
-        myInfoEditResponseDto.setEmail(member.getEmail());
-        myInfoEditResponseDto.setProfileImageUrl(null);
-
-        return myInfoEditResponseDto;
+        return MyInfoEditResponseDto.of(
+                member.getId(),
+                member.getNickname(),
+                member.getEmail(),
+                member.getProfileImageUrl()
+        );
     }
 
-    //TODO: 프론트 테스트 - 수정할 것
-    public MyPostListResponseDto getMemberPosts(Long memberId, int page, int size) {
+    /**
+     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     */
+    public MyPostListResponseDto getMyPosts(Long memberId, Pageable pageable) {
 
-        // TODO: 프론트 테스트할 때, PostRepository 수정하지 않기 위해 post 전부 불러옴. 수정 필수!!
-        List<Post> memberPosts = postRepository.findAll().stream()
-                .filter(post -> post.getAuthor().getId().equals(memberId))
-                .filter(post -> !post.isDeleted())
-                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .collect(Collectors.toList());
+        validateMemberActiveExists(memberId);
 
-        int totalCount = memberPosts.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+        // 작성한 게시글을 Page 객체으로 조회
+        Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                memberId, pageable);
 
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalCount);
+        List<MyPostSummaryDto> postSummaries = convertPostsToSummaries(pageByAuthorIdWithPageable);
 
-        List<Post> pagedPosts = fromIndex < totalCount
-                ? memberPosts.subList(fromIndex, toIndex)
-                : new ArrayList<>();
+        PaginationDto paginationDto = getPaginationDto(pageByAuthorIdWithPageable);
 
-        List<MyPostSummary> postSummaries = pagedPosts.stream()
-                .map(this::convertPostToSummary)
-                .collect(Collectors.toList());
-
-        MyPostListResponseDto response = new MyPostListResponseDto();
-        PaginationDto paginationDto = new PaginationDto(page, totalPages, totalCount, size,
-                page + 1 < totalPages, page > 0);
-
-        response.setPosts(postSummaries);
-        response.setPagination(paginationDto);
-
-        return response;
+        // Page 객체를 DTO로 변환
+        return MyPostListResponseDto.of(
+                postSummaries,
+                paginationDto
+        );
     }
 
-    public MyCommentListResponseDto getMemberComments(Long memberId, int page, int size) {
-        // TODO: 프론트 테스트할 때, CommentRepository 수정하지 않기 위해 comment 전부 불러옴. 수정 필수!!
-        List<Comment> memberComments = commentRepository.findAll().stream()
-                .filter(comment -> comment.getCommenter().getId().equals(memberId))
-                .filter(comment -> !comment.isDeleted())
-                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .collect(Collectors.toList());
+    private List<MyPostSummaryDto> convertPostsToSummaries(Page<Post> pagePosts) {
+        return pagePosts.getContent().stream()
+                .map(post -> {
+                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    return MyPostSummaryDto.of(post, commentCount);
+                })
+                .toList();
+    }
 
-        int totalCount = memberComments.size();
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+    private PaginationDto getPaginationDto(Page<?> page) {
+        return new PaginationDto(
+                page.getNumber(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getSize(),
+                page.hasNext(),
+                page.hasPrevious()
+        );
+    }
 
-        int fromIndex = page * size;
-        int toIndex = Math.min(fromIndex + size, totalCount);
+    /**
+     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     */
+    public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
 
-        List<Comment> pagedComments = fromIndex < totalCount
-                ? memberComments.subList(fromIndex, toIndex)
-                : new ArrayList<>();
+        validateMemberActiveExists(memberId);
 
-        List<MyCommentSummary> commentSummaries = pagedComments.stream()
-                .map(this::convertCommentToSummary)
-                .collect(Collectors.toList());
+        // 작성한 댓글을 Page 객체로 조회
+        Page<Comment> pageByCommenterIdWithPageable =
+                commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                memberId, pageable
+        );
 
-        MyCommentListResponseDto response = new MyCommentListResponseDto();
-        PaginationDto paginationDto = new PaginationDto(page, totalPages, totalCount, size,
-                page + 1 < totalPages, page > 0);
+        List<MyCommentSummaryDto> commentSummaries = convertCommentsToSummaries(pageByCommenterIdWithPageable);
 
-        response.setComments(commentSummaries);
-        response.setPagination(paginationDto);
+        PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
 
-        return response;
+        // Page 객체를 DTO로 변환
+        return MyCommentListResponseDto.of(
+                commentSummaries, paginationDto
+        );
+    }
+
+    private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
+        return pageComments.getContent().stream()
+                .map(MyCommentSummaryDto::of)
+                .toList();
     }
 
     /**
@@ -258,44 +258,6 @@ public class MemberService {
         return memberRepository.findByIdAndIsDeletedFalse(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(null,
                         String.format("활성화된 회원을 찾을 수 없습니다. memberId: %d", memberId)));
-    }
-
-    private MyPostSummary convertPostToSummary(Post post) {
-
-        MyPostSummary summary = new MyPostSummary();
-
-        summary.setPostId(post.getId());
-        summary.setBeforeTitle(post.getBeforeTitle());
-        summary.setAfterTitle(post.getAfterTitle());
-        summary.setBeforeContent(post.getBeforeContent());
-        summary.setAfterContent(post.getAfterContent());
-        summary.setCreatedAt(post.getCreatedAt());
-        summary.setEmotionType(post.getEmotionType());
-        summary.setConceptType(post.getConceptType());
-        summary.setReactionCount(
-                (int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 리액션 미구현된 관계로 리액션 수 하드코딩
-        summary.setCommentCount((int) (Math.random() * 20) + 1);    // TODO: 프론트 테스트 - 댓글 개수 하드코딩
-        summary.setImageUrl(post.getImageUrl());
-        summary.setIsHidden(post.isHidden());
-
-        return summary;
-    }
-
-    private MyCommentSummary convertCommentToSummary(Comment comment) {
-
-        MyCommentSummary summary = new MyCommentSummary();
-
-        summary.setCommentId(comment.getId());
-        summary.setPostId(comment.getPost().getId());
-        summary.setPostTitle(comment.getPost().getAfterTitle());
-        summary.setBeforeContent(comment.getBeforeContent());
-        summary.setAfterContent(comment.getAfterContent());
-        summary.setCreatedAt(comment.getCreatedAt());
-
-        // TODO: 프론트 테스트 - 리액션 개수 하드코딩
-        summary.setReactionCount((int) (Math.random() * 20) + 1);
-
-        return summary;
     }
 
     /**
