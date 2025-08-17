@@ -3,6 +3,7 @@ package today.sesac.versebyverse.comment.controller;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
@@ -80,11 +83,23 @@ class CommentControllerTest {
                 LocalDateTime.now() // updatedAt
         );
 
+        // UserPrincipal을 실제 객체로 생성 (mock 대신)
+        UserPrincipal userPrincipal = UserPrincipal.create(
+                commenterId,
+                RoleType.ROLE_USER,
+                SocialType.GOOGLE,
+                "test@test.com"
+        );
+
         when(commentService.writeComment(commentCreateRequestDto, commenterId, postId))
                 .thenReturn(responseDto);
 
         // when, then
         mockMvc.perform(post(String.format("/api/v1/posts/%d/comments", postId))
+                        .with(authentication(new OAuth2AuthenticationToken(
+                                userPrincipal,
+                                userPrincipal.getAuthorities(),
+                                "google")))
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(commentCreateRequestDto)))
                 .andExpect(status().isCreated())
@@ -162,8 +177,21 @@ class CommentControllerTest {
         long postId = 1L; // 게시글 ID
         long commentId = 1L; // 삭제할 댓글 ID
 
+        long memberId = 1L; // 삭제 요청한 회원 ID
+        // UserPrincipal을 실제 객체로 생성 (mock 대신)
+        UserPrincipal userPrincipal = UserPrincipal.create(
+                memberId,
+                RoleType.ROLE_USER,
+                SocialType.GOOGLE,
+                "test@test.com"
+        );
+
         // when, then
-        mockMvc.perform(delete(String.format("/api/v1/posts/%d/comments/%d", postId, commentId)))
+        mockMvc.perform(delete(String.format("/api/v1/posts/%d/comments/%d", postId, commentId))
+                        .with(authentication(new OAuth2AuthenticationToken(
+                                userPrincipal,
+                                userPrincipal.getAuthorities(),
+                                "google"))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.result").value("성공적으로 댓글을 삭제했습니다."));
