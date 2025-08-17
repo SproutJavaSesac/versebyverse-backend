@@ -156,7 +156,7 @@ public class ReactionService {
             reaction = Reaction.createPostReaction(author, post, emotion);
         } else {
             Comment comment =
-                    commentRepository.findByIdAndIsDeletedFalseAndIsReportedFalse(targetId)
+                    commentRepository.findByIdAndIsDeletedFalseAndIsBlockedFalse(targetId)
                             .orElseThrow(() -> new RuntimeException("comment not found"));
             reaction = Reaction.createCommentReaction(author, comment, emotion);
         }
