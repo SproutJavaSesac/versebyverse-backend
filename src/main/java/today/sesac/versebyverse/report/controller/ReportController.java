@@ -48,7 +48,7 @@ public class ReportController {
      * @return 응답
      */
     @PostMapping("/reports/posts/{postId}")
-    public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") long postId,
+    public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") Long postId,
             @Valid @RequestBody ReportRequestDto reportRequestDto,
             @AuthenticationPrincipal UserPrincipal reporter) {
 

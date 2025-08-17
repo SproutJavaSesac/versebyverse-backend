@@ -37,7 +37,7 @@ public class ReportService {
      * @return 게시글 신고 응답 dto
      */
     public PostReportResponseDto reportPost(ReportRequestDto reportRequestDto, Long reporterId,
-            long postId) {
+            Long postId) {
 
         Member reporter = memberService.getActiveMemberOrThrow(reporterId);
         Post post = postService.getActivePostById(postId);
@@ -56,7 +56,7 @@ public class ReportService {
     }
 
     /**
-     * 게시글, 댓글 신고 전 검증하는 기능입니다.
+     * 게시글 신고를 등록하기 전 검증하는 기능입니다.
      *
      * @param reporter 신고자
      * @param post     게시글
@@ -68,7 +68,7 @@ public class ReportService {
     }
 
     /**
-     * 중복 신고가 있는지 확인합니다.
+     * 게시글 중복 신고가 있는지 확인합니다.
      */
     private void validateDuplicatePostReport(Long reporterId, Long postId) {
 
