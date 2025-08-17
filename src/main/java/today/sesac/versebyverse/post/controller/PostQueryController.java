@@ -2,11 +2,13 @@ package today.sesac.versebyverse.post.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.global.response.PaginationDto;
@@ -30,9 +32,10 @@ public class PostQueryController {
      */
     @GetMapping("/{postId}")
     public ApiResponse<PostSingleQueryResponseDto> getSinglePostDetail(
-            @PathVariable("postId") Long postId) {
+            @PathVariable("postId") Long postId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = 1L;
+        Long memberId = userPrincipal.getMemberId();
         PostSingleQueryResponseDto postSingleQueryResponseDto =
                 postQueryService.getPostDetail(postId, memberId);
         return ApiResponse.success(postSingleQueryResponseDto);
