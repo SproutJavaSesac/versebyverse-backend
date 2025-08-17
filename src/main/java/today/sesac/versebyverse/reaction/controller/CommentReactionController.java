@@ -40,7 +40,7 @@ public class CommentReactionController {
         Long memberId = userPrincipal.getMemberId();
 
         return ApiResponse.success(
-                reactionService.getReactions(TargetType.POST, commentId, memberId));
+                reactionService.getReactions(TargetType.COMMENT, commentId, memberId));
     }
 
     /**
