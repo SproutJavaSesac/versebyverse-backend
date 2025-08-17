@@ -9,15 +9,21 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
+import today.sesac.versebyverse.comment.exception.CommentErrorCode;
+import today.sesac.versebyverse.comment.exception.CommentException;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
+import today.sesac.versebyverse.post.exception.PostErrorCode;
+import today.sesac.versebyverse.post.exception.PostException;
 import today.sesac.versebyverse.post.repository.PostRepository;
 import today.sesac.versebyverse.reaction.dto.request.ReactionRequestDto;
 import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
 import today.sesac.versebyverse.reaction.entity.Reaction;
+import today.sesac.versebyverse.reaction.exception.ReactionErrorCode;
+import today.sesac.versebyverse.reaction.exception.ReactionException;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
 import today.sesac.versebyverse.reaction.utils.TargetType;
 
@@ -68,6 +74,13 @@ public class ReactionService {
     public ReactionResponseDto addReaction(ReactionRequestDto reactionRequestDto,
             Long targetId, Long memberId, TargetType targetType) {
 
+        Optional<Reaction> existingReaction =
+                findReactionByType(targetType, targetId, memberId, reactionRequestDto.type());
+
+        if (existingReaction.isPresent()) {
+            throw new ReactionException(ReactionErrorCode.DUPLICATE_REACTION_FOUND, "");
+        }
+
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
         return addCountByReactionType(reactionRequestDto.type(), targetId, targetType);
@@ -107,7 +120,7 @@ public class ReactionService {
 
         Reaction existingReaction =
                 findReactionByMemberIdAndTargetId(targetType, memberId, targetId)
-                        .orElseThrow(() -> new EntityNotFoundException("Reaction not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("존재하는 감정이 없습니다."));
 
         existingReaction.updateReaction(reactionRequestDto.type());
 
@@ -151,13 +164,16 @@ public class ReactionService {
         if (targetType == TargetType.POST) {
             Post post = postRepository.findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(
                             targetId)
-                    .orElseThrow(() -> new RuntimeException("post not found"));
+                    .orElseThrow(() -> new PostException(PostErrorCode.POST_NOT_FOUND,
+                            "게시글이 존재하지 않습니다."));
             //dto로 온 감정에 대해 postId에 대한 author의 반응 reaction 객체 생성
             reaction = Reaction.createPostReaction(author, post, emotion);
         } else {
             Comment comment =
                     commentRepository.findByIdAndIsDeletedFalseAndIsBlockedFalse(targetId)
-                            .orElseThrow(() -> new RuntimeException("comment not found"));
+                            .orElseThrow(
+                                    () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
+                                            "댓글이 존재하지 않습니다."));
             reaction = Reaction.createCommentReaction(author, comment, emotion);
         }
         //4. reaction 객체 저장
