@@ -64,19 +64,14 @@ public class ReportController {
      * @return 응답
      */
     @PostMapping("/reports/comments/{commentId}")
-    public ApiResponse<?> commentReport(@PathVariable("commentId") int commentId,
-            @RequestBody ReportRequestDto reportRequestDto) {
+    public ApiResponse<CommentReportResponseDto> commentReport(
+            @PathVariable("commentId") long commentId,
+            @Valid @RequestBody ReportRequestDto reportRequestDto,
+            @AuthenticationPrincipal UserPrincipal reporter) {
 
-        reportType = "COMMENT";
-        CommentReportResponseDto commentReportResponseDto = CommentReportResponseDto.builder()
-                .reportId((int) (Math.random() * 10) + 1)
-                .commentId(commentId)
-                .reportType(reportType)
-                .reasonDetail(reportRequestDto.getReasonDetail())
-                .statusType("PENDING")
-                .createdAt(LocalDateTime.now())
-                .build();
-        return ApiResponse.success(commentReportResponseDto);
+        CommentReportResponseDto response =
+                reportService.reportComment(reportRequestDto, reporter.getMemberId(), commentId);
+        return ApiResponse.success(response);
     }
 
     /**

@@ -145,4 +145,16 @@ public class CommentService {
             ));
         }
     }
+
+    /**
+     * isDeleted가 false가 아닌 하는 댓글인지 확인합니다.
+     *
+     * @param commentId 댓글 id
+     */
+    public Comment getActiveCommentById(Long commentId) {
+
+        return commentRepository.findByIdAndIsDeletedFalseAndIsBlockedFalse(commentId).orElseThrow(
+                () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, "commentId")
+        );
+    }
 }

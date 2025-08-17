@@ -18,4 +18,12 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      * @param postId     게시글 id
      */
     Optional<Report> findByReporterIdAndPostId(Long reporterId, Long postId);
+
+    /**
+     * 신고자의 댓글 중복 신고가 있는지 조회합니다.
+     *
+     * @param reporterId 신고자 id
+     * @param commentId  댓글 id
+     */
+    Optional<Report> findByReporterIdAndCommentId(Long reporterId, Long commentId);
 }
