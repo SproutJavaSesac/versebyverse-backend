@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
+import today.sesac.versebyverse.member.dto.response.MemberCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
@@ -201,5 +202,26 @@ public class MemberController {
                 PageRequest.of(page, size));
 
         return ApiResponse.success(memberPostListResponseDto);
+    }
+
+    /**
+     * 다른 회원이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param memberId 대상 회원의 ID
+     * @return 회원이 작성한 댓글 목록 응답 DTO
+     */
+    @GetMapping("/{memberId}/comments")
+    public ApiResponse<MemberCommentListResponseDto> getMemberComments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable Long memberId
+    ) {
+
+        MemberCommentListResponseDto memberCommentListResponseDto = memberService.getMemberComments(
+                memberId, PageRequest.of(page, size));
+
+        return ApiResponse.success(memberCommentListResponseDto);
     }
 }

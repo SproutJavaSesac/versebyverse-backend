@@ -11,6 +11,8 @@ import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.member.dto.response.MemberCommentListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MemberPostSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
@@ -244,6 +246,40 @@ public class MemberService {
     private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
         return pageComments.getContent().stream()
                 .map(MyCommentSummaryDto::of)
+                .toList();
+    }
+
+
+    /**
+     * 대상 회원이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @param pageable 페이지네이션 정보
+     * @return 회원이 작성한 댓글 목록 응답 DTO
+     */
+    public MemberCommentListResponseDto getMemberComments(Long memberId, Pageable pageable) {
+
+        validateMemberActiveExists(memberId);
+
+        // 작성한 댓글을 Page 객체로 조회
+        Page<Comment> pageByCommenterIdWithPageable =
+                commentRepository.findByCommenterIdAndIsDeletedFalseAndIsBlockedFalseOrderByCreatedAtDesc(
+                        memberId, pageable
+                );
+
+        List<MemberCommentSummaryDto> commentSummaries = convertCommentsToMemberSummaries(pageByCommenterIdWithPageable);
+
+        PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MemberCommentListResponseDto.of(
+                commentSummaries, paginationDto
+        );
+    }
+
+    private List<MemberCommentSummaryDto> convertCommentsToMemberSummaries(Page<Comment> pageComments) {
+        return pageComments.getContent().stream()
+                .map(MemberCommentSummaryDto::of)
                 .toList();
     }
 
