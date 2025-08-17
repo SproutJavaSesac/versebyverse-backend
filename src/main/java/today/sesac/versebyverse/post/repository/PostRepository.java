@@ -148,4 +148,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return 특정 사용자가 작성한 총 게시글의 수
      */
     int countByAuthorIdAndIsDeletedFalse(Long authorId);
+
+    /**
+     * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다.
+     * 신고된 게시글, 숨겨진 게시글, 삭제된 게시글은 포함하지 않습니다.
+     *
+     * @param authorId 게시글 작성자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 페이지로 가져온 작성자 게시글 목록
+     */
+    Page<Post> findByAuthorIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalseOrderByCreatedAtDesc(Long authorId, Pageable pageable);
 }

@@ -11,6 +11,8 @@ import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberPostSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
@@ -274,5 +276,41 @@ public class MemberService {
                             memberId
                     ));
         }
+    }
+
+    /**
+     * 대상 회원이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @param pageable 페이지네이션 정보
+     * @return 회원이 작성한 게시글 목록 응답 DTO
+     */
+    public MemberPostListResponseDto getMemberPosts(Long memberId, Pageable pageable) {
+
+        validateMemberActiveExists(memberId);
+
+        // 작성한 게시글을 Page 객체으로 조회
+        Page<Post> pageByAuthorIdWithPageable = postRepository
+                .findByAuthorIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalseOrderByCreatedAtDesc(
+                        memberId, pageable);
+
+        List<MemberPostSummaryDto> postSummaries = convertPostsToMemberSummaries(pageByAuthorIdWithPageable);
+
+        PaginationDto paginationDto = getPaginationDto(pageByAuthorIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MemberPostListResponseDto.of(
+                postSummaries,
+                paginationDto
+        );
+    }
+
+    private List<MemberPostSummaryDto> convertPostsToMemberSummaries(Page<Post> pagePosts) {
+        return pagePosts.getContent().stream()
+                .map(post -> {
+                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    return MemberPostSummaryDto.of(post, commentCount);
+                })
+                .toList();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
+import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
@@ -178,5 +180,26 @@ public class MemberController {
         MyInfoEditResponseDto myInfoEditResponseDto = memberService.editMyInformation(memberId,
                 myInfoEditRequestDto.getNickname());
         return ApiResponse.success(myInfoEditResponseDto);
+    }
+
+    /**
+     * 다른 회원이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param page page 페이지 번호 (0부터 시작)
+     * @param size 페이지 크기 (기본값: 10)
+     * @param memberId 대상 회원의 ID
+     * @return 회원이 작성한 게시글 목록 응답 DTO
+     */
+    @GetMapping("/{memberId}/posts")
+    public ApiResponse<MemberPostListResponseDto> getMemberPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @PathVariable Long memberId
+    ) {
+
+        MemberPostListResponseDto memberPostListResponseDto = memberService.getMemberPosts(memberId,
+                PageRequest.of(page, size));
+
+        return ApiResponse.success(memberPostListResponseDto);
     }
 }
