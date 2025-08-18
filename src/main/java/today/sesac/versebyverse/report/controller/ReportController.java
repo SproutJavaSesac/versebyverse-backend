@@ -2,10 +2,10 @@ package today.sesac.versebyverse.report.controller;
 
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
-import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.report.dto.request.ReportActionRequestDto;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
-import today.sesac.versebyverse.report.dto.response.AdminReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportActionResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.entity.StatusType;
 import today.sesac.versebyverse.report.service.ReportService;
 
 /**
@@ -35,8 +34,6 @@ import today.sesac.versebyverse.report.service.ReportService;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ReportController {
-
-    private String reportType = "";
 
     private final ReportService reportService;
 
@@ -75,47 +72,25 @@ public class ReportController {
     }
 
     /**
-     * 관리자용 신고 목록 조회.
+     * 관리자용 신고 목록 조회. 신고 상태별로 필터링하여 신고 목록을 페이지네이션과 함께 조회합니다.
      *
-     * @param statusType 신고 상태 (PENDING/DECIDED)
-     * @param page       페이지 번호
-     * @param size       한 페이지당 아이템 수
-     * @param sort       정렬 기준 (latest/oldest)
-     * @return 신고 목록 + 페이지네이션 정보
+     * @param statusType 신고 상태 (PENDING: 대기중, ACCEPTED: 승인, REJECTED: 거부, POSTPONE: 보류)
+     * @param page       페이지 번호 (0부터 시작, 기본값: 0)
+     * @param size       한 페이지당 아이템 수 (기본값: 20)
+     * @param sort       정렬 기준 필드 (기본값: createdAt)
+     * @param order      정렬 순서 (ASC: 오름차순, DESC: 내림차순, 기본값: DESC)
+     * @return 신고 목록과 페이지네이션 정보를 포함한 응답
      */
     @GetMapping("/admin/reports")
-    public ApiResponse<?> getReportList(@RequestParam String statusType,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "latest") String sort) {
-
-        // 더미 리스트
-        List<AdminReportResponseDto> reports = new ArrayList<>();
-        for (int i = 1; i <= size; i++) {
-            if (i % 2 == 0) {
-                reportType = "COMMENT";
-            } else {
-                reportType = "POST";
-            }
-            reports.add(
-                    AdminReportResponseDto.builder()
-                            .reportId((int) (Math.random() * i * 10) + 1)
-                            .reporterId(i)
-                            .reportType(reportType)
-                            .postId(i)
-                            .reasonCode("PROFANITY")
-                            .reasonDetail(null)
-                            .statusType(statusType)
-                            .createdAt(LocalDateTime.now())
-                            .build()
-            );
-        }
-        PaginationDto pagination = new PaginationDto(page, (int) Math.ceil(1000.0 / size),
-                1000, size, page * size < 1000, page > 1);
+    public ApiResponse<ReportListResponseWrapperDto> getReportList(
+            @RequestParam(required = false) StatusType statusType,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size,
+            @RequestParam(name = "sort", defaultValue = "createdAt") String sort,
+            @RequestParam(name = "order", defaultValue = "DESC") Direction order) {
 
         return ApiResponse.success(
-                ReportListResponseWrapperDto.builder().reports(reports).pagination(pagination)
-                        .build());
+                reportService.getReportList(statusType, PageRequest.of(page, size, order, sort)));
     }
 
     /**
