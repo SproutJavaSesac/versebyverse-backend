@@ -1,6 +1,5 @@
 package today.sesac.versebyverse.auth.handler;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException exception) throws IOException, ServletException {
+            AuthenticationException exception) throws IOException {
         log.info("----OAuth2AuthenticationFailureHandler 동작----"); //TODO: debug로 수정, 발생한 예외도 로그로 출력하기
 
         //TODO: 하드코딩된 도메인 환경변수로 교체하기, 발생한 예외 코드 파라미터로 전달하기
