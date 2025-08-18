@@ -65,7 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Member member = memberService.findOrCreateSocialMember(email, nickname,
                 roleType, socialType);
 
-        return UserPrincipal.create(member.getId(), roleType, socialType,
-                email);
+        return UserPrincipal.create(member.getId(), member.getRoleType(), member.getSocialType(),
+                member.getEmail());
     }
 }
