@@ -119,7 +119,7 @@ public class ReportService {
     private void validateDuplicatePostReport(Long reporterId, Long postId) {
 
         if (reportRepository.findByReporterIdAndPostId(reporterId, postId).isPresent()) {
-            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, String.valueOf(postId));
+            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, "postId");
         }
     }
 
@@ -130,17 +130,19 @@ public class ReportService {
 
         if (reporter.getId().equals(post.getAuthor().getId())) {
             throw new ReportException(ReportErrorCode.SELF_REPORT_NOT_ALLOWED,
-                    String.valueOf(post.getId()));
+                    "postId");
         }
     }
 
     /**
      * 댓글 중복 신고가 있는지 확인합니다.
+     *
+     * @throws ReportException 중복 신고할 경우
      */
     private void validateDuplicateCommentReport(Long reporterId, Long commentId) {
 
         if (reportRepository.findByReporterIdAndCommentId(reporterId, commentId).isPresent()) {
-            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, String.valueOf(commentId));
+            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, "commentId");
         }
     }
 
@@ -151,7 +153,7 @@ public class ReportService {
 
         if (reporter.getId().equals(comment.getCommenter().getId())) {
             throw new ReportException(ReportErrorCode.SELF_REPORT_NOT_ALLOWED,
-                    String.valueOf(comment.getId()));
+                    "commentId");
         }
     }
 }

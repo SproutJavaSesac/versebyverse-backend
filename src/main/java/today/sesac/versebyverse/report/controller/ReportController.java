@@ -44,11 +44,11 @@ public class ReportController {
      * 게시글 신고.
      *
      * @param postId           게시글 식별 id
-     * @param reportRequestDto 요청 dto
-     * @return 응답
+     * @param reportRequestDto 게시글 신고 요청 dto
+     * @return 게시글 신고 응답 dto
      */
     @PostMapping("/reports/posts/{postId}")
-    public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") long postId,
+    public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") Long postId,
             @Valid @RequestBody ReportRequestDto reportRequestDto,
             @AuthenticationPrincipal UserPrincipal reporter) {
 

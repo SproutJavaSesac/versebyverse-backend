@@ -147,9 +147,10 @@ public class CommentService {
     }
 
     /**
-     * isDeleted가 false가 아닌 하는 댓글인지 확인합니다.
+     * isDeleted와 isBlocked의 필드가 false인 comment엔티티를 반환합니다.
      *
      * @param commentId 댓글 id
+     * @return Comment  isDeleted=false && isBlocked=false인 comment 엔티티
      */
     public Comment getActiveCommentById(Long commentId) {
 
