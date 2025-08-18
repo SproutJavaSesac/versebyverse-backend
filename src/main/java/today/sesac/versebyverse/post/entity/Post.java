@@ -76,6 +76,8 @@ public class Post extends BaseEntity {
 
     /**
      * 관리자 신고 승인처리에 의해 차단된 상태 여부. 기본값 = 0
+     * <br>
+     * {@link today.sesac.versebyverse.report.entity.Report}의 StatusType이 ACCEPTED가 되면 true가 됩니다.
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isBlocked;
