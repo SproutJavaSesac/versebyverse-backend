@@ -24,10 +24,10 @@ import today.sesac.versebyverse.post.entity.Post;
  * 사용자가 게시글 또는 댓글을 신고할 때 사용되는 도메인입니다. 게시글과 댓글 중 하나만 신고 대상이 될 수 있습니다.
  */
 @Entity
-@Table(name = "reports")
-@Check(constraints = "(post_id IS NOT NULL AND comment_id IS NULL) OR (post_id IS NULL AND comment_id IS NOT NULL)")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(name = "reports")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Check(constraints = "(post_id IS NOT NULL AND comment_id IS NULL) OR (post_id IS NULL AND comment_id IS NOT NULL)")
 public class Report extends BaseEntity {
 
     /**
@@ -97,6 +97,7 @@ public class Report extends BaseEntity {
         this.comment = comment;
         this.reasonType = reasonType;
         this.reasonDetail = reasonDetail;
+        this.statusType = StatusType.PENDING;
     }
 
     /**
