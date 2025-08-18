@@ -40,6 +40,7 @@ public class ReportService {
      * @param reporterId       신고자 id
      * @param postId           게시글 id
      * @return 게시글 신고 응답 dto
+     * @throws ReportException 중복 신고, 자신의 게시글 신고, 게시글이 존재하지 않는 경우
      */
     public PostReportResponseDto reportPost(ReportRequestDto reportRequestDto,
             Long reporterId, Long postId) {
@@ -67,6 +68,7 @@ public class ReportService {
      * @param reporterId       신고자 ID
      * @param commentId        댓글 ID
      * @return 신고 응답 DTO
+     * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
      */
     public CommentReportResponseDto reportComment(
             ReportRequestDto reportRequestDto, Long reporterId, Long commentId) {
@@ -94,6 +96,7 @@ public class ReportService {
      *
      * @param reporter 신고자
      * @param comment  댓글
+     * @throws ReportException 중복 신고, 자신의 댓글 신고인 경우
      */
     private void validateCommentReportEligibility(Member reporter, Comment comment) {
 
@@ -106,6 +109,7 @@ public class ReportService {
      *
      * @param reporter 신고자
      * @param post     게시글
+     * @throws ReportException 중복 신고, 자신의 게시글 신고인 경우
      */
     private void validatePostReportEligibility(Member reporter, Post post) {
 
@@ -115,6 +119,10 @@ public class ReportService {
 
     /**
      * 중복 신고가 있는지 확인합니다.
+     *
+     * @param reporterId 신고자 ID
+     * @param postId     게시글 ID
+     * @throws ReportException 이미 신고한 게시글인 경우
      */
     private void validateDuplicatePostReport(Long reporterId, Long postId) {
 
@@ -125,6 +133,10 @@ public class ReportService {
 
     /**
      * 신고자 자신의 게시물을 신고하는지 확인합니다.
+     *
+     * @param reporter 신고자
+     * @param post     게시글
+     * @throws ReportException 자신의 게시글을 신고하려는 경우
      */
     private void validateSelfPostReport(Member reporter, Post post) {
 
@@ -137,7 +149,9 @@ public class ReportService {
     /**
      * 댓글 중복 신고가 있는지 확인합니다.
      *
-     * @throws ReportException 중복 신고할 경우
+     * @param reporterId 신고자 ID
+     * @param commentId  댓글 ID
+     * @throws ReportException 이미 신고한 댓글인 경우
      */
     private void validateDuplicateCommentReport(Long reporterId, Long commentId) {
 
@@ -148,6 +162,10 @@ public class ReportService {
 
     /**
      * 신고자 자신의 댓글을 신고하는지 확인합니다.
+     *
+     * @param reporter 신고자
+     * @param comment  댓글
+     * @throws ReportException 자신의 댓글을 신고하려는 경우
      */
     private void validateSelfCommentReport(Member reporter, Comment comment) {
 
