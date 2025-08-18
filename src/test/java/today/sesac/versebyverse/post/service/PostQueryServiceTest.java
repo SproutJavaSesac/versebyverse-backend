@@ -34,7 +34,7 @@ class PostQueryServiceTest {
         Long postId = 1L;
         Post mockPost = mock(Post.class);
         when(postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId))
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId))
                 .thenReturn(Optional.of(mockPost));
 
         // When
@@ -52,7 +52,7 @@ class PostQueryServiceTest {
         // Given
         Long postId = 999L;
         when(postRepository
-                .findByIdAndIsDeletedFalseAndIsReportedFalseAndIsHiddenFalse(postId))
+                .findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId))
                 .thenReturn(Optional.empty());
 
         // When & Then

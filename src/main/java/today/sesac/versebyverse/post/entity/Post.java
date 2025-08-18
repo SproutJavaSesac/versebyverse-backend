@@ -69,10 +69,16 @@ public class Post extends BaseEntity {
     private String imageUrl;
 
     /**
-     * 게시글 신고 유무. 기본값 = 0
+     * 신고 횟수. 기본값 = 0
+     */
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED DEFAULT 0")
+    private int reportCount;
+
+    /**
+     * 관리자 신고 승인처리에 의해 차단된 상태 여부. 기본값 = 0
      */
     @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    private boolean isReported;
+    private boolean isBlocked;
 
     /**
      * 게시글 삭제 유무. soft deleted이므로 삭제되어도 db에는 존재하게됩니다. 기본값 = 0
@@ -111,7 +117,8 @@ public class Post extends BaseEntity {
         this.beforeTitle = beforeTitle;
         this.afterTitle = afterTitle;
         this.imageUrl = imageUrl;
-        this.isReported = false;
+        this.reportCount = 0;
+        this.isBlocked = false;
         this.isDeleted = false;
         this.isHidden = false;
         this.emotionType = emotionType;
@@ -159,7 +166,7 @@ public class Post extends BaseEntity {
      */
     public void report() {
 
-        this.isReported = true;
+        this.isBlocked = true;
     }
 
     /**

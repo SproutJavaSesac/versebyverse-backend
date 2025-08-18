@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.ai.dto.request.CommentAiRequestDto;
+import today.sesac.versebyverse.ai.prompt.PromptType;
+import today.sesac.versebyverse.ai.service.CommentAiService;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
@@ -32,6 +35,8 @@ public class CommentService {
 
     private final PostQueryService postQueryService;
 
+    private final CommentAiService commentAiService;
+
     /**
      * 댓글을 작성합니다.
      *
@@ -49,7 +54,11 @@ public class CommentService {
         Member member = memberService.getActiveMemberOrThrow(
                 commenterId);
 
-        String afterContent = "AI가 변경해 준 content"; // TODO: AI 처리 로직 추가 예정
+        CommentAiRequestDto commentAiRequestDto =
+                CommentAiRequestDto.of(activePost.getConceptType(),
+                        commentCreateRequestDto.content(), null);
+        String afterContent = commentAiService.executeAiWithValidation(commentAiRequestDto,
+                PromptType.COMMENT_CONCEPT_TRANSFORM).getContent();
 
         Comment comment = createRootOrReplyComment(commentCreateRequestDto, afterContent,
                 activePost, member);
@@ -87,7 +96,7 @@ public class CommentService {
                                 CommentErrorCode.COMMENT_NOT_FOUND, "parentId"));
 
         // 신고된 경우, 신고된 댓글에서는 답글을 작성할 수 없습니다.
-        if (parentComment.isReported()) {
+        if (parentComment.isBlocked()) {
             throw new CommentException(CommentErrorCode.INVALID_REPLY_REFERENCE, "parentId");
         }
 
