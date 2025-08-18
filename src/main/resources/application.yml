@@ -34,12 +34,16 @@ spring:
               - profile
 
 server:
+  port: 8080
+  address: 0.0.0.0
+  forward-headers-strategy: native
+
   servlet:
     session:
       cookie:
-        secure: true
+        secure: false  # 개발환경에서는 false
         http-only: true
-        same-site: none
+        same-site: Lax
 
 client:
   url: ${CLIENT_URL}
