@@ -25,6 +25,7 @@ import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportActionResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.exception.ReportException;
 import today.sesac.versebyverse.report.service.ReportService;
 
 /**
@@ -44,8 +45,10 @@ public class ReportController {
      * 게시글 신고.
      *
      * @param postId           게시글 식별 id
-     * @param reportRequestDto 요청 dto
-     * @return 응답
+     * @param reportRequestDto 게시글 신고 요청 dto
+     * @param reporter         신고자 정보
+     * @return 게시글 신고 응답 dto
+     * @throws ReportException 중복 신고, 자신의 게시글 신고, 게시글이 존재하지 않는 경우
      */
     @PostMapping("/reports/posts/{postId}")
     public ApiResponse<PostReportResponseDto> postReport(@PathVariable("postId") Long postId,
@@ -60,23 +63,20 @@ public class ReportController {
      * 댓글 신고.
      *
      * @param commentId        댓글 식별 id
-     * @param reportRequestDto 요청 dto
-     * @return 응답
+     * @param reportRequestDto 댓글 신고 요청 dto
+     * @param reporter         신고자 정보
+     * @return 댓글 신고 응답 dto
+     * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
      */
     @PostMapping("/reports/comments/{commentId}")
-    public ApiResponse<?> commentReport(@PathVariable("commentId") int commentId,
-            @RequestBody ReportRequestDto reportRequestDto) {
+    public ApiResponse<CommentReportResponseDto> commentReport(
+            @PathVariable("commentId") long commentId,
+            @Valid @RequestBody ReportRequestDto reportRequestDto,
+            @AuthenticationPrincipal UserPrincipal reporter) {
 
-        reportType = "COMMENT";
-        CommentReportResponseDto commentReportResponseDto = CommentReportResponseDto.builder()
-                .reportId((int) (Math.random() * 10) + 1)
-                .commentId(commentId)
-                .reportType(reportType)
-                .reasonDetail(reportRequestDto.getReasonDetail())
-                .statusType("PENDING")
-                .createdAt(LocalDateTime.now())
-                .build();
-        return ApiResponse.success(commentReportResponseDto);
+        CommentReportResponseDto response =
+                reportService.reportComment(reportRequestDto, reporter.getMemberId(), commentId);
+        return ApiResponse.success(response);
     }
 
     /**
@@ -87,6 +87,7 @@ public class ReportController {
      * @param size       한 페이지당 아이템 수
      * @param sort       정렬 기준 (latest/oldest)
      * @return 신고 목록 + 페이지네이션 정보
+     * @throws IllegalArgumentException page나 size가 음수인 경우
      */
     @GetMapping("/admin/reports")
     public ApiResponse<?> getReportList(@RequestParam String statusType,
@@ -129,6 +130,7 @@ public class ReportController {
      * @param reportId               신고 ID
      * @param reportActionRequestDto 처리 요청 dto
      * @return 처리 결과
+     * @throws IllegalArgumentException reportId가 유효하지 않은 경우
      */
     @PatchMapping("/admin/reports/{reportId}")
     public ApiResponse<?> handleReport(@PathVariable int reportId,

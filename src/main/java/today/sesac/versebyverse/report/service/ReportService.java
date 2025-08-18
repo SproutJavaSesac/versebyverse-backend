@@ -3,11 +3,14 @@ package today.sesac.versebyverse.report.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import today.sesac.versebyverse.comment.entity.Comment;
+import today.sesac.versebyverse.comment.service.CommentService;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
+import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.entity.Report;
 import today.sesac.versebyverse.report.exception.ReportErrorCode;
@@ -28,16 +31,19 @@ public class ReportService {
 
     private final PostQueryService postService;
 
+    private final CommentService commentService;
+
     /**
-     * 게시글을 신고하는 기능입니다.
+     * 게시글을 신고합니다.
      *
      * @param reportRequestDto 클라이언트로부터 입력받은 신고요청 dto
      * @param reporterId       신고자 id
      * @param postId           게시글 id
      * @return 게시글 신고 응답 dto
+     * @throws ReportException 중복 신고, 자신의 게시글 신고, 게시글이 존재하지 않는 경우
      */
-    public PostReportResponseDto reportPost(ReportRequestDto reportRequestDto, Long reporterId,
-            Long postId) {
+    public PostReportResponseDto reportPost(ReportRequestDto reportRequestDto,
+            Long reporterId, Long postId) {
 
         Member reporter = memberService.getActiveMemberOrThrow(reporterId);
         Post post = postService.getActivePostById(postId);
@@ -56,10 +62,54 @@ public class ReportService {
     }
 
     /**
-     * 게시글 신고를 등록하기 전 검증하는 기능입니다.
+     * 댓글을 신고합니다.
+     *
+     * @param reportRequestDto 신고 요청 DTO
+     * @param reporterId       신고자 ID
+     * @param commentId        댓글 ID
+     * @return 신고 응답 DTO
+     * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
+     */
+    public CommentReportResponseDto reportComment(
+            ReportRequestDto reportRequestDto, Long reporterId, Long commentId) {
+
+        Member reporter = memberService.getActiveMemberOrThrow(reporterId);
+        Comment comment = commentService.getActiveCommentById(commentId);
+
+        // 댓글 신고 등록 전 신고 가능한지 확인
+        validateCommentReportEligibility(reporter, comment);
+
+        Report report = reportRepository.save(
+                Report.createCommentReport(reporter, comment, reportRequestDto.getReasonType(),
+                        reportRequestDto.getReasonDetail())
+        );
+
+        return CommentReportResponseDto.of(report.getId(),
+                report.getReporter().getId(),
+                report.getComment().getId(),
+                report.getReasonType(), report.getReasonDetail(),
+                report.getStatusType(), report.getCreatedAt());
+    }
+
+    /**
+     * 댓글 신고 가능 여부를 확인합니다.
+     *
+     * @param reporter 신고자
+     * @param comment  댓글
+     * @throws ReportException 중복 신고, 자신의 댓글 신고인 경우
+     */
+    private void validateCommentReportEligibility(Member reporter, Comment comment) {
+
+        validateDuplicateCommentReport(reporter.getId(), comment.getId());
+        validateSelfCommentReport(reporter, comment);
+    }
+
+    /**
+     * 게시글 신고 가능 여부를 확인합니다.
      *
      * @param reporter 신고자
      * @param post     게시글
+     * @throws ReportException 중복 신고, 자신의 게시글 신고인 경우
      */
     private void validatePostReportEligibility(Member reporter, Post post) {
 
@@ -69,22 +119,59 @@ public class ReportService {
 
     /**
      * 게시글 중복 신고가 있는지 확인합니다.
+     *
+     * @param reporterId 신고자 ID
+     * @param postId     게시글 ID
+     * @throws ReportException 이미 신고한 게시글인 경우
      */
     private void validateDuplicatePostReport(Long reporterId, Long postId) {
 
         if (reportRepository.findByReporterIdAndPostId(reporterId, postId).isPresent()) {
-            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, String.valueOf(postId));
+            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, "postId");
         }
     }
 
     /**
      * 신고자 자신의 게시물을 신고하는지 확인합니다.
+     *
+     * @param reporter 신고자
+     * @param post     게시글
+     * @throws ReportException 자신의 게시글을 신고하려는 경우
      */
     private void validateSelfPostReport(Member reporter, Post post) {
 
         if (reporter.getId().equals(post.getAuthor().getId())) {
             throw new ReportException(ReportErrorCode.SELF_REPORT_NOT_ALLOWED,
-                    String.valueOf(post.getId()));
+                    "postId");
+        }
+    }
+
+    /**
+     * 댓글 중복 신고가 있는지 확인합니다.
+     *
+     * @param reporterId 신고자 ID
+     * @param commentId  댓글 ID
+     * @throws ReportException 이미 신고한 댓글인 경우
+     */
+    private void validateDuplicateCommentReport(Long reporterId, Long commentId) {
+
+        if (reportRepository.findByReporterIdAndCommentId(reporterId, commentId).isPresent()) {
+            throw new ReportException(ReportErrorCode.DUPLICATE_REPORT, "commentId");
+        }
+    }
+
+    /**
+     * 신고자 자신의 댓글을 신고하는지 확인합니다.
+     *
+     * @param reporter 신고자
+     * @param comment  댓글
+     * @throws ReportException 자신의 댓글을 신고하려는 경우
+     */
+    private void validateSelfCommentReport(Member reporter, Comment comment) {
+
+        if (reporter.getId().equals(comment.getCommenter().getId())) {
+            throw new ReportException(ReportErrorCode.SELF_REPORT_NOT_ALLOWED,
+                    "commentId");
         }
     }
 }
