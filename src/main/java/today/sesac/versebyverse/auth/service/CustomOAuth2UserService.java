@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.auth.service;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -30,18 +31,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 소셜 로그인 타입을 가져옵니다.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        log.info("loadUser.registrationId: {}", registrationId); // ex.google
-        SocialType socialType = null;
-        if (registrationId.equals("google")) {
-            socialType = SocialType.GOOGLE;
-        }
-        log.info("socialType: {}", socialType);
+        SocialType socialType = extractSocialType(registrationId);
 
         // 사용자 정보를 가져옵니다.
-        String email = oAuth2User.getAttribute("email");
-        log.info("email: {}", email);
-        String nickname = oAuth2User.getAttribute("name");
-        log.info("nickname: {}", nickname); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
+        String email = extractEmail(oAuth2User, socialType);
+        String nickname = extractNickname(oAuth2User, socialType);
 
         // 사용자 역할을 부여합니다.
         RoleType roleType = RoleType.ROLE_USER;
@@ -63,5 +57,40 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return UserPrincipal.create(member.getId(), roleType, socialType,
                 email);
+    }
+
+    private SocialType extractSocialType (String registrationId) {
+        if (registrationId.equals("google")) {
+            return SocialType.GOOGLE;
+        } else if (registrationId.equals("kakao")) {
+            return SocialType.KAKAO;
+        } else {
+            throw new OAuth2AuthenticationException(
+                    "Unsupported OAuth2 provider: " + registrationId);
+        }
+    }
+
+    private String extractNickname (OAuth2User oAuth2User, SocialType socialType) {
+        if (socialType.equals(SocialType.GOOGLE)) {
+            return oAuth2User.getAttribute("name");
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>)kakaoAccount.get("profile");
+            return (String) profile.get("nickname");
+        } else {
+            throw new OAuth2AuthenticationException(
+                    "Unsupported OAuth2 provider: " + socialType);
+        }
+    }
+
+    private String extractEmail (OAuth2User oAuth2User, SocialType socialType) {
+        String email = null;
+        if (socialType.equals(SocialType.GOOGLE)) {
+            email = oAuth2User.getAttribute("email");
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            email = (String) kakaoAccount.get("email");
+        }
+        return email;
     }
 }
