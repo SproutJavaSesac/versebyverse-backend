@@ -129,7 +129,7 @@ public class MemberService {
     }
 
     /**
-     * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
+     * 사용자 본인의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
      *
      * @param memberId 사용자의 ID
      * @return 내 정보 조회 응답 DTO
@@ -149,7 +149,7 @@ public class MemberService {
     }
 
     /**
-     * 사용자의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
+     * 사용자 본인의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
      *
      * @param memberId 사용자의 ID
      * @param nickname 변경할 사용자의 닉네임
@@ -171,11 +171,11 @@ public class MemberService {
     }
 
     /**
-     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     * 사용자 본인이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
      *
      * @param memberId 사용자 ID
      * @param pageable 페이지네이션 정보
-     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     * @return 사용자 본인이 작성한 게시글 목록 응답 DTO
      */
     public MyPostListResponseDto getMyPosts(Long memberId, Pageable pageable) {
 
@@ -217,11 +217,11 @@ public class MemberService {
     }
 
     /**
-     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     * 사용자 본인이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
      *
      * @param memberId 사용자 ID
      * @param pageable 페이지네이션 정보
-     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     * @return 사용자 본인이 작성한 댓글 목록 응답 DTO
      */
     public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
 

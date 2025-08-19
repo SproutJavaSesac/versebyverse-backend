@@ -75,14 +75,13 @@ public class MemberController {
 
     private final RankingService rankingService;
 
-    // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
     /**
-     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     * 내가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
      *
      * @param page page 페이지 번호 (0부터 시작)
      * @param size 페이지 크기 (기본값: 10)
      * @param userPrincipal 사용자의 인증 정보
-     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     * @return 내가 작성한 게시글 목록 응답 DTO
      */
     @GetMapping("/me/posts")
     public ApiResponse<MyPostListResponseDto> getMyPosts(
@@ -100,12 +99,12 @@ public class MemberController {
     }
 
     /**
-     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     * 내가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
      *
      * @param page 페이지 번호 (0부터 시작)
      * @param size 페이지 크기 (기본값: 10)
      * @param userPrincipal 사용자의 인증 정보
-     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     * @return 내가 작성한 댓글 목록 응답 DTO
      */
     @GetMapping("/me/comments")
     public ApiResponse<MyCommentListResponseDto> getMyComments(
@@ -147,10 +146,10 @@ public class MemberController {
     }
 
     /**
-     * 사용자의 정보를 조회합니다.
+     * 내 정보를 조회합니다.
      *
      * @param userPrincipal 사용자의 인증 정보
-     * @return 사용자의 정보 응답 DTO
+     * @return 내 정보 응답 DTO
      */
     @GetMapping("/me")
     public ApiResponse<MyInfoGetResponseDto> getMyInformation(
@@ -165,11 +164,11 @@ public class MemberController {
     }
 
     /**
-     * 사용자의 정보를 수정합니다.
+     * 내 정보를 수정합니다.
      *
      * @param userPrincipal 사용자의 인증 정보
      * @param myInfoEditRequestDto 사용자의 정보 수정 요청 DTO
-     * @return 사용자의 정보 수정 응답 DTO
+     * @return 내 정보 수정 응답 DTO
      */
     @PutMapping("/me")
     public ApiResponse<MyInfoEditResponseDto> editMyInformation(
@@ -185,12 +184,12 @@ public class MemberController {
     }
 
     /**
-     * 다른 회원이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     * 대상 회원이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
      *
      * @param page page 페이지 번호 (0부터 시작)
      * @param size 페이지 크기 (기본값: 10)
      * @param memberId 대상 회원의 ID
-     * @return 회원이 작성한 게시글 목록 응답 DTO
+     * @return 대상 회원이 작성한 게시글 목록 응답 DTO
      */
     @GetMapping("/{memberId}/posts")
     public ApiResponse<MemberPostListResponseDto> getMemberPosts(
@@ -206,12 +205,12 @@ public class MemberController {
     }
 
     /**
-     * 다른 회원이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     * 대상 회원이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
      *
      * @param page 페이지 번호 (0부터 시작)
      * @param size 페이지 크기 (기본값: 10)
      * @param memberId 대상 회원의 ID
-     * @return 회원이 작성한 댓글 목록 응답 DTO
+     * @return 대상 회원이 작성한 댓글 목록 응답 DTO
      */
     @GetMapping("/{memberId}/comments")
     public ApiResponse<MemberCommentListResponseDto> getMemberComments(
@@ -227,13 +226,13 @@ public class MemberController {
     }
 
     /**
-     * 다른 회원의 순위(랭킹) 정보를 조회합니다.
+     * 대상 회원의 순위(랭킹) 정보를 조회합니다.
      *
      * @param category      조회할 순위(랭킹) 카테고리
      * @param periodType    조회할 기간 타입 (예: DAILY, WEEKLY 등)
      * @param maxCount      조회하는 랭킹 최대 개수(최대 30개)
      * @param memberId      다른 회원의 ID
-     * @return 다른 회원의 순위(랭킹) 정보
+     * @return 대상 회원의 순위(랭킹) 정보
      */
     @GetMapping("/{memberId}/rankings")
     public ApiResponse<MemberRankingListResponseDto> getMemberRankings(
