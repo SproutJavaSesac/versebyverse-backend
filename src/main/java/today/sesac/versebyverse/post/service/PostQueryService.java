@@ -28,13 +28,14 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 public class PostQueryService {
 
     private final PostRepository postRepository;
+
     private final CommentRepository commentRepository;
 
     /**
      * 게시글 목록 리스트 조회.
      */
     public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sort,
-                                                 int page, int size) {
+            int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
         Pageable pageable = PageRequest.of(page, size);
@@ -44,7 +45,6 @@ public class PostQueryService {
 
         //repository를 통해 jpa 가 db 에서 받아온 post 엔티티 + 페이지 정보
         Page<Post> postPage;
-
 
         if (!filterByConcept) {
             //filterByConcept이 false 일때 (concept이 all 이거나 null 이어서 필터링 없이 전체조회)
@@ -94,7 +94,7 @@ public class PostQueryService {
      * @return 작성자와 게시글 수의 리스트
      */
     public List<AuthorPostCountDto> getAuthorAndPostCount(LocalDateTime startDate,
-                                                          LocalDateTime endDate) {
+            LocalDateTime endDate) {
 
         return postRepository.findActiveAuthorActivePostCount(startDate, endDate)
                 .stream()
@@ -113,6 +113,7 @@ public class PostQueryService {
      * @return postSingleQueryResponseDto
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
+
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
         // TODO 댓글갯수,반응갯수, 댓글 총갯수 추가
@@ -142,6 +143,19 @@ public class PostQueryService {
 
         if (!postRepository.existsByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId)) {
             throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
+        }
+    }
+
+    /**
+     * 존재하는 게시글인지 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @throws PostException 게시글이 존재하지 않을 경우
+     */
+    public void validatePostExistsOrThrow(Long postId) {
+
+        if (!postRepository.existsById(postId)) {
+            throw new PostException(PostErrorCode.POST_NOT_FOUND, "postId");
         }
     }
 }
