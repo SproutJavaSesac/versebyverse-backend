@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
@@ -39,10 +41,12 @@ public class CommentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<CommentCreateResponseDto> createComment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody CommentCreateRequestDto commentCreateRequestDto,
             @PathVariable("postId") Long postId) {
 
-        Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
+
         CommentCreateResponseDto commentCreateResponseDto = commentService.writeComment(
                 commentCreateRequestDto, memberId, postId);
 
@@ -76,9 +80,11 @@ public class CommentController {
      */
     @DeleteMapping("/{commentId}")
     public ApiResponse<String> deleteComment(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable("commentId") Long commentId) {
 
-        Long memberId = 1L; // TODO: 현재 사용자 memberId 1로 하드코딩, 추후 변경 예정
+        Long memberId = userPrincipal.getMemberId();
+
         commentService.deleteComment(commentId, memberId);
         return ApiResponse.success("성공적으로 댓글을 삭제했습니다.");
     }
