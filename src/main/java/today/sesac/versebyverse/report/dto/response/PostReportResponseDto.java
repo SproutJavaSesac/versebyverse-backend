@@ -13,11 +13,11 @@ import today.sesac.versebyverse.report.entity.StatusType;
 @AllArgsConstructor(staticName = "of")
 public class PostReportResponseDto {
 
-    private long reportId;
+    private Long reportId;
 
-    private long reporterId;
+    private Long reporterId;
 
-    private long postId;
+    private Long postId;
 
     private ReasonType reasonType;
 
