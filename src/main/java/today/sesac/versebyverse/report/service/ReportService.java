@@ -118,7 +118,7 @@ public class ReportService {
     }
 
     /**
-     * 중복 신고가 있는지 확인합니다.
+     * 게시글 중복 신고가 있는지 확인합니다.
      *
      * @param reporterId 신고자 ID
      * @param postId     게시글 ID
