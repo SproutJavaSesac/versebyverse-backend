@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,6 +29,8 @@ public class SecurityConfig {
     private String clientUrl;
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    private final AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -57,7 +60,7 @@ public class SecurityConfig {
                                         userInfoEndpointConfig
                                                 .userService(customOAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
-                        //TODO: 실패 시 handler도 추가하기
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
                 ).logout(logout -> logout   // TODO: 프론트 테스트를 위한 임시 로그아웃 구현 -> 수정 필요
                         .logoutUrl("/api/v1/auth/logout")
                         .invalidateHttpSession(true)
