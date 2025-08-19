@@ -24,6 +24,7 @@ import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
 import today.sesac.versebyverse.member.dto.response.MemberCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberRankingListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
@@ -223,5 +224,26 @@ public class MemberController {
                 memberId, PageRequest.of(page, size));
 
         return ApiResponse.success(memberCommentListResponseDto);
+    }
+
+    /**
+     * 다른 회원의 순위(랭킹) 정보를 조회합니다.
+     *
+     * @param category      조회할 순위(랭킹) 카테고리
+     * @param periodType    조회할 기간 타입 (예: DAILY, WEEKLY 등)
+     * @param maxCount      조회하는 랭킹 최대 개수(최대 30개)
+     * @param memberId      다른 회원의 ID
+     * @return 다른 회원의 순위(랭킹) 정보
+     */
+    @GetMapping("/{memberId}/rankings")
+    public ApiResponse<MemberRankingListResponseDto> getMemberRankings(
+            @RequestParam(defaultValue = "POST") RankingCategory category,
+            @RequestParam(defaultValue = "DAILY") RankingPeriodType periodType,
+            @RequestParam(defaultValue = "7") @Min(value = 1) @Max(value = 30) int maxCount,
+            @PathVariable Long memberId
+    ) {
+        MemberRankingListResponseDto memberRankingListResponseDto = rankingService.getMemberRankingByMemberId(
+                memberId, category, periodType, maxCount);
+        return ApiResponse.success(memberRankingListResponseDto);
     }
 }
