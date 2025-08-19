@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
+    url: jdbc:mysql://${DB_SOURCE}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  sql:
+    init:
+      mode: never # 운영환경에서는 초기 데이터 로딩 비활성화
+  jpa:
+    hibernate:
+      ddl-auto: validate # 운영환경에서는 스키마 검증만 수행
+    defer-datasource-initialization: false
+
+    properties:
+      hibernate:
+        format_sql: false # 운영환경에서는 SQL 포맷팅 비활성화
+        show-sql: false   # 운영환경에서는 SQL 로그 비활성화
+
+# log level 설정, 예: trace, debug, info, warn, error
+logging:
+  level:
+    root: INFO
