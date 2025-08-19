@@ -19,7 +19,7 @@ import today.sesac.versebyverse.member.entity.Member;
  */
 @Getter
 @Entity
-@Table(name = "member_badeges",
+@Table(name = "member_badges",
         uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "badge_id"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberBadge extends BaseEntity {
