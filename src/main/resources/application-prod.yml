@@ -18,12 +18,6 @@ spring:
         format_sql: false # 운영환경에서는 SQL 포맷팅 비활성화
         show-sql: false   # 운영환경에서는 SQL 로그 비활성화
 
-server:
-  servlet:
-    session:
-      cookie:
-        secure: true
-
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:

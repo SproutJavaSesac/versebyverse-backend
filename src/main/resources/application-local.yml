@@ -19,12 +19,6 @@ spring:
         format_sql: true # 콘솔 창에서 SQL을 보기 좋게 출력함.(줄바꿈, 들여쓰기 등)
         show-sql: true # hibernate가 실행하는 SQL을 로그로 출력
 
-server:
-  servlet:
-    session:
-      cookie:
-        secure: false
-
 # log level 설정, 예: trace, debug, info, warn, error
 logging:
   level:

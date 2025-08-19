@@ -37,13 +37,12 @@ server:
   port: 8080
   address: 0.0.0.0
   forward-headers-strategy: native
-
   servlet:
     session:
       cookie:
-        secure: false  # 개발환경에서는 false
+        secure: true
         http-only: true
-        same-site: Lax
+        same-site: none
 
 client:
   url: ${CLIENT_URL}
