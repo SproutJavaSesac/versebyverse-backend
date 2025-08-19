@@ -27,13 +27,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByPostIdOrderByPathAsc(Long postId, Pageable pageable);
 
     /**
-     * 게시글 id로 삭제되지 않고 신고되지 않은 댓글을 조회합니다.
-     *
-     * @param targetId 게시글 id
-     */
-    Optional<Comment> findByIdAndIsDeletedFalseAndIsBlockedFalse(Long targetId);
-
-    /**
      * 게시글 ID로 삭제되지 않은 댓글을 조회합니다.
      *
      * @param postId 게시글 ID
