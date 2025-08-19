@@ -27,7 +27,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     /**
      * 로그인 성공 시 홈(/) 페이지로 리다이렉트.
-     * TODO: 원래 로그인하려던 페이지로 보내주기(프론트 구현 필요)
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
