@@ -131,7 +131,7 @@ public class MemberController {
      * @return 내 순위(랭킹) 정보
      */
     @GetMapping("/me/rankings")
-    public ApiResponse<MyRankingListResponseDto> getMemberRankings(
+    public ApiResponse<MyRankingListResponseDto> getMyRankings(
             @RequestParam(defaultValue = "POST") RankingCategory category,
             @RequestParam(defaultValue = "DAILY") RankingPeriodType periodType,
             @RequestParam(defaultValue = "7") @Min(value = 1) @Max(value = 30) int maxCount,
