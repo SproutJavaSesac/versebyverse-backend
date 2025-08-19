@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -17,12 +18,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+    @Value("${client.url}")
+    private String clientUrl;
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException {
 
-        //TODO: 하드코딩된 도메인 환경변수로 교체하기, 발생한 예외 코드 파라미터로 전달하기
-        String redirectUrl = "http://localhost:3000" + "/auth/callback" + "?status=error";
+        String redirectUrl = clientUrl + "/auth/callback" + "?status=error";
 
         RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
         redirectStrategy.sendRedirect(request, response, redirectUrl);
