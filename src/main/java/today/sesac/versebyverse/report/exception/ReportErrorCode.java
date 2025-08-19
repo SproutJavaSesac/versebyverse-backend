@@ -9,19 +9,9 @@ import today.sesac.versebyverse.global.exception.IErrorCode;
  */
 @Getter
 public enum ReportErrorCode implements IErrorCode {
-    /**
-     * 존재하지 않는 신고를 조회하려고 할 때 발생합니다.
-     */
+
     REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 신고입니다."),
-
-    /**
-     * 이미 신고한 대상에 대해 중복 신고를 시도할 때 발생합니다.
-     */
     DUPLICATE_REPORT(HttpStatus.CONFLICT, "이미 신고한 대상입니다."),
-
-    /**
-     * 자신의 게시글이나 댓글을 신고하려고 할 때 발생합니다.
-     */
     SELF_REPORT_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "자신의 게시글이나 댓글은 신고할 수 없습니다.");
 
     /**

@@ -154,4 +154,17 @@ public class CommentService {
             ));
         }
     }
+
+    /**
+     * isDeleted와 isBlocked의 필드가 false인 comment엔티티를 반환합니다.
+     *
+     * @param commentId 댓글 id
+     * @return Comment  isDeleted=false && isBlocked=false인 comment 엔티티
+     */
+    public Comment getActiveCommentById(Long commentId) {
+
+        return commentRepository.findByIdAndIsDeletedFalseAndIsBlockedFalse(commentId).orElseThrow(
+                () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, "commentId")
+        );
+    }
 }
