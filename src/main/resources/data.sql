@@ -951,3 +951,63 @@ VALUES
 ('시@발', '아이고', '우회 욕설', 'MODIFIED_SWEAR', NOW(), NOW()),
 ('fuxk', 'dang', '영어 욕설 우회 표현', 'MODIFIED_SWEAR', NOW(), NOW()),
 ('tlqkf', '젠장', '한글 자판 치환 욕설', 'MODIFIED_SWEAR', NOW(), NOW());
+
+-- === Report 더미 데이터 50개 ==
+-- reasonDetail은 reasonType이 OTHER일 때만 값을 설정하고, 나머지는 NULL
+-- 게시글 신고와 댓글 신고를 적절히 분배하여 생성
+INSERT INTO reports (id, reporter_id, post_id, comment_id, reason_type, reason_detail, status_type,
+                     created_at, updated_at)
+VALUES
+-- 게시글 신고 30개
+(1, 2, 1, NULL, 'SPAM', NULL, 'PENDING', NOW(), NOW()),
+(2, 3, 5, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'ACCEPTED', NOW(), NOW()),
+(3, 4, 10, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'REJECTED', NOW(), NOW()),
+(4, 5, 15, NULL, 'ILLEGAL_FILMING', NULL, 'PENDING', NOW(), NOW()),
+(5, 6, 20, NULL, 'OTHER', '부적절한 광고성 내용이 포함되어 있습니다', 'PENDING', NOW(), NOW()),
+(6, 7, 25, NULL, 'SPAM', NULL, 'ACCEPTED', NOW(), NOW()),
+(7, 8, 30, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'POSTPONE', NOW(), NOW()),
+(8, 9, 35, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'REJECTED', NOW(), NOW()),
+(9, 10, 40, NULL, 'ILLEGAL_FILMING', NULL, 'PENDING', NOW(), NOW()),
+(10, 1, 45, NULL, 'OTHER', '개인정보가 노출되어 있습니다', 'ACCEPTED', NOW(), NOW()),
+(11, 2, 50, NULL, 'SPAM', NULL, 'PENDING', NOW(), NOW()),
+(12, 3, 55, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'REJECTED', NOW(), NOW()),
+(13, 4, 60, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'POSTPONE', NOW(), NOW()),
+(14, 5, 65, NULL, 'ILLEGAL_FILMING', NULL, 'PENDING', NOW(), NOW()),
+(15, 6, 70, NULL, 'OTHER', '폭력적인 내용이 포함되어 있습니다', 'ACCEPTED', NOW(), NOW()),
+(16, 7, 75, NULL, 'SPAM', NULL, 'REJECTED', NOW(), NOW()),
+(17, 8, 80, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'PENDING', NOW(), NOW()),
+(18, 9, 85, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'POSTPONE', NOW(), NOW()),
+(19, 10, 90, NULL, 'ILLEGAL_FILMING', NULL, 'ACCEPTED', NOW(), NOW()),
+(20, 1, 95, NULL, 'OTHER', '저작권 침해가 의심됩니다', 'PENDING', NOW(), NOW()),
+(21, 2, 100, NULL, 'SPAM', NULL, 'REJECTED', NOW(), NOW()),
+(22, 3, 105, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'PENDING', NOW(), NOW()),
+(23, 4, 110, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'ACCEPTED', NOW(), NOW()),
+(24, 5, 115, NULL, 'ILLEGAL_FILMING', NULL, 'POSTPONE', NOW(), NOW()),
+(25, 6, 120, NULL, 'OTHER', '사기성 내용이 포함되어 있습니다', 'REJECTED', NOW(), NOW()),
+(26, 7, 125, NULL, 'SPAM', NULL, 'PENDING', NOW(), NOW()),
+(27, 8, 130, NULL, 'INAPPROPRIATE_CONTENT', NULL, 'ACCEPTED', NOW(), NOW()),
+(28, 9, 135, NULL, 'PORNOGRAPHIC_CONTENT', NULL, 'PENDING', NOW(), NOW()),
+(29, 10, 140, NULL, 'ILLEGAL_FILMING', NULL, 'REJECTED', NOW(), NOW()),
+(30, 1, 145, NULL, 'OTHER', '혐오 표현이 포함되어 있습니다', 'POSTPONE', NOW(), NOW()),
+
+-- 댓글 신고 20개
+(31, 2, NULL, 1, 'SPAM', NULL, 'PENDING', NOW(), NOW()),
+(32, 3, NULL, 5, 'INAPPROPRIATE_CONTENT', NULL, 'ACCEPTED', NOW(), NOW()),
+(33, 4, NULL, 10, 'PORNOGRAPHIC_CONTENT', NULL, 'REJECTED', NOW(), NOW()),
+(34, 5, NULL, 15, 'ILLEGAL_FILMING', NULL, 'PENDING', NOW(), NOW()),
+(35, 6, NULL, 20, 'OTHER', '비방성 발언이 포함되어 있습니다', 'ACCEPTED', NOW(), NOW()),
+(36, 7, NULL, 25, 'SPAM', NULL, 'POSTPONE', NOW(), NOW()),
+(37, 8, NULL, 30, 'INAPPROPRIATE_CONTENT', NULL, 'REJECTED', NOW(), NOW()),
+(38, 9, NULL, 35, 'PORNOGRAPHIC_CONTENT', NULL, 'PENDING', NOW(), NOW()),
+(39, 10, NULL, 40, 'ILLEGAL_FILMING', NULL, 'ACCEPTED', NOW(), NOW()),
+(40, 1, NULL, 45, 'OTHER', '개인정보 유출이 의심됩니다', 'PENDING', NOW(), NOW()),
+(41, 2, NULL, 50, 'SPAM', NULL, 'REJECTED', NOW(), NOW()),
+(42, 3, NULL, 55, 'INAPPROPRIATE_CONTENT', NULL, 'POSTPONE', NOW(), NOW()),
+(43, 4, NULL, 60, 'PORNOGRAPHIC_CONTENT', NULL, 'ACCEPTED', NOW(), NOW()),
+(44, 5, NULL, 65, 'ILLEGAL_FILMING', NULL, 'PENDING', NOW(), NOW()),
+(45, 6, NULL, 70, 'OTHER', '폭력적인 언어가 사용되었습니다', 'REJECTED', NOW(), NOW()),
+(46, 7, NULL, 75, 'SPAM', NULL, 'ACCEPTED', NOW(), NOW()),
+(47, 8, NULL, 80, 'INAPPROPRIATE_CONTENT', NULL, 'PENDING', NOW(), NOW()),
+(48, 9, NULL, 85, 'PORNOGRAPHIC_CONTENT', NULL, 'POSTPONE', NOW(), NOW()),
+(49, 10, NULL, 90, 'ILLEGAL_FILMING', NULL, 'REJECTED', NOW(), NOW()),
+(50, 1, NULL, 95, 'OTHER', '허위 사실을 유포하고 있습니다', 'ACCEPTED', NOW(), NOW());
