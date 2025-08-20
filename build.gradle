@@ -2,7 +2,18 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "jacoco"
+    id "org.sonarqube" version "3.5.0.2730"
 }
+
+jacocoTestReport {
+    dependsOn test // report가 만들어지기 전 Test 실행
+    reports {
+        xml.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
 
 group = 'today.sesac'
 version = '0.0.1-SNAPSHOT'
@@ -47,6 +58,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // 테스트가 끝난 후 JaCoCo 리포트 생성
 
     // gradle로 test를 실행할 때 .env 파일에 정의된 환경변수를 읽어와서 테스트 환경에 적용
     def envFile = file('.env')
@@ -59,6 +71,7 @@ tasks.named('test') {
                     environment key, value.trim()
                 }
             }
+            return true // continue reading lines
         }
     }
 }

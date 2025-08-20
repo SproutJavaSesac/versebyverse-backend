@@ -62,7 +62,7 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
 
             return response;
         } catch (Exception e) { //TODO: 커스텀예외 처리하기.
-            log.error("AI 처리 실패, 원본 데이터로 대체: ", e);
+            log.warn("AI 처리 실패, 원본 데이터로 대체: ", e);
             return createFallbackResponse(requestDto);
         }
     }
