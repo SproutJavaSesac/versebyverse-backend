@@ -147,7 +147,7 @@ public class PostQueryService {
     }
 
     /**
-     * 존재하는 게시글인지 확인합니다.
+     * 게시글의 상태(정상/삭제/신고)와 관계없이 DB에 실제로 존재하는지 확인합니다.
      *
      * @param postId 게시글 ID
      * @throws PostException 게시글이 존재하지 않을 경우
