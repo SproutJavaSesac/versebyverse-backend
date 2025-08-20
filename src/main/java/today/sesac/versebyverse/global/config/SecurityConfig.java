@@ -1,7 +1,5 @@
 package today.sesac.versebyverse.global.config;
 
-import java.util.Arrays;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import today.sesac.versebyverse.auth.CustomLogoutSuccessHandler;
 import today.sesac.versebyverse.auth.OAuth2AuthenticationSuccessHandler;
 import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
@@ -25,12 +20,12 @@ import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
-    private String clientUrl;
+    private final AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    private final AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
+    private String clientUrl;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -60,7 +55,7 @@ public class SecurityConfig {
                                         userInfoEndpointConfig
                                                 .userService(customOAuth2UserService))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
-                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
                 ).logout(logout -> logout   // TODO: 프론트 테스트를 위한 임시 로그아웃 구현 -> 수정 필요
                         .logoutUrl("/api/v1/auth/logout")
                         .invalidateHttpSession(true)

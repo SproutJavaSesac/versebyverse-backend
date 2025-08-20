@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
-import today.sesac.versebyverse.member.exception.MemberNotFoundException;
 import today.sesac.versebyverse.member.service.MemberService;
 
 /**
@@ -54,7 +53,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (socialType == null) {
             throw new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "지원하지 않는 소셜 로그인 제공자입니다.", null
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "지원하지 않는 소셜 로그인 제공자입니다.",
+                    null
             );
         }
 
