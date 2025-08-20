@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.report.entity.ReasonType;
+import today.sesac.versebyverse.report.entity.ReportType;
 import today.sesac.versebyverse.report.entity.StatusType;
 
 /**
@@ -18,9 +19,13 @@ public class ReportResponseDto {
 
     private Long reporterId;
 
+    private String reporterNickname;
+
     private Long postId;
 
     private Long commentId;
+
+    private ReportType reportType;
 
     private ReasonType reasonType;
 

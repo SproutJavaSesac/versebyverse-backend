@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.report.entity.Report;
+import today.sesac.versebyverse.report.entity.ReportType;
 
 /**
  * 신고 목록 응답을 위한 래퍼 DTO입니다. 신고 목록과 페이지네이션 정보를 함께 제공합니다.
@@ -39,8 +40,11 @@ public class ReportListResponseWrapperDto {
                 .map(report -> ReportResponseDto.of(
                         report.getId(),
                         report.getReporter().getId(),
-                        report.getPost() != null ? report.getPost().getId() : null,
+                        report.getReporter().getNickname(),
+                        report.getPost() != null ? report.getPost().getId()
+                                : report.getComment().getPost().getId(),
                         report.getComment() != null ? report.getComment().getId() : null,
+                        report.getComment() != null ? ReportType.COMMENT : ReportType.POST,
                         report.getReasonType(),
                         report.getReasonDetail(),
                         report.getStatusType(),
@@ -62,7 +66,7 @@ public class ReportListResponseWrapperDto {
      * @param report 신고 엔티티
      * @return 신고된 대상의 누적 신고 횟수
      */
-    private static Integer getReportCount(Report report) {
+    private static int getReportCount(Report report) {
 
         if (report.getPost() != null) {
             return report.getPost().getReportCount();
