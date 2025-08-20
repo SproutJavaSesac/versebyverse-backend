@@ -48,7 +48,8 @@ class GlobalExceptionHandlerTest {
     @DisplayName("[예외]-RuntimeException 처리 테스트")
     void handleRuntimeException() throws Exception {
 
-        mockMvc.perform(get("/test/error/runtime"))
+        mockMvc.perform(get("/test/error/runtime").header("Accept-Language", "ko") // 언어 설정
+                )
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath(IS_SUCCESS).value(false))
                 .andExpect(jsonPath(ERROR_NAME).value("INTERNAL_SERVER"))
@@ -87,11 +88,14 @@ class GlobalExceptionHandlerTest {
     @DisplayName("[예외]-NoHandlerFoundException 처리 테스트")
     void handleNoHandlerFoundException() throws Exception {
 
-        mockMvc.perform(get("/test/not-found"))
+        mockMvc.perform(get("/test/not-found")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "ko") // 언어 설정
+                )
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(IS_SUCCESS).value(false))
-                .andExpect(jsonPath(ERROR_NAME).value("UNDISCOVERED"))
-                .andExpect(jsonPath(ERROR_MESSAGE).value("요청하신 정보를 찾을 수 없습니다."))
+                .andExpect(jsonPath(ERROR_NAME).value("NOT_FOUND"))
+                .andExpect(jsonPath(ERROR_MESSAGE).value("요청하신 URL을 찾을 수 없습니다."))
                 .andExpect(jsonPath(ERROR_PARAM).isEmpty());
     }
 
@@ -146,7 +150,7 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * 테스트용 요청 DTO
+     * 테스트용 요청 DTO.
      *
      * @param email 이메일
      */
@@ -158,7 +162,7 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * 테스트용 컨트롤러를 빈으로 등록하는 설정 클래스
+     * 테스트용 컨트롤러를 빈으로 등록하는 설정 클래스.
      */
     @TestConfiguration
     static class TestConfig {
