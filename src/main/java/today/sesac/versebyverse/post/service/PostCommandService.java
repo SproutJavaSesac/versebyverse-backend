@@ -8,7 +8,9 @@ import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
+import today.sesac.versebyverse.global.exception.FileUploadException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
+import today.sesac.versebyverse.global.service.S3FileService;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.dto.request.PostCreateRequestDto;
@@ -34,6 +36,8 @@ public class PostCommandService {
 
     private final PostAiService postAiService;
 
+    private final S3FileService s3FileService;
+
     /**
      * 게시물 작성 api.
      *
@@ -50,6 +54,20 @@ public class PostCommandService {
         String beforeTitle = postCreateRequestDto.getTitle();
         //3.사용자가 작성한 원본내용 설정
         String beforeContent = postCreateRequestDto.getContent();
+
+        // 이미지 파일 S3 업로드
+        String imageUrl = null;
+        if (postCreateRequestDto.getImageFile() != null && !postCreateRequestDto.getImageFile()
+                .isEmpty()) {
+            try {
+                imageUrl = s3FileService.uploadImage(postCreateRequestDto.getImageFile(), "posts");
+                log.info("이미지 업로드 완료: {}", imageUrl);
+            } catch (Exception e) {
+                log.error("이미지 업로드 실패", e);
+                throw new FileUploadException("이미지 업로드에 실패했습니다.", e);
+            }
+        }
+        
         //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
                 PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConceptType(),
@@ -72,7 +90,7 @@ public class PostCommandService {
                 afterContent,
                 beforeTitle,
                 afterTitle,
-                postCreateRequestDto.getImageUrl(),
+                imageUrl,
                 postAiResponseDto.getEmotionType(),
                 postAiResponseDto.getConceptType()
         );
@@ -93,6 +111,18 @@ public class PostCommandService {
 
         Post post = getPostById(postId);
         validatePostOwnership(post, memberId);
+
+        // S3에서 이미지 삭제
+        if (post.getImageUrl() != null) {
+            try {
+                s3FileService.deleteImage(post.getImageUrl());
+                log.info("게시글 이미지 삭제 완료: {}", post.getImageUrl());
+            } catch (Exception e) {
+                log.error("게시글 이미지 삭제 실패: {}", post.getImageUrl(), e);
+                // 이미지 삭제 실패 시에도 게시글 삭제는 진행
+            }
+        }
+        
         //soft deleted
         post.delete();
         postRepository.save(post);

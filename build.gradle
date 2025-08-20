@@ -44,9 +44,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     // Spring AI Vertex AI Gemini
     implementation platform("org.springframework.ai:spring-ai-bom:$springAiVersion")
     implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
+
+    // Spring Cloud AWS
+    implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1')
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'

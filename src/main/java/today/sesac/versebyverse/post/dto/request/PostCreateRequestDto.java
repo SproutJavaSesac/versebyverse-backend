@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
 
@@ -40,7 +41,7 @@ public class PostCreateRequestDto {
     private String content;
 
     /**
-     * 이미지 URL입니다.
+     * 이미지 파일 .
      */
-    private String imageUrl;
+    private MultipartFile imageFile;
 }
