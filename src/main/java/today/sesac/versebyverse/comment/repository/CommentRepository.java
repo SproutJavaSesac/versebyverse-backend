@@ -55,10 +55,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
      * 게시글 id로 해당 게시글의 삭제되지 않고, 신고되지 않은 댓글 수를 조회합니다.
      *
-     * @param id
+     * @param id 게시글 id
      * @return Long 으로 해당 게시글의 댓글 수
      */
-    Long countByPostIdAndIsDeletedFalseAndIsBlockedFalse(Long id);
+    int countByPostIdAndIsDeletedFalseAndIsBlockedFalse(Long id);
 
     /**
      * 게시글 id로 해당 게시글의 댓글 수를 조회합니다.

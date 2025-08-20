@@ -225,7 +225,7 @@ public class ReactionService {
      * @param targetId   게시글 or 댓글 id
      * @param targetType 게시글 or 댓글
      */
-    private ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
+    public ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
             TargetType targetType) {
 
         List<Object[]> counts;

@@ -71,4 +71,11 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
      * @param targetId 댓글 id
      */
     Optional<Reaction> findByMemberIdAndCommentId(Long memberId, Long targetId);
+
+    /**
+     * 게시글의 id로 게시글 총 반응 갯수 조회.
+     *
+     * @param postId 게시글 id
+     */
+    int countByPostId(@Param("postId") Long postId);
 }
