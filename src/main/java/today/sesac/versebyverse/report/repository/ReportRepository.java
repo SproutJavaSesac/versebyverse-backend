@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -42,4 +43,16 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      */
     @Query("SELECT r FROM Report r WHERE (:statusType IS NULL OR r.statusType = :statusType)")
     Page<Report> findAllByStatusType(@Param("statusType") StatusType statusType, Pageable pageable);
+
+    /**
+     * 신고의 상태를 업데이트합니다.
+     *
+     * @param reportId   업데이트할 신고의 ID
+     * @param statusType 설정할 새로운 상태 타입
+     */
+    @Modifying
+    @Query("update Report r set r.statusType = :statusType where r.id = :reportId")
+    Optional<Report> updateStatus(@Param("reportId") Long reportId,
+            @Param("statusType") StatusType statusType);
+
 }

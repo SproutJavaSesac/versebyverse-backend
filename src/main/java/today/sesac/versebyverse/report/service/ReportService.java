@@ -11,9 +11,11 @@ import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
+import today.sesac.versebyverse.report.dto.request.ReportActionRequestDto;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
+import today.sesac.versebyverse.report.dto.response.ReportActionResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
 import today.sesac.versebyverse.report.entity.Report;
 import today.sesac.versebyverse.report.entity.StatusType;
@@ -66,14 +68,13 @@ public class ReportService {
     }
 
     /**
-     * 게시글 신고를 등록하기 전 검증하는 기능입니다.
-     * 댓글을 신고합니다.
+     * 게시글 신고를 등록하기 전 검증하는 기능입니다. 댓글을 신고합니다.
      *
      * @param reportRequestDto 신고 요청 DTO
      * @param reporterId       신고자 ID
      * @param commentId        댓글 ID
-     * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
      * @return 신고 응답 DTO
+     * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
      */
     public CommentReportResponseDto reportComment(
             ReportRequestDto reportRequestDto, Long reporterId, Long commentId) {
@@ -194,4 +195,26 @@ public class ReportService {
 
         return ReportListResponseWrapperDto.of(reportPage);
     }
+
+    @Transactional
+    public ReportActionResponseDto handleReportAction(Long reportId,
+            ReportActionRequestDto reportActionRequestDto) {
+        // 신고 존재 여부 확인
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(
+                        () -> new ReportException(ReportErrorCode.REPORT_NOT_FOUND, "reportId"));
+
+        // 이미 처리된 신고인지 확인
+        if (report.getStatusType() != StatusType.PENDING) {
+            throw new ReportException(ReportErrorCode.REPORT_ALREADY_PROCESSED, "reportId");
+        }
+
+        StatusType statusType = reportActionRequestDto.getAction();
+
+        report = reportRepository.updateStatus(reportId, statusType).orElseThrow(
+                () -> new ReportException(ReportErrorCode.REPORT_PROCESS_FAILED, "reportId"));
+        return ReportActionResponseDto.of(report.getId(), report.getStatusType(),
+                report.getUpdatedAt());
+    }
+
 }
