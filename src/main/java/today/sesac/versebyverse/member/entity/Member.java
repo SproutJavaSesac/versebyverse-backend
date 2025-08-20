@@ -46,7 +46,6 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean isDeleted;
 
     private String profileImageUrl;

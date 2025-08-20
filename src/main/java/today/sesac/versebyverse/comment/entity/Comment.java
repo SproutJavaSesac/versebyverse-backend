@@ -93,14 +93,15 @@ public class Comment extends BaseEntity {
      * <br>
      * {@link today.sesac.versebyverse.report.entity.Report}의 StatusType이 ACCEPTED가 되면 true가 됩니다.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isBlocked;
 
     /**
      * 댓글 삭제 여부.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
     private boolean isDeleted;
+
 
     private Comment(
             String beforeContent, String afterContent, int level,
