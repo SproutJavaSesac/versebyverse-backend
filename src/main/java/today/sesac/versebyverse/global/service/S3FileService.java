@@ -165,4 +165,4 @@ public class S3FileService {
         }
         throw new IllegalArgumentException("유효하지 않은 S3 URL입니다: " + s3Url);
     }
-} 
+}

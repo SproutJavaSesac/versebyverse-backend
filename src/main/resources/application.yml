@@ -52,8 +52,8 @@ spring:
   cloud:
     aws:
       credentials:
-        access-key: { S3_ACCESS_KEY }
-        secret-key: { S3_SECRET_ACCESS_KEY }
+        access-key: ${S3_ACCESS_KEY}
+        secret-key: ${S3_SECRET_ACCESS_KEY}
       region:
         static: ${S3_REGION}
 # S3 설정
