@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.member.service;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,18 +47,6 @@ public class MemberService {
     private final CommentRepository commentRepository;
 
     private final SocialLoginService socialLoginService;
-
-    /**
-     * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
-     */
-    @Transactional
-    public Member createMember(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
-
-        Member member = Member.create(roleType, socialType, email, nickname);
-        Member savedMember = memberRepository.save(member);
-        return savedMember;
-    }
 
     /**
      *  회원을 삭제합니다.
@@ -111,13 +100,32 @@ public class MemberService {
         return member;
     }
 
-    public Member findByEmailAndSocialType(String email, SocialType socialType) {
+    /**
+     * 소셜 로그인 요청이 들어올 때, 회원이 존재하면 회원을 반환하고 없을 경우 회원을 새로 만들고 반환합니다.
+     *
+     * @param email      사용자의 이메일
+     * @param nickname   사용자의 닉네임
+     * @param roleType   회원을 새로 만들 경우, 회원의 역할
+     * @param socialType 회원을 새로 만들 경우, 회원 테이블에 저장될 소셜 로그인 타입(ex. 구글, 카카오)
+     * @return Member 객체
+     */
+    @Transactional
+    public Member findOrCreateSocialMember(String email, String nickname, RoleType roleType,
+            SocialType socialType) {
 
-        Member member = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email, socialType).orElseThrow(
-                () -> new MemberNotFoundException(email + ", " + socialType,
-                        "해당 email을 가진 회원을 찾을 수 없습니다.")
-        );
-        return member;
+        Optional<Member> memberOptional =
+                memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email,
+                        socialType);
+
+        if (memberOptional.isPresent()) {
+            return memberOptional.get();
+        }
+
+        Member member = Member.create(roleType, socialType, email, nickname);
+        Member savedMember = memberRepository.save(member);
+        log.info("회원 가입이 완료되었습니다. memberId = {}", savedMember.getId());
+
+        return savedMember;
     }
 
     public Member getMember(Long memberId) {
