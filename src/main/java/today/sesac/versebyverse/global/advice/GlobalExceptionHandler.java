@@ -28,7 +28,7 @@ import today.sesac.versebyverse.global.response.ErrorResponse;
  * 모든 Controller에서 발생하는 예외를 처리하기 위한 클래스입니다.
  *
  * <p>기본적으로 에러를 던진 곳에서 로그를 남기며,
- * 국제화된 에러 메시지를 제공합니���.</p>
+ * 국제화된 에러 메시지를 제공합니다.</p>
  */
 @Slf4j(topic = "GLOBAL_EXCEPTION_HANDLER")
 @RestControllerAdvice
