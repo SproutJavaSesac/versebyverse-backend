@@ -112,7 +112,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.result.content").value(content))
                 .andExpect(jsonPath("$.result.level").value(0))
                 .andExpect(jsonPath("$.result.reactionTotalCount").value(0))
-                .andExpect(jsonPath("$.result.reactions").isEmpty())
+                .andExpect(jsonPath("$.result.reactionDetails").isEmpty())
                 .andExpect(jsonPath("$.result.isDeleted").value(false))
                 .andExpect(jsonPath("$.result.isBlocked").value(false))
                 .andExpect(jsonPath("$.result.createdAt").isNotEmpty())
