@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.member.dto.request.MyInfoEditRequestDto;
+import today.sesac.versebyverse.member.dto.response.MyBadgeListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoGetResponseDto;
@@ -116,6 +117,24 @@ public class MemberController {
                 memberId, PageRequest.of(page, size));
 
         return ApiResponse.success(myCommentListResponseDto);
+    }
+
+    /**
+     * 내가 획득한 배지를 조회합니다.
+     *
+     * @param userPrincipal 요청한 회원의 인증 정보.
+     * @return 내가 보유한 배지 정보.
+     */
+    @GetMapping("/me/badges")
+    public ApiResponse<MyBadgeListResponseDto> getMyBadges(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+
+        Long memberId = userPrincipal.getMemberId();
+
+        MyBadgeListResponseDto myBadgeListResponseDto = memberService.getMyBadges(memberId);
+
+        return ApiResponse.success(myBadgeListResponseDto);
     }
 
     /**
