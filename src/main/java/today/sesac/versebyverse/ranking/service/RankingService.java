@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.member.dto.response.MemberRankingListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberRankingSummary;
 import today.sesac.versebyverse.member.dto.response.MyRankingListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyRankingSummary;
 import today.sesac.versebyverse.member.entity.Member;
@@ -122,6 +124,39 @@ public class RankingService {
 
         return new MyRankingListResponseDto(
                 category, maxCount, periodType, myRankingSummaryList
+        );
+    }
+
+    /**
+     * 다른 회원의 순위(랭킹) 정보를 조회합니다.
+     *
+     * @param memberId   회원 ID
+     * @param category   조회할 순위(랭킹) 카테고리
+     * @param periodType 조회할 기간 타입
+     * @param maxCount   조회하는 랭킹 최대 개수(최대 30개)
+     * @return 다른 회원의 순위(랭킹) 정보
+     */
+    public MemberRankingListResponseDto getMemberRankingByMemberId(Long memberId, RankingCategory category,
+                                                                    RankingPeriodType periodType,
+                                                                    int maxCount) {
+        memberService.validateMemberActiveExists(memberId);
+
+        LocalDateTime endDateTime = LocalDateTime.now();
+        List<MemberRankingSummary> memberRankingSummaryList = rankingRepository
+                .findAllByMemberIdAndCategoryAndPeriodTypeAndCreatedAtBetween(
+                        memberId, category, periodType,
+                        getStartTimeFromEndTimeAndPeriod(
+                                endDateTime, periodType, maxCount),
+                        endDateTime)
+                .stream()
+                .map(ranking -> {
+                    String rankChange = getRankChangeWithSymbol(ranking.getRank(),
+                            ranking.getPreviousRank());
+                    return new MemberRankingSummary(ranking, rankChange);
+                }).toList();
+
+        return new MemberRankingListResponseDto(
+                category, maxCount, periodType, memberRankingSummaryList
         );
     }
 

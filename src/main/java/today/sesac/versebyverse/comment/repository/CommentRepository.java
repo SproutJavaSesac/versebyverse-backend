@@ -69,6 +69,17 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     int countByPostIdAndIsDeletedFalse(Long postId);
 
     /**
+     * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다.
+     * 차단된 댓글, 삭제된 댓글은 포함하지 않습니다.
+     *
+     * @param commenterId 댓글 작성자 ID
+     * @param pageable 페이지네이션 정보
+     * @return 페이지로 가져온 작성자 댓글 목록
+     */
+    Page<Comment> findByCommenterIdAndIsDeletedFalseAndIsBlockedFalseOrderByCreatedAtDesc(Long commenterId, Pageable pageable);
+
+
+    /**
      * 댓글이 삭제되지 않았거나 관리자로부터 신고 승인되지 않은 댓글을 조회합니다.
      *
      * @param commentId 댓글 ID

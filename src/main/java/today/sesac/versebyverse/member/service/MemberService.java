@@ -12,6 +12,10 @@ import today.sesac.versebyverse.auth.service.SocialLoginService;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.member.dto.response.MemberCommentListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberCommentSummaryDto;
+import today.sesac.versebyverse.member.dto.response.MemberPostListResponseDto;
+import today.sesac.versebyverse.member.dto.response.MemberPostSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
@@ -133,7 +137,7 @@ public class MemberService {
     }
 
     /**
-     * 사용자의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
+     * 사용자 본인의 정보를 조회하고 컨트롤러로 반환하는 메서드입니다.
      *
      * @param memberId 사용자의 ID
      * @return 내 정보 조회 응답 DTO
@@ -153,7 +157,7 @@ public class MemberService {
     }
 
     /**
-     * 사용자의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
+     * 사용자 본인의 정보를 수정하고 변경사항을 컨트롤러로 반환하는 메서드입니다.
      *
      * @param memberId 사용자의 ID
      * @param nickname 변경할 사용자의 닉네임
@@ -175,11 +179,11 @@ public class MemberService {
     }
 
     /**
-     * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     * 사용자 본인이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
      *
      * @param memberId 사용자 ID
      * @param pageable 페이지네이션 정보
-     * @return 사용자가 작성한 게시글 목록 응답 DTO
+     * @return 사용자 본인이 작성한 게시글 목록 응답 DTO
      */
     public MyPostListResponseDto getMyPosts(Long memberId, Pageable pageable) {
 
@@ -221,11 +225,11 @@ public class MemberService {
     }
 
     /**
-     * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     * 사용자 본인이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
      *
      * @param memberId 사용자 ID
      * @param pageable 페이지네이션 정보
-     * @return 사용자가 작성한 댓글 목록 응답 DTO
+     * @return 사용자 본인이 작성한 댓글 목록 응답 DTO
      */
     public MyCommentListResponseDto getMyComments(Long memberId, Pageable pageable) {
 
@@ -250,6 +254,75 @@ public class MemberService {
     private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
         return pageComments.getContent().stream()
                 .map(MyCommentSummaryDto::of)
+                .toList();
+    }
+
+    /**
+     * 대상 회원이 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @param pageable 페이지네이션 정보
+     * @return 회원이 작성한 게시글 목록 응답 DTO
+     */
+    public MemberPostListResponseDto getMemberPosts(Long memberId, Pageable pageable) {
+
+        validateMemberActiveExists(memberId);
+
+        // 작성한 게시글을 Page 객체으로 조회
+        Page<Post> pageByAuthorIdWithPageable = postRepository
+                .findByAuthorIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalseOrderByCreatedAtDesc(
+                        memberId, pageable);
+
+        List<MemberPostSummaryDto> postSummaries = convertPostsToMemberSummaries(pageByAuthorIdWithPageable);
+
+        PaginationDto paginationDto = getPaginationDto(pageByAuthorIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MemberPostListResponseDto.of(
+                postSummaries,
+                paginationDto
+        );
+    }
+
+    private List<MemberPostSummaryDto> convertPostsToMemberSummaries(Page<Post> pagePosts) {
+        return pagePosts.getContent().stream()
+                .map(post -> {
+                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    return MemberPostSummaryDto.of(post, commentCount);
+                })
+                .toList();
+    }
+
+    /**
+     * 대상 회원이 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
+     *
+     * @param memberId 회원 ID
+     * @param pageable 페이지네이션 정보
+     * @return 회원이 작성한 댓글 목록 응답 DTO
+     */
+    public MemberCommentListResponseDto getMemberComments(Long memberId, Pageable pageable) {
+
+        validateMemberActiveExists(memberId);
+
+        // 작성한 댓글을 Page 객체로 조회
+        Page<Comment> pageByCommenterIdWithPageable =
+                commentRepository.findByCommenterIdAndIsDeletedFalseAndIsBlockedFalseOrderByCreatedAtDesc(
+                        memberId, pageable
+                );
+
+        List<MemberCommentSummaryDto> commentSummaries = convertCommentsToMemberSummaries(pageByCommenterIdWithPageable);
+
+        PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
+
+        // Page 객체를 DTO로 변환
+        return MemberCommentListResponseDto.of(
+                commentSummaries, paginationDto
+        );
+    }
+
+    private List<MemberCommentSummaryDto> convertCommentsToMemberSummaries(Page<Comment> pageComments) {
+        return pageComments.getContent().stream()
+                .map(MemberCommentSummaryDto::of)
                 .toList();
     }
 
@@ -283,4 +356,6 @@ public class MemberService {
                     ));
         }
     }
+
+
 }
