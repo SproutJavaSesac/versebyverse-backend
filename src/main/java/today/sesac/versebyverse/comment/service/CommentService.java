@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.comment.service;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import today.sesac.versebyverse.ai.service.CommentAiService;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
 import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
+import today.sesac.versebyverse.comment.dto.response.CommentSingleQueryForAdminResponseDto;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.exception.CommentErrorCode;
 import today.sesac.versebyverse.comment.exception.CommentException;
@@ -166,5 +168,39 @@ public class CommentService {
         return commentRepository.findByIdAndIsDeletedFalseAndIsBlockedFalse(commentId).orElseThrow(
                 () -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND, "commentId")
         );
+    }
+
+    /**
+     * 특정 댓글을 ID로 조회합니다.
+     *
+     * @param postId    게시글 ID
+     * @param commentId 댓글 ID
+     * @return 댓글 단건 조회 응답 DTO
+     */
+    public CommentSingleQueryForAdminResponseDto getCommentByIdForAdmin(Long postId,
+            Long commentId) {
+
+        postQueryService.validatePostExistsOrThrow(postId);
+
+        Comment comment = commentRepository.findByIdAndPostId(commentId, postId)
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
+                        "commentId"));
+
+        return new CommentSingleQueryForAdminResponseDto(
+                comment.getId(),
+                comment.getPost().getId(),
+                comment.getCommenter().getId(),
+                comment.getCommenter().getNickname(),
+                comment.getParentComment() != null ? comment.getParentComment().getId() : null,
+                comment.getAfterContent(),
+                comment.getLevel(),
+                6, // TODO: comment.getReactions().size(),
+                Map.of(), // TODO: 리액션 기능 추가 예정
+                comment.isDeleted(),
+                comment.isBlocked(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
+
     }
 }
