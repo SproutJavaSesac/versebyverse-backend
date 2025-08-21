@@ -49,19 +49,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse>> handleBaseException(
             AbstractBaseException exception) {
 
-        log.warn("[BaseException] {} - {}", exception.getIErrorCode().name(),
+        log.warn("[BaseException] {} - {}", exception.getErrorCode().name(),
                 exception.getMessage());
 
         ApiResponse<ErrorResponse> errorResponse = ApiResponse.fail(
                 new ErrorResponse(
-                        exception.getIErrorCode().name(),
-                        exception.getIErrorCode().getMessage(),
+                        exception.getErrorCode().name(),
+                        exception.getErrorCode().getMessage(),
                         exception.getParam()
                 )
         );
 
         return ResponseEntity
-                .status(exception.getIErrorCode().getHttpStatus())
+                .status(exception.getErrorCode().getHttpStatus())
                 .body(errorResponse);
     }
 
