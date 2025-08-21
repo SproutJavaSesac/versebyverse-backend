@@ -30,11 +30,9 @@ public class MessageConfig {
         // messages 프로퍼티 파일 기본명 지정 (messages.properties, messages_ko.properties 자동 찾음)
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
-
-        // 메시지 키가 없으면 코드명을 그대로 반환
         messageSource.setUseCodeAsDefaultMessage(false); // false: 없는 키를 보내면 예외 발생
         messageSource.setFallbackToSystemLocale(
-                true); // 시스템 로케일을 기본으로 사용함. messages.properties 파일이 없으면 시스템 로케일에 따라 messages_ko.properties 등을 찾음
+                true); // true: 시스템 로케일을 사용함. 시스템 로케일에 대한 messages 파일이 없는 경우, messages.properties 파일을 사용함.
         return messageSource;
     }
 }
