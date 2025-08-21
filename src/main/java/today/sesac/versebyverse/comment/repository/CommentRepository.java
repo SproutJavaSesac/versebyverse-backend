@@ -69,4 +69,12 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return 게시글의 댓글 수
      */
     int countByPostIdAndIsDeletedFalse(Long postId);
+
+    /**
+     * 댓글이 삭제되지 않았거나 관리자로부터 신고 승인되지 않은 댓글을 조회합니다.
+     *
+     * @param commentId 댓글 ID
+     * @return 조회한 댓글
+     */
+    Optional<Comment> findByIdAndIsDeletedFalseAndIsBlockedFalse(Long commentId);
 }
