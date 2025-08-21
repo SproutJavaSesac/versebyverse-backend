@@ -52,7 +52,7 @@ public class BadgeService {
         boolean hasTargetBadge = memberBadgeList.stream()
                 .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
 
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
+        int postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
 
         if (postCount > 0 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
@@ -72,7 +72,7 @@ public class BadgeService {
         boolean hasTargetBadge = memberBadgeList.stream()
                 .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
 
-        long postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
+        int postCount = postRepository.countByAuthorIdAndIsDeletedFalse(authorId);
 
         if (postCount >= 10 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
