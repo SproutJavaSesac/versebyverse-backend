@@ -83,16 +83,24 @@ public class Comment extends BaseEntity {
     private String path;
 
     /**
-     * 댓글 삭제 여부.
+     * 신고 횟수. 기본값 = 0
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean isDeleted;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED DEFAULT 0")
+    private int reportCount;
 
     /**
-     * 신고된 댓글인지 여부.
+     * 관리자에 신고 승인 처리에 의해 차단 여부. 기본값 = 0
+     * <br>
+     * {@link today.sesac.versebyverse.report.entity.Report}의 StatusType이 ACCEPTED가 되면 true가 됩니다.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean isReported;
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isBlocked;
+
+    /**
+     * 댓글 삭제 여부.
+     */
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isDeleted;
 
     private Comment(
             String beforeContent, String afterContent, int level,
@@ -104,8 +112,9 @@ public class Comment extends BaseEntity {
         this.commenter = commenter;
         this.parentComment = parentComment;
         this.level = level;
+        this.reportCount = 0;
+        this.isBlocked = false;
         this.isDeleted = false;
-        this.isReported = false;
     }
 
     /**
@@ -172,7 +181,7 @@ public class Comment extends BaseEntity {
         if (isDeleted) {
             return "삭제된 내용입니다";
         }
-        if (isReported) {
+        if (isBlocked) {
             return "신고된 내용입니다";
         }
         return afterContent;
@@ -183,7 +192,7 @@ public class Comment extends BaseEntity {
      */
     public Long getDisplayCommenterId() {
 
-        if (isDeleted || isReported) {
+        if (isDeleted || isBlocked) {
             return null;
         }
         return commenter.getId();
@@ -197,7 +206,7 @@ public class Comment extends BaseEntity {
         if (isDeleted) {
             return "알 수 없음";
         }
-        if (isReported) {
+        if (isBlocked) {
             return "신고된 사용자";
         }
         return commenter.getNickname();

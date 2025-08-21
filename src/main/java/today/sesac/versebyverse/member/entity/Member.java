@@ -46,6 +46,7 @@ public class Member extends BaseEntity {
     @Column(length = 50)
     private String nickname;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean isDeleted;
 
     private String profileImageUrl;
@@ -77,6 +78,11 @@ public class Member extends BaseEntity {
         return new Member(roleType, socialType, email, nickname, null);
     }
 
+    /**
+     * 사용자의 프로필을 수정합니다.
+     *
+     * @param nickname 사용자의 닉네임
+     */
     public void editProfile(String nickname) {
 
         this.nickname = nickname;
