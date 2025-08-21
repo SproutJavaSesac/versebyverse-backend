@@ -99,17 +99,19 @@ public class MemberService {
     /**
      * 소셜 로그인 요청이 들어올 때, 회원이 존재하면 회원을 반환하고 없을 경우 회원을 새로 만들고 반환합니다.
      *
-     * @param email 사용자의 이메일
-     * @param nickname 사용자의 닉네임
-     * @param roleType 회원을 새로 만들 경우, 회원의 역할
+     * @param email      사용자의 이메일
+     * @param nickname   사용자의 닉네임
+     * @param roleType   회원을 새로 만들 경우, 회원의 역할
      * @param socialType 회원을 새로 만들 경우, 회원 테이블에 저장될 소셜 로그인 타입(ex. 구글, 카카오)
      * @return Member 객체
      */
     @Transactional
-    public Member findOrCreateSocialMember(String email, String nickname, RoleType roleType, SocialType socialType) {
+    public Member findOrCreateSocialMember(String email, String nickname, RoleType roleType,
+            SocialType socialType) {
 
-        Optional<Member> memberOptional = memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email,
-                socialType);
+        Optional<Member> memberOptional =
+                memberRepository.findByEmailAndSocialTypeAndIsDeletedFalse(email,
+                        socialType);
 
         if (memberOptional.isPresent()) {
             return memberOptional.get();
