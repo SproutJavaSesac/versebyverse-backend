@@ -21,6 +21,7 @@ import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.dto.response.ReportResponseDto;
 import today.sesac.versebyverse.report.entity.StatusType;
 import today.sesac.versebyverse.report.exception.ReportException;
 import today.sesac.versebyverse.report.service.ReportService;
@@ -105,11 +106,11 @@ public class ReportController {
      * @throws IllegalArgumentException reportId가 유효하지 않은 경우
      */
     @PatchMapping("/admin/reports/{reportId}")
-    public ApiResponse<?> handleReport(@PathVariable Long reportId,
+    public ApiResponse<ReportResponseDto> handleReport(@PathVariable Long reportId,
             @RequestBody ReportActionRequestDto reportActionRequestDto) {
 
-        reportService.handleReportAction(reportId, reportActionRequestDto);
-        return ApiResponse.success(null);
+        return ApiResponse.success(
+                reportService.handleReportAction(reportId, reportActionRequestDto));
     }
 
 }

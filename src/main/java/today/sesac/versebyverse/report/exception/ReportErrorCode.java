@@ -14,7 +14,8 @@ public enum ReportErrorCode implements IErrorCode {
     DUPLICATE_REPORT(HttpStatus.CONFLICT, "이미 신고한 대상입니다."),
     SELF_REPORT_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "자신의 게시글이나 댓글은 신고할 수 없습니다."),
     REPORT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 신고 처리된 대상입니다."),
-    REPORT_PROCESS_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "신고 처리가 실패했습니다. 다시 시도해주세요");
+    REPORT_PROCESS_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "신고 처리가 실패했습니다. 다시 시도해주세요"),
+    REPORT_ACTION_TYPE_WRONG(HttpStatus.BAD_REQUEST, "신고 처리 요청이 잘못되었습니다.");
 
     /**
      * HTTP 응답 상태 코드입니다.
