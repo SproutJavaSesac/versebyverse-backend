@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
@@ -33,6 +34,7 @@ import today.sesac.versebyverse.reaction.utils.TargetType;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Getter
 public class ReactionService {
 
     private final ReactionRepository reactionRepository;
@@ -236,17 +238,65 @@ public class ReactionService {
             counts = reactionRepository.countReactionsByTypeForComment(targetId);
         }
 
-        Map<Emotion, String> reactionDetails = counts.stream().collect(
+        Map<Emotion, Integer> reactionDetails = counts.stream().collect(
                 Collectors.toMap(
                         row -> (Emotion) row[0],
-                        row -> String.valueOf(row[1])
+                        row -> ((Long) row[1]).intValue()
                 )
         );
 
         int reactionCount = reactionDetails.values().stream()
-                .mapToInt(Integer::parseInt)
+                .mapToInt(Integer::intValue)
                 .sum();
 
         return ReactionResponseDto.of(type, reactionCount, reactionDetails);
     }
+
+    /**
+     * 여러 댓글의 리액션 정보를 한 번에 조회.
+     *
+     * @param commentIds 댓글 ID 리스트
+     * @return 댓글 id별 리액션 정보 맵
+     */
+    public Map<Long, ReactionResponseDto> getReactionsForComments(List<Long> commentIds) {
+
+        if (commentIds.isEmpty()) {
+            return Map.of();
+        }
+
+        // 한 번의 쿼리로 모든 댓글의 리액션 정보 조회
+        List<Object[]> allReactions =
+                reactionRepository.countReactionsByTypeForMultipleComments(commentIds);
+
+        // comment id 별로 그룹화
+        Map<Long, List<Object[]>> reactionsByComment = allReactions.stream()
+                .collect(Collectors.groupingBy(row -> (Long) row[2])); // row[2]가 commentId
+
+        return commentIds.stream()
+                .collect(Collectors.toMap(
+                        //key : 댓글 id
+                        commentId -> commentId,
+
+                        //value : 각 댓글의 반응을 dto로 변환
+                        commentId -> {
+                            //댓글 id에 대한 반응 가져옴. 없으면 빈 객체 반환
+                            List<Object[]> reactions =
+                                    reactionsByComment.getOrDefault(commentId, List.of());
+
+                            //object 배열을 map으로 변환
+                            Map<Emotion, Integer> reactionDetails = reactions.stream()
+                                    .collect(Collectors.toMap(
+                                            row -> (Emotion) row[0],
+                                            row -> ((Long) row[1]).intValue()
+                                    ));
+
+                            int reactionCount = reactionDetails.values().stream()
+                                    .mapToInt(Integer::intValue)
+                                    .sum();
+
+                            return ReactionResponseDto.of(null, reactionCount, reactionDetails);
+                        }
+                ));
+    }
 }
+

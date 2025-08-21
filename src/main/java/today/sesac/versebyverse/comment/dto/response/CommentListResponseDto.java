@@ -1,10 +1,12 @@
 package today.sesac.versebyverse.comment.dto.response;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
 
 /**
  * 댓글 목록 응답 DTO.
@@ -26,14 +28,27 @@ public record CommentListResponseDto(
      */
     public CommentListResponseDto(
             Long postId,
-            Page<Comment> pageComments
+            Page<Comment> pageComments,
+            Map<Long, ReactionResponseDto> reactionsMap
     ) {
 
         this(
                 postId,
                 IntStream.range(0, pageComments.getContent().size())
-                        .mapToObj(i ->
-                                CommentResponseDto.of(pageComments.getContent().get(i), i))
+                        .mapToObj(i -> {
+                            Comment comment = pageComments.getContent().get(i);
+                            ReactionResponseDto reactionInfo = reactionsMap.getOrDefault(
+                                    comment.getId(),
+                                    ReactionResponseDto.of(null, 0, Map.of()) // 기본값
+                            );
+
+                            return CommentResponseDto.of(
+                                    comment,
+                                    i,
+                                    reactionInfo.reactionTotalCount(),
+                                    reactionInfo.reactionDetails()
+                            );
+                        })
                         .toList(),
                 new PaginationDto(
                         pageComments.getNumber(),

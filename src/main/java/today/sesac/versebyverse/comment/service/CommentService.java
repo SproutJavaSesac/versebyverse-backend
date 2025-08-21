@@ -1,5 +1,7 @@
 package today.sesac.versebyverse.comment.service;
 
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,9 @@ import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
+import today.sesac.versebyverse.reaction.service.ReactionService;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * CommentService는 댓글 관련 비즈니스 로직을 처리하는 서비스입니다.
@@ -36,6 +41,8 @@ public class CommentService {
     private final PostQueryService postQueryService;
 
     private final CommentAiService commentAiService;
+
+    private final ReactionService reactionService;
 
     /**
      * 댓글을 작성합니다.
@@ -64,7 +71,13 @@ public class CommentService {
                 activePost, member);
         Comment savedComment = commentRepository.save(comment);
         savedComment.updatePath(); // 댓글 경로 자동 생성
-        return CommentCreateResponseDto.of(savedComment);
+
+        ReactionResponseDto reactionInfo =
+                reactionService.addCountByReactionType(null, savedComment.getId(),
+                        TargetType.COMMENT);
+
+        return CommentCreateResponseDto.of(savedComment, reactionInfo.reactionTotalCount(),
+                reactionInfo.reactionDetails());
 
     }
 
@@ -123,9 +136,19 @@ public class CommentService {
         Page<Comment> pageByPostIdWithPageable = commentRepository
                 .findByPostIdOrderByPathAsc(postId, pageable);
 
+        //post id에 대한 모든 댓글 id 추출
+        List<Long> commentIds = pageByPostIdWithPageable.getContent().stream()
+                .map(Comment::getId)
+                .toList();
+
+        //모든 댓글에 대한 리액션 정보 한번에 조회
+        Map<Long, ReactionResponseDto> reactionsMap =
+                reactionService.getReactionsForComments(commentIds);
+
         return new CommentListResponseDto(
                 postId,
-                pageByPostIdWithPageable
+                pageByPostIdWithPageable,
+                reactionsMap
         );
     }
 

@@ -78,4 +78,19 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
      * @param postId 게시글 id
      */
     int countByPostId(@Param("postId") Long postId);
+
+    /**
+     * 여러 댓글의 리액션을 한 번에 조회.
+     *
+     * @param commentIds 댓글 ID 리스트
+     * @return [감정타입, 개수] 형태의 Object 배열 리스트
+     */
+    @Query("""
+              SELECT r.type, COUNT(r), r.comment.id 
+              FROM Reaction r 
+              WHERE r.comment.id IN :commentIds 
+              GROUP BY r.comment.id, r.type
+            """)
+    List<Object[]> countReactionsByTypeForMultipleComments(
+            @Param("commentIds") List<Long> commentIds);
 }

@@ -131,7 +131,7 @@ public class PostQueryService {
                 TargetType.POST);
 
         return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
-                getReactionCounts.recationTotalCount(), getReactionCounts.reactionDetails());
+                getReactionCounts.reactionTotalCount(), getReactionCounts.reactionDetails());
     }
 
     /**

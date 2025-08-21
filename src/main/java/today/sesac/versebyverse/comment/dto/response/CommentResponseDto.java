@@ -72,4 +72,33 @@ public class CommentResponseDto {
                 comment.getUpdatedAt()
         );
     }
+
+    /**
+     * Comment 객체를 CommentResponseDto로 변환합니다 (리액션 정보 포함).
+     *
+     * @param comment       변환할 Comment 객체
+     * @param order         순서
+     * @param reactionCount 리액션 총 개수
+     * @param reactions     리액션별 상세 개수
+     * @return 변환된 CommentResponseDto 객체
+     */
+    public static CommentResponseDto of(Comment comment, int order, int reactionCount,
+            Map<Emotion, Integer> reactions) {
+
+        return new CommentResponseDto(
+                comment.getId(),
+                comment.getDisplayCommenterId(),
+                comment.getDisplayCommenterNickname(),
+                comment.getParentComment() != null ? comment.getParentComment().getId() : null,
+                order,
+                comment.getLevel(),
+                comment.getDisplayContent(),
+                reactionCount,
+                reactions,
+                comment.isDeleted(),
+                comment.isBlocked(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
+    }
 }
