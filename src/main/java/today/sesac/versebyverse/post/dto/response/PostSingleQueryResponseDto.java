@@ -36,7 +36,7 @@ public class PostSingleQueryResponseDto {
 
     int reactionCount;
 
-    Map<Emotion, String> reactionDetailCount;
+    Map<Emotion, Integer> reactionDetailCount;
 
     /**
      * dto of 정적 메서드.
@@ -49,7 +49,7 @@ public class PostSingleQueryResponseDto {
      */
     public static PostSingleQueryResponseDto of(Post post, Long memberId,
             int commentCount, int reactionCount,
-            Map<Emotion, String> reactionDetails) {
+            Map<Emotion, Integer> reactionDetails) {
 
         return new PostSingleQueryResponseDto(
                 post.getId(),
