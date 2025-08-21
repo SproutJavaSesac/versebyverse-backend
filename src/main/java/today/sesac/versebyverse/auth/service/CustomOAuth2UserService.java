@@ -37,7 +37,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 사용자 정보를 가져옵니다.
         String email = extractEmail(oAuth2User, socialType);
+        if (email == null) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "이메일 정보가 존재하지 않습니다.", null
+            );
+        }
+
         String nickname = extractNickname(oAuth2User, socialType);
+        if (nickname == null) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "닉네임 정보가 존재하지 않습니다.", null
+            );
+        }
 
         // 사용자 역할을 부여합니다.
         RoleType roleType = RoleType.ROLE_USER;
@@ -64,17 +75,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private String extractNickname (OAuth2User oAuth2User, SocialType socialType) {
+        String nickname = null;
         if (socialType.equals(SocialType.GOOGLE)) {
-            return oAuth2User.getAttribute("name");
+            nickname = oAuth2User.getAttribute("name");
         } else if (socialType.equals(SocialType.KAKAO)) {
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            if (kakaoAccount == null) {
+                return null;
+            }
+
             Map<String, Object> profile = (Map<String, Object>)kakaoAccount.get("profile");
-            return (String) profile.get("nickname");
-        } else {
-            throw new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "닉네임 정보가 존재하지 않습니다.", null
-            );
+            if (profile == null) {
+                return null;
+            }
+            nickname = (String) profile.get("nickname");
         }
+        return nickname;
     }
 
     private String extractEmail (OAuth2User oAuth2User, SocialType socialType) {
@@ -83,11 +99,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             email = oAuth2User.getAttribute("email");
         } else if (socialType.equals(SocialType.KAKAO)) {
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            if (kakaoAccount == null) {
+                return null;
+            }
             email = (String) kakaoAccount.get("email");
-        } else {
-            throw new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "이메일 정보가 존재하지 않습니다.", null
-            );
         }
         return email;
     }
