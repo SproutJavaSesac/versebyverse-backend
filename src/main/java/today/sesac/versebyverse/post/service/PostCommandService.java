@@ -3,11 +3,13 @@ package today.sesac.versebyverse.post.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
+import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -33,6 +35,8 @@ public class PostCommandService {
     private final MemberService memberService;
 
     private final PostAiService postAiService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 게시물 작성 api.
@@ -79,8 +83,11 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
+        eventPublisher.publishEvent(new PostCreatedEvent(author));
+
         return PostCreateResponseDto.of(savedPost);
     }
+
 
     /**
      * 게시물 삭제.
