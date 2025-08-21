@@ -34,6 +34,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     Optional<Comment> findByIdAndIsDeletedFalse(Long postId);
 
+
     /**
      * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다. 삭제된 댓글은 포함하지 않습니다.
      *
@@ -55,7 +56,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
      * 게시글 id로 해당 게시글의 삭제되지 않고, 신고되지 않은 댓글 수를 조회합니다.
      *
-     * @param id 게시글 id
+     * @param id 게시글 ID
      * @return Long 으로 해당 게시글의 댓글 수
      */
     int countByPostIdAndIsDeletedFalseAndIsBlockedFalse(Long id);
@@ -75,4 +76,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return 조회한 댓글
      */
     Optional<Comment> findByIdAndIsDeletedFalseAndIsBlockedFalse(Long commentId);
+
+    /**
+     * 특정 댓글을 게시글 ID와 함께 조회합니다.
+     *
+     * @param commentId 댓글 ID
+     * @param postId    게시글 ID
+     * @return {@code Optional<Comment>} 댓글이 존재하면 Optional에 포함된 Comment 객체, 없으면 Optional.empty()
+     */
+    Optional<Comment> findByIdAndPostId(Long commentId, Long postId);
 }
