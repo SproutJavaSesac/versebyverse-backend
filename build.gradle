@@ -44,7 +44,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
     // Spring AI Vertex AI Gemini
     implementation platform("org.springframework.ai:spring-ai-bom:$springAiVersion")
     implementation 'org.springframework.ai:spring-ai-starter-model-vertex-ai-gemini'
