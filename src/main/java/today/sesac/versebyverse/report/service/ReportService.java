@@ -2,6 +2,8 @@ package today.sesac.versebyverse.report.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.service.CommentService;
@@ -12,7 +14,9 @@ import today.sesac.versebyverse.post.service.PostQueryService;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
+import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
 import today.sesac.versebyverse.report.entity.Report;
+import today.sesac.versebyverse.report.entity.StatusType;
 import today.sesac.versebyverse.report.exception.ReportErrorCode;
 import today.sesac.versebyverse.report.exception.ReportException;
 import today.sesac.versebyverse.report.repository.ReportRepository;
@@ -62,13 +66,14 @@ public class ReportService {
     }
 
     /**
+     * 게시글 신고를 등록하기 전 검증하는 기능입니다.
      * 댓글을 신고합니다.
      *
      * @param reportRequestDto 신고 요청 DTO
      * @param reporterId       신고자 ID
      * @param commentId        댓글 ID
-     * @return 신고 응답 DTO
      * @throws ReportException 중복 신고, 자신의 댓글 신고, 댓글이 존재하지 않는 경우
+     * @return 신고 응답 DTO
      */
     public CommentReportResponseDto reportComment(
             ReportRequestDto reportRequestDto, Long reporterId, Long commentId) {
@@ -96,7 +101,6 @@ public class ReportService {
      *
      * @param reporter 신고자
      * @param comment  댓글
-     * @throws ReportException 중복 신고, 자신의 댓글 신고인 경우
      */
     private void validateCommentReportEligibility(Member reporter, Comment comment) {
 
@@ -173,5 +177,21 @@ public class ReportService {
             throw new ReportException(ReportErrorCode.SELF_REPORT_NOT_ALLOWED,
                     "commentId");
         }
+    }
+
+    /**
+     * 신고 목록을 조회합니다. 신고 상태(StatusType)에 따라 필터링하여 페이지네이션된 신고 목록을 반환합니다. statusType이 null인 경우 모든 상태의
+     * 신고를 조회합니다.
+     *
+     * @param statusType  신고 상태 (PENDING: 대기중, ACCEPTED: 승인, REJECTED: 거부, POSTPONE: 보류)
+     * @param pageRequest 페이지네이션 정보 (페이지 번호, 크기, 정렬 기준)
+     * @return 신고 목록과 페이지네이션 정보를 포함한 응답 DTO
+     */
+    public ReportListResponseWrapperDto getReportList(StatusType statusType,
+            PageRequest pageRequest) {
+
+        Page<Report> reportPage = reportRepository.findAllByStatusType(statusType, pageRequest);
+
+        return ReportListResponseWrapperDto.of(reportPage);
     }
 }

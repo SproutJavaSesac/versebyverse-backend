@@ -20,9 +20,9 @@ import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
     private final AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 

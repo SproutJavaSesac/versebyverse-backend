@@ -1,14 +1,12 @@
 package today.sesac.versebyverse.profanity.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import today.sesac.versebyverse.profanity.entity.ProfanityCategory;
 
 /**
  * 비속어 정보 DTO.
  */
-@Builder        //TODO: 삭제예정
 @Getter
 @AllArgsConstructor(staticName = "of")
 public class ProfanityResponseDto {

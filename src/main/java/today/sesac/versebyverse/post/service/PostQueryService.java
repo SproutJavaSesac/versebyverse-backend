@@ -159,4 +159,17 @@ public class PostQueryService {
             throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
         }
     }
+
+    /**
+     * 게시글의 상태(정상/삭제/신고)와 관계없이 DB에 실제로 존재하는지 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @throws PostException 게시글이 존재하지 않을 경우
+     */
+    public void validatePostExistsOrThrow(Long postId) {
+
+        if (!postRepository.existsById(postId)) {
+            throw new PostException(PostErrorCode.POST_NOT_FOUND, "postId");
+        }
+    }
 }
