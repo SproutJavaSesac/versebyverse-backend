@@ -36,6 +36,8 @@ public class PostSingleQueryResponseDto {
 
     int reactionCount;
 
+    Emotion myReaction;
+
     Map<Emotion, Integer> reactionDetailCount;
 
     /**
@@ -48,7 +50,7 @@ public class PostSingleQueryResponseDto {
      * @param reactionDetails 게시글의 반응별 갯수
      */
     public static PostSingleQueryResponseDto of(Post post, Long memberId,
-            int commentCount, int reactionCount,
+            int commentCount, int reactionCount, Emotion myReaction,
             Map<Emotion, Integer> reactionDetails) {
 
         return new PostSingleQueryResponseDto(
@@ -62,6 +64,7 @@ public class PostSingleQueryResponseDto {
                 post.isMine(memberId),
                 commentCount,
                 reactionCount,
+                myReaction,
                 reactionDetails
         );
     }

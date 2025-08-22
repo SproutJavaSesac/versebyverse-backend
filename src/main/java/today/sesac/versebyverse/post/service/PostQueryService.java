@@ -127,11 +127,12 @@ public class PostQueryService {
                         postId);
 
         //게시글에 반응별 갯수와 총 반응 갯수 조회
-        ReactionResponseDto getReactionCounts = reactionService.addCountByReactionType(null, postId,
-                TargetType.POST);
+        ReactionResponseDto reactionInfo =
+                reactionService.getReactions(TargetType.POST, postId, memberId);
 
         return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
-                getReactionCounts.reactionTotalCount(), getReactionCounts.reactionDetails());
+                reactionInfo.reactionTotalCount(), reactionInfo.myReaction(),
+                reactionInfo.reactionDetails());
     }
 
     /**
