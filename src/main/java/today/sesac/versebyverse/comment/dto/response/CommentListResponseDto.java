@@ -46,6 +46,7 @@ public record CommentListResponseDto(
                                     comment,
                                     i,
                                     reactionInfo.reactionTotalCount(),
+                                    reactionInfo.myReaction(),
                                     reactionInfo.reactionDetails()
                             );
                         })

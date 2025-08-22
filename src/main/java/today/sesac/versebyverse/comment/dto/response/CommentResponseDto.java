@@ -33,6 +33,8 @@ public class CommentResponseDto {
 
     private final int reactionCount;
 
+    private final Emotion myReaction;
+
     private final Map<Emotion, Integer> reactions;
 
     private final Boolean isDeleted;
@@ -44,36 +46,6 @@ public class CommentResponseDto {
     private final LocalDateTime updatedAt;
 
     /**
-     * Comment 객체를 CommentResponseDto로 변환합니다.
-     *
-     * @param comment 변환할 Comment 객체
-     * @return 변환된 CommentResponseDto 객체
-     */
-    public static CommentResponseDto of(Comment comment, int order) {
-
-        return new CommentResponseDto(
-                comment.getId(),
-                comment.getDisplayCommenterId(),
-                comment.getDisplayCommenterNickname(),
-                comment.getParentComment() != null ? comment.getParentComment().getId() : null,
-                order,
-                comment.getLevel(),
-                comment.getDisplayContent(),
-                6, // TODO: reactionCount 필드 구현 필요
-                Map.of(
-                        Emotion.HAPPY, 3,
-                        Emotion.SAD, 1,
-                        Emotion.ANGRY, 0,
-                        Emotion.EXCITED, 2
-                ), // TODO: reactions 필드 구현 필요
-                comment.isDeleted(),
-                comment.isBlocked(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt()
-        );
-    }
-
-    /**
      * Comment 객체를 CommentResponseDto로 변환합니다 (리액션 정보 포함).
      *
      * @param comment       변환할 Comment 객체
@@ -83,6 +55,7 @@ public class CommentResponseDto {
      * @return 변환된 CommentResponseDto 객체
      */
     public static CommentResponseDto of(Comment comment, int order, int reactionCount,
+            Emotion myReaction,
             Map<Emotion, Integer> reactions) {
 
         return new CommentResponseDto(
@@ -94,6 +67,7 @@ public class CommentResponseDto {
                 comment.getLevel(),
                 comment.getDisplayContent(),
                 reactionCount,
+                myReaction,
                 reactions,
                 comment.isDeleted(),
                 comment.isBlocked(),

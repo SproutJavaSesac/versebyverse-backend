@@ -47,6 +47,7 @@ public class PostSingleQueryResponseDto {
      * @param memberId        회원 id
      * @param commentCount    게시글의 댓글 총 갯수
      * @param reactionCount   게시글의 반응 총 갯수
+     * @param myReaction      사용자의 반응
      * @param reactionDetails 게시글의 반응별 갯수
      */
     public static PostSingleQueryResponseDto of(Post post, Long memberId,
