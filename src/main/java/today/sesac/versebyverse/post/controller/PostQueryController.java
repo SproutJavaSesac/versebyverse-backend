@@ -35,7 +35,7 @@ public class PostQueryController {
             @PathVariable("postId") Long postId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-        Long memberId = userPrincipal.getMemberId();
+        Long memberId = userPrincipal != null ? userPrincipal.getMemberId() : null;
         PostSingleQueryResponseDto postSingleQueryResponseDto =
                 postQueryService.getPostDetail(postId, memberId);
         return ApiResponse.success(postSingleQueryResponseDto);

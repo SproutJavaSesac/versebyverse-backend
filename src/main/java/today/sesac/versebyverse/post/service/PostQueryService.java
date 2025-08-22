@@ -126,9 +126,14 @@ public class PostQueryService {
                 commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
                         postId);
 
-        //게시글에 반응별 갯수와 총 반응 갯수 조회
-        ReactionResponseDto reactionInfo =
-                reactionService.getReactions(TargetType.POST, postId, memberId);
+        ReactionResponseDto reactionInfo;
+        if (memberId != null) {
+            // 로그인 사용자: 개인 반응 정보 포함
+            reactionInfo = reactionService.getReactions(TargetType.POST, postId, memberId);
+        } else {
+            // 비로그인 사용자: 전체 반응 통계만
+            reactionInfo = reactionService.addCountByReactionType(null, postId, TargetType.POST);
+        }
 
         return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
                 reactionInfo.reactionTotalCount(), reactionInfo.myReaction(),
