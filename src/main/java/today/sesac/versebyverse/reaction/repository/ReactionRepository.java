@@ -38,7 +38,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Object[]> countReactionsByTypeForComment(@Param("commentId") Long commentId);
 
     /**
-     * 회원이 특정 게시글에 누른 반응을 조회.
+     * 회원이 특정 게시글에 누른 특정 반응을 조회.
      *
      * @param memberId 회원 id
      * @param postId   게시글 id
@@ -47,7 +47,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     Optional<Reaction> findByMemberIdAndPostIdAndType(Long memberId, Long postId, Emotion emotion);
 
     /**
-     * 댓글 id, 회원 id , 감정을 기반으로 reaction의 id 조회.
+     * 회원이 특정 댓글에 누른 특정 반응을 조회.
      *
      * @param memberId  회원 id
      * @param commentId 댓글 id
@@ -57,7 +57,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             Emotion emotion);
 
     /**
-     * 회원 id, 게시글 id로 reaction 조회.
+     * 회원이 특정 게시글에 누른 반응을 조회.
      *
      * @param memberId 회원 id
      * @param targetId 게시글 id
@@ -65,7 +65,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     Optional<Reaction> findByMemberIdAndPostId(Long memberId, Long targetId);
 
     /**
-     * 회원 id, 댓글 id로 reaction 조회.
+     * 회원이 특정 댓글에 누른 반응을 조회.
      *
      * @param memberId 회원 id
      * @param targetId 댓글 id

@@ -206,7 +206,7 @@ public class ReactionService {
     }
 
     /**
-     * 회원과 게시글 또는 댓글 id로 반응 조회.
+     * 회원이 특정 게시글이나 댓글에 누른 반응을 조회.
      *
      * @param targetType 게시글 or 댓글
      * @param memberId   회원 id
