@@ -62,7 +62,8 @@ public class ReactionService {
         Emotion currentMemberEmotionType =
                 currentMemberReaction.map(Reaction::getType).orElse(null);
 
-        return addCountByReactionType(currentMemberEmotionType, targetId, targetType);
+        return getTotalReactionAndReactionDetailsByTargetType(currentMemberEmotionType, targetId,
+                targetType);
     }
 
     /**
@@ -85,7 +86,8 @@ public class ReactionService {
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
 
-        return addCountByReactionType(reactionRequestDto.type(), targetId, targetType);
+        return getTotalReactionAndReactionDetailsByTargetType(reactionRequestDto.type(), targetId,
+                targetType);
     }
 
     /**
@@ -126,7 +128,8 @@ public class ReactionService {
 
         existingReaction.updateReaction(reactionRequestDto.type());
 
-        return addCountByReactionType(reactionRequestDto.type(), targetId, targetType);
+        return getTotalReactionAndReactionDetailsByTargetType(reactionRequestDto.type(), targetId,
+                targetType);
     }
 
     /**
@@ -227,7 +230,8 @@ public class ReactionService {
      * @param targetId   게시글 or 댓글 id
      * @param targetType 게시글 or 댓글
      */
-    public ReactionResponseDto addCountByReactionType(Emotion type, Long targetId,
+    public ReactionResponseDto getTotalReactionAndReactionDetailsByTargetType(Emotion type,
+            Long targetId,
             TargetType targetType) {
 
         List<Object[]> counts;

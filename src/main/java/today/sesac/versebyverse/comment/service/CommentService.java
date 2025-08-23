@@ -74,7 +74,8 @@ public class CommentService {
         savedComment.updatePath(); // 댓글 경로 자동 생성
 
         ReactionResponseDto reactionInfo =
-                reactionService.addCountByReactionType(null, savedComment.getId(),
+                reactionService.getTotalReactionAndReactionDetailsByTargetType(null,
+                        savedComment.getId(),
                         TargetType.COMMENT);
 
         return CommentCreateResponseDto.of(savedComment, reactionInfo.reactionTotalCount(),
@@ -208,11 +209,12 @@ public class CommentService {
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
                         "commentId"));
 
-        ReactionResponseDto reactionInfo = reactionService.addCountByReactionType(
-                null,
-                comment.getId(),
-                TargetType.COMMENT
-        );
+        ReactionResponseDto reactionInfo =
+                reactionService.getTotalReactionAndReactionDetailsByTargetType(
+                        null,
+                        comment.getId(),
+                        TargetType.COMMENT
+                );
 
         return new CommentSingleQueryForAdminResponseDto(
                 comment.getId(),

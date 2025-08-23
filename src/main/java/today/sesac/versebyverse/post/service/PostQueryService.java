@@ -133,7 +133,9 @@ public class PostQueryService {
             reactionInfo = reactionService.getReactions(TargetType.POST, postId, memberId);
         } else {
             // 비로그인 사용자: 전체 반응 통계만
-            reactionInfo = reactionService.addCountByReactionType(null, postId, TargetType.POST);
+            reactionInfo =
+                    reactionService.getTotalReactionAndReactionDetailsByTargetType(null, postId,
+                            TargetType.POST);
         }
 
         return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
