@@ -38,6 +38,7 @@ public class PostQueryService {
     private final ReactionRepository reactionRepository;
 
     private final ReactionService reactionService;
+    //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
      * 게시글 목록 리스트 조회.
