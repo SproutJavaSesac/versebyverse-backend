@@ -5,7 +5,6 @@
 ## condition
 
 다음 조건에 따라 JSON 형식의 댓글을 변환해주세요:
-
 1. **입력 형식**: genreType, content를 포함한 JSON
 2. **출력 형식**: 입력 형식과 동일한 JSON
 3. **변환 규칙**:
@@ -30,5 +29,4 @@
 ## example
 
 input: {"genreType": "HIPSTER_FEED", "content": "정말 좋은 글이네요!"}
-output: {"genreType": "HIPSTER_FEED", "content": "와, 이 글 정말 바이브가 좋네요! 미니멀하면서도 깊이 있는 내용이에요. 이런 퀄리티의
-글을 읽을 수 있어서 행복해요 ✨"} 
+output: {"genreType": "HIPSTER_FEED", "content": "와, 이 글 정말 바이브가 좋네요! 미니멀하면서도 깊이 있는 내용이에요."} 

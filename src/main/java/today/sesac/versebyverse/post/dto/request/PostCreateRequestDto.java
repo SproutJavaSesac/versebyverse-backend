@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
-import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 
 /**
  * 게시글 작성 요청 dto.
@@ -20,6 +20,8 @@ public class PostCreateRequestDto {
      */
     @NotBlank
     private String title;
+
+    private String concept;
 
     /**
      * 게시물의 장르타입입니다.

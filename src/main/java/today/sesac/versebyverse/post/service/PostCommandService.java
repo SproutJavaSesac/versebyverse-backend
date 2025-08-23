@@ -57,7 +57,8 @@ public class PostCommandService {
         String beforeContent = postCreateRequestDto.getContent();
         //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
-                PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getGenreType(),
+                PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConcept(),
+                        postCreateRequestDto.getGenreType(),
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
         //5. ai 호출 게시글 변환

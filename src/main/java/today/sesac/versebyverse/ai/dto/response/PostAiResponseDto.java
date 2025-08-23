@@ -21,7 +21,9 @@ public class PostAiResponseDto extends AiResponseDto {
     /**
      * AI가 처리한 게시글 제목.
      */
-    private String title;
+    private String afterTitle;
+
+    private String conceptType;
 
     /**
      * AI가 분석한 게시글 장르 타입.
@@ -36,5 +38,5 @@ public class PostAiResponseDto extends AiResponseDto {
     /**
      * AI가 처리한 게시글 내용.
      */
-    private String content;
+    private String afterContent;
 }

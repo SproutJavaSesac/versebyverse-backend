@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
@@ -46,7 +46,7 @@ class PostRepositoryTest {
         savedPost = postRepository.save(
                 Post.createPost(
                         author, "1-beforeContent", "1-afterContent", "1-beforeTitle",
-                        "1-afterTitle", null, Emotion.HAPPY, Genre.DRAMA
+                        "1-afterTitle", null, Emotion.HAPPY, Genre.COLUMN
                 )
         );
 
@@ -71,7 +71,7 @@ class PostRepositoryTest {
         assertThat(foundPost.get().getAfterTitle()).isEqualTo("1-afterTitle");
         assertThat(foundPost.get().getImageUrl()).isNull();
         assertThat(foundPost.get().getEmotionType()).isEqualTo(Emotion.HAPPY);
-        assertThat(foundPost.get().getGenreType()).isEqualTo(Genre.DRAMA);
+        assertThat(foundPost.get().getGenreType()).isEqualTo(Genre.COLUMN);
     }
 
     @Test
