@@ -21,7 +21,7 @@ import today.sesac.versebyverse.reaction.utils.TargetType;
  * 게시물 반응 관련 컨트롤러.
  */
 @RestController
-@RequestMapping("/api/v1/posts/{postId}")
+@RequestMapping("/api/v1/posts/{postId}/reactions")
 @RequiredArgsConstructor
 public class PostReactionController {
 
@@ -34,7 +34,7 @@ public class PostReactionController {
      * @return 반응하기 응답 dto
      */
 
-    @GetMapping("/reactions")
+    @GetMapping
     public ApiResponse<ReactionResponseDto> getPostReaction(
             @PathVariable Long postId,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -52,7 +52,7 @@ public class PostReactionController {
      * @return 반응하기 응답 dto
      */
 
-    @PostMapping("/reactions")
+    @PostMapping
     public ApiResponse<ReactionResponseDto> addPostEmotion(
             @PathVariable Long postId,
             @RequestBody ReactionRequestDto reactionRequestDto,
@@ -71,7 +71,7 @@ public class PostReactionController {
      * @param type   삭제할 반응 타입
      * @return 문자열
      */
-    @DeleteMapping("/reactions/{type}")
+    @DeleteMapping("/{type}")
     public ApiResponse<String> deleteEmotion(
             @PathVariable Long postId, @PathVariable String type,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -88,7 +88,7 @@ public class PostReactionController {
      * @param reactionRequestDto 추가될 감정 dto
      * @return 반응하기 응답 dto
      */
-    @PutMapping("/reactions")
+    @PutMapping
     public ApiResponse<ReactionResponseDto> updateEmotion(
             @PathVariable Long postId,
             @RequestBody ReactionRequestDto reactionRequestDto,
