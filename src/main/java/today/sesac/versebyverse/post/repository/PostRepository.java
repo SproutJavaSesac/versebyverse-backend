@@ -91,9 +91,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param pageable    페이지네이션 정보
      */
     @Query("""
-            SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id \
-            WHERE p.conceptType = :conceptType \
-            GROUP BY p.id \
+            SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id 
+            WHERE p.conceptType = :conceptType 
+            GROUP BY p.id 
             ORDER BY COUNT(r.id) DESC""")
     Page<Post> findByConceptTypeOrderByReactionCount(Concept conceptType, Pageable pageable);
 
