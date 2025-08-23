@@ -158,7 +158,7 @@ public class ReactionService {
      */
     private void saveReaction(TargetType targetType, Long targetId, Long memberId,
             ReactionRequestDto reactionRequestDto) {
-        //1.작성자 정보 member 객체로 가져오기 (현재 사용자는 id=1로 하드코딩)
+        //1.작성자 정보 member 객체로 가져오기
         Member author = memberService.getMember(memberId);
 
         //2. dto 내의 emotion 객체의 감정 꺼내기
