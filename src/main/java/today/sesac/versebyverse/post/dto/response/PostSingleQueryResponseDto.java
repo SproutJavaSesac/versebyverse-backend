@@ -20,7 +20,7 @@ public record PostSingleQueryResponseDto(
 
         String imgUrl,
 
-        String conceptType,
+        String genreType,
 
         Boolean isMine
 
@@ -40,7 +40,7 @@ public record PostSingleQueryResponseDto(
                 post.getAuthor().getNickname(),
                 post.getCreatedAt(),
                 post.getImageUrl(),
-                post.getConceptType().toString(),
+                post.getGenreType().toString(),
                 post.isMine(memberId)
         );
     }

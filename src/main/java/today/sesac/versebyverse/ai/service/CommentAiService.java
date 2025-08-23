@@ -54,10 +54,10 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
             PromptType promptType) {
 
         CommentAiResponseDto responseDto = executeAi(requestDto, promptType);
-        if (responseDto.getConceptType() == null || responseDto.getContent() == null) {
+        if (responseDto.getGenreType() == null || responseDto.getContent() == null) {
             log.warn("AI 응답 필수 필드 누락");
             throw new AiException(AiErrorCode.REQUIRED_FIELD_MISSING,
-                    (responseDto.getConceptType() == null)
+                    (responseDto.getGenreType() == null)
                             ? "conceptType"
                             : "content");
         }
@@ -73,7 +73,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      */
     private CommentAiResponseDto createFallbackResponse(CommentAiRequestDto requestDto) {
 
-        return CommentAiResponseDto.of(requestDto.getConceptType(), requestDto.getContent(),
+        return CommentAiResponseDto.of(requestDto.getGenreType(), requestDto.getContent(),
                 requestDto.getEmotion());
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.response.ApiResponse;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.post.dto.response.PageResponseDto;
@@ -43,14 +43,14 @@ public class PostQueryController {
      */
     @GetMapping
     public ApiResponse<PageResponseDto<PostSummaryResponseDto>> getPostsList(
-            @RequestParam(defaultValue = "ALL") Concept concept,
-            // concept이 null 이면 all 인 경우와 같은 로직 사용(필터링 없이 최신순 조회)
+            @RequestParam(defaultValue = "ALL") Genre genre,
+            // genre가 null 이면 all 인 경우와 같은 로직 사용(필터링 없이 최신순 조회)
             @RequestParam(defaultValue = "createdAt") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         //게시글 리스트 + 페이징 정보
-        Page<PostSummaryResponseDto> result = postQueryService.getPosts(concept, sort, page, size);
+        Page<PostSummaryResponseDto> result = postQueryService.getPosts(genre, sort, page, size);
         //페이지 정보만 따로 뽑아서 넣기
         PaginationDto paginationDto = new PaginationDto(
                 result.getNumber(),

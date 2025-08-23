@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
 
 /**
@@ -22,10 +22,10 @@ public class PostCreateRequestDto {
     private String title;
 
     /**
-     * 게시물의 컨셉타입입니다.
+     * 게시물의 장르타입입니다.
      */
     @NotNull
-    private Concept conceptType;
+    private Genre genreType;
 
     /**
      * 감정 타입 null일 경우 ai가 감정 분석을 해줍니다.

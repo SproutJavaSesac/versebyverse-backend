@@ -30,7 +30,7 @@ import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.service.CommentService;
 import today.sesac.versebyverse.global.config.TestSecurityConfig;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.member.entity.Member;
@@ -224,7 +224,7 @@ class CommentControllerTest {
                 "변환 후 게시글 제목",
                 null,
                 Emotion.HAPPY,
-                Concept.DRAMA
+                Genre.DRAMA
         ));
         when(post.getId()).thenReturn(postId);
 
