@@ -32,7 +32,6 @@ public class CommentReactionController {
      *
      * @param commentId 댓글 id
      */
-
     @GetMapping
     public ApiResponse<ReactionResponseDto> getCommentReaction(@PathVariable Long postId,
             @PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
