@@ -128,7 +128,7 @@ public class ReactionService {
 
         existingReaction.updateReaction(reactionRequestDto.type());
 
-        return getTotalReactionAndReactionDetailsByTargetType(reactionRequestDto.type(), targetId,
+        return getTotalReactionAndReactionDetailsByTargetType(existingReaction.getType(), targetId,
                 targetType);
     }
 
