@@ -38,7 +38,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     List<Object[]> countReactionsByTypeForComment(@Param("commentId") Long commentId);
 
     /**
-     * 게시글 id, 회원 id, 감정을 기반으로 reaction의 id 조회.
+     * 회원이 특정 게시글에 누른 반응을 조회.
      *
      * @param memberId 회원 id
      * @param postId   게시글 id
