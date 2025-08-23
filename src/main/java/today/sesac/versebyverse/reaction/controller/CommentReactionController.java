@@ -31,6 +31,7 @@ public class CommentReactionController {
      * 반응하기 조회.
      *
      * @param commentId 댓글 id
+     * @return 반응하기 응답 dto
      */
     @GetMapping
     public ApiResponse<ReactionResponseDto> getCommentReaction(@PathVariable Long postId,
@@ -48,6 +49,7 @@ public class CommentReactionController {
      * @param postId             게시글 id
      * @param commentId          댓글 id
      * @param reactionRequestDto 추가할 반응 dto
+     * @return 반응하기 응답 dto
      */
     @PostMapping
     public ApiResponse<ReactionResponseDto> addCommentReaction(@PathVariable Long postId,
@@ -66,6 +68,7 @@ public class CommentReactionController {
      * @param postId    게시글 id
      * @param commentId 댓글 id
      * @param type      삭제할 반응 타입
+     * @return 반응하기 응답 dto
      */
     @DeleteMapping("/{type}")
     public ApiResponse<String> deleteCommentReaction(@PathVariable Long postId,
@@ -84,7 +87,8 @@ public class CommentReactionController {
      *
      * @param postId             게시글 id
      * @param commentId          댓글 id
-     * @param reactionRequestDto 수정한 댓글 dto
+     * @param reactionRequestDto 수정할 댓글 dto
+     * @return 반응하기 응답 dto
      */
     @PutMapping
     public ApiResponse<ReactionResponseDto> updateCommentReaction(@PathVariable Long postId,

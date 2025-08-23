@@ -31,6 +31,7 @@ public class PostReactionController {
      * 반응하기 조회.
      *
      * @param postId 게시글 id
+     * @return 반응하기 응답 dto
      */
 
     @GetMapping("/reactions")
@@ -48,6 +49,7 @@ public class PostReactionController {
      * 게시물에 반응 추가하기.
      *
      * @param postId 반응을 추가할 게시글 id
+     * @return 반응하기 응답 dto
      */
 
     @PostMapping("/reactions")
@@ -67,6 +69,7 @@ public class PostReactionController {
      *
      * @param postId 반응을 삭제할 게시글 id
      * @param type   삭제할 반응 타입
+     * @return 문자열
      */
     @DeleteMapping("/reactions/{type}")
     public ApiResponse<String> deleteEmotion(
@@ -83,6 +86,7 @@ public class PostReactionController {
      *
      * @param postId             게시물 id
      * @param reactionRequestDto 추가될 감정 dto
+     * @return 반응하기 응답 dto
      */
     @PutMapping("/reactions")
     public ApiResponse<ReactionResponseDto> updateEmotion(

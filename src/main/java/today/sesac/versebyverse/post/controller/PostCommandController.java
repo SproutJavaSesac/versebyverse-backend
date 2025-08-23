@@ -27,7 +27,11 @@ public class PostCommandController {
     private final PostCommandService postCommandService;
 
     /**
-     * 게시물 작성.
+     * 게시글 작성.
+     *
+     * @param postCreateRequestDto 게시글 작성 dto
+     * @param userPrincipal        회원 id
+     * @return 게시글 생성 dto
      */
     @PostMapping
     public ApiResponse<PostCreateResponseDto> savePost(
@@ -41,7 +45,11 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 삭제.
+     * 게시글 삭제.
+     *
+     * @param postId        게시글 id
+     * @param userPrincipal 회원 id
+     * @return 문자열
      */
     @DeleteMapping("/{postId}")
     public ApiResponse<String> deletePost(@PathVariable Long postId,
@@ -53,7 +61,11 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 숨김.
+     * 게시글 숨김.
+     *
+     * @param postId        게시글 id
+     * @param userPrincipal 회원 id
+     * @return 문자열
      */
     @PatchMapping("/{postId}/hide")
     public ApiResponse<String> hidePost(@PathVariable Long postId,
@@ -65,7 +77,11 @@ public class PostCommandController {
     }
 
     /**
-     * 게시물 숨김 해제.
+     * 게시글 숨김 해제.
+     *
+     * @param postId        게시글 id
+     * @param userPrincipal 회원 id
+     * @return 문자열
      */
     @PatchMapping("{postId}/unhide")
     public ApiResponse<String> unhidePost(@PathVariable Long postId,
