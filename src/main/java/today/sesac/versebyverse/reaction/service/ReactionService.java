@@ -1,6 +1,5 @@
 package today.sesac.versebyverse.reaction.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +124,9 @@ public class ReactionService {
 
         Reaction existingReaction =
                 findReactionByMemberIdAndTargetId(targetType, memberId, targetId)
-                        .orElseThrow(() -> new EntityNotFoundException("존재하는 감정이 없습니다."));
+                        .orElseThrow(
+                                () -> new ReactionException(ReactionErrorCode.REACTION_NOT_FOUND,
+                                        "memberId:" + memberId + "targetId" + targetId));
 
         existingReaction.updateReaction(reactionRequestDto.type());
 

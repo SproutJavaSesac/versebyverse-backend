@@ -9,7 +9,9 @@ import today.sesac.versebyverse.global.exception.IErrorCode;
  */
 @Getter
 public enum ReactionErrorCode implements IErrorCode {
-    DUPLICATE_REACTION_FOUND(HttpStatus.CONFLICT, "이미 같은 감정 반응이 존재합니다.");
+    DUPLICATE_REACTION_FOUND(HttpStatus.CONFLICT, "이미 같은 감정 반응이 존재합니다."),
+    REACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "수정할 반응이 없습니다."),
+    ;
 
     private final HttpStatus httpStatus;
 
