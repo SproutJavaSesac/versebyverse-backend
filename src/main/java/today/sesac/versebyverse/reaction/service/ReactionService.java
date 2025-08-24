@@ -81,7 +81,8 @@ public class ReactionService {
                 findReactionByType(targetType, targetId, memberId, reactionRequestDto.type());
 
         if (existingReaction.isPresent()) {
-            throw new ReactionException(ReactionErrorCode.DUPLICATE_REACTION_FOUND, "");
+            throw new ReactionException(ReactionErrorCode.DUPLICATE_REACTION_FOUND,
+                    "reactionType: " + reactionRequestDto.type());
         }
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
