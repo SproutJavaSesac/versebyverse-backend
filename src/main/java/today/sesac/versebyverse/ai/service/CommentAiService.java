@@ -10,6 +10,7 @@ import today.sesac.versebyverse.ai.exception.AiErrorCode;
 import today.sesac.versebyverse.ai.exception.AiException;
 import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
 import today.sesac.versebyverse.ai.prompt.PromptType;
+import today.sesac.versebyverse.ai.util.GenrePromptMapper;
 
 /**
  * 댓글 관련 AI 서비스입니다.
@@ -46,12 +47,13 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      * AI 요청을 실행하고 응답을 검증하여 안전한 결과를 반환합니다.
      *
      * @param requestDto AI 요청 데이터 전송 객체
-     * @param promptType 사용할 프롬프트 타입
      * @return responseDto AI 응답 DTO
      * @throws AiException 응답의 필수 필드(conceptType, content)가 null인 경우
      */
-    public CommentAiResponseDto executeAiWithValidation(CommentAiRequestDto requestDto,
-            PromptType promptType) {
+    public CommentAiResponseDto executeAiWithValidation(CommentAiRequestDto requestDto) {
+
+        PromptType promptType =
+                GenrePromptMapper.getPostPromptType(requestDto.getGenreType());
 
         CommentAiResponseDto responseDto = executeAi(requestDto, promptType);
         if (responseDto.getGenreType() == null || responseDto.getContent() == null) {

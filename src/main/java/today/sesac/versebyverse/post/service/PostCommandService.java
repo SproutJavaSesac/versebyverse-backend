@@ -7,9 +7,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
-import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
-import today.sesac.versebyverse.ai.util.GenrePromptMapper;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
@@ -62,11 +60,8 @@ public class PostCommandService {
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
         //5. ai 호출 게시글 변환
-        // 장르에 따라 프롬프트 타입 자동 결정
-        PromptType promptType =
-                GenrePromptMapper.getPostPromptType(postCreateRequestDto.getGenreType());
         PostAiResponseDto postAiResponseDto =
-                postAiService.executeAiWithValidation(postAiRequestDto, promptType);
+                postAiService.executeAiWithValidation(postAiRequestDto);
 
         //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
