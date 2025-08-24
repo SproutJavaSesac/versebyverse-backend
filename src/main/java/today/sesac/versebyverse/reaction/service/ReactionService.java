@@ -262,7 +262,8 @@ public class ReactionService {
      * @param commentIds 댓글 ID 리스트
      * @return 댓글 id별 리액션 정보 맵
      */
-    public Map<Long, ReactionResponseDto> getReactionsForComments(List<Long> commentIds) {
+    public Map<Long, ReactionResponseDto> getReactionsForComments(List<Long> commentIds,
+            Long memberId) {
 
         if (commentIds.isEmpty()) {
             return Map.of();
@@ -272,9 +273,17 @@ public class ReactionService {
         List<Object[]> allReactions =
                 reactionRepository.countReactionsByTypeForMultipleComments(commentIds);
 
+        //현재 로그인 한 사용자의 댓글별 리액션 조회
+        Map<Long, Emotion> currentUserReactions = Map.of(); // 기본값
+        if (memberId != null) {
+            currentUserReactions =
+                    getCurrentUserReactionsForComments(commentIds, memberId); // 새 메서드 호출
+        }
         // comment id 별로 그룹화
         Map<Long, List<Object[]>> reactionsByComment = allReactions.stream()
                 .collect(Collectors.groupingBy(row -> (Long) row[2])); // row[2]가 commentId
+
+        final Map<Long, Emotion> finalCurrentUserReactions = currentUserReactions;
 
         return commentIds.stream()
                 .collect(Collectors.toMap(
@@ -298,8 +307,31 @@ public class ReactionService {
                                     .mapToInt(Integer::intValue)
                                     .sum();
 
-                            return ReactionResponseDto.of(null, reactionCount, reactionDetails);
+                            Emotion myReaction = finalCurrentUserReactions.get(commentId);
+
+                            return ReactionResponseDto.of(myReaction, reactionCount,
+                                    reactionDetails);
                         }
+                ));
+    }
+
+    /**
+     * 현재 로그인한 사용자가 댓글들에 한 반응 조회.
+     *
+     * @param commentIds 댓글 id 리스트
+     * @param memberId   회원 id
+     * @return 현재 사용자가 반응한 댓글 id 와 해당 댓글에 한 반응 map
+     */
+    private Map<Long, Emotion> getCurrentUserReactionsForComments(List<Long> commentIds,
+            Long memberId) {
+
+        List<Reaction> currentUserReactions = reactionRepository
+                .findByMemberIdAndCommentIdIn(memberId, commentIds);
+
+        return currentUserReactions.stream()
+                .collect(Collectors.toMap(
+                        reaction -> reaction.getComment().getId(),
+                        Reaction::getType
                 ));
     }
 }

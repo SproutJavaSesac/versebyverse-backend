@@ -131,7 +131,8 @@ public class CommentService {
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
      */
-    public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
+    public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable,
+            Long memberId) {
 
         postQueryService.validateActivePostByIdOrThrow(postId);
 
@@ -145,7 +146,7 @@ public class CommentService {
 
         //모든 댓글에 대한 리액션 정보 한번에 조회
         Map<Long, ReactionResponseDto> reactionsMap =
-                reactionService.getReactionsForComments(commentIds);
+                reactionService.getReactionsForComments(commentIds, memberId);
 
         return new CommentListResponseDto(
                 postId,

@@ -93,4 +93,13 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             """)
     List<Object[]> countReactionsByTypeForMultipleComments(
             @Param("commentIds") List<Long> commentIds);
+
+    /**
+     * 특정 사용자가 여러 댓글에 대해 남긴 모든 반응들을 조회.
+     *
+     * @param memberId   현재 로그인된 사용자
+     * @param commentIds 특정 게시글에 달린 댓글들의 리스트
+     * @return memberId가 댓글 리스트들중 반응한 객체
+     */
+    List<Reaction> findByMemberIdAndCommentIdIn(Long memberId, List<Long> commentIds);
 }
