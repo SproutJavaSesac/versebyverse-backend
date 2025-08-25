@@ -10,6 +10,8 @@ public record PostSingleQueryResponseDto(
 
         Long postId,
 
+        Long authorId,
+
         String afterTitle,
 
         String afterContent,
@@ -32,9 +34,12 @@ public record PostSingleQueryResponseDto(
 //    Map<String, Integer> reactionDetailCount;
 
 ) {
+
     public static PostSingleQueryResponseDto of(Post post, Long memberId) {
+
         return new PostSingleQueryResponseDto(
                 post.getId(),
+                post.getAuthor().getId(),
                 post.getAfterTitle(),
                 post.getAfterContent(),
                 post.getAuthor().getNickname(),
