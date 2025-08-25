@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import today.sesac.versebyverse.auth.CustomAuthenticationEntryPoint;
 import today.sesac.versebyverse.auth.CustomLogoutSuccessHandler;
 import today.sesac.versebyverse.auth.OAuth2AuthenticationSuccessHandler;
 import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
@@ -31,6 +32,8 @@ public class SecurityConfig {
 
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -42,19 +45,19 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/oauth2/authorization",
                                 "/login/oauth2/code/*",
-                                "/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
+                                "/api/v1/posts/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                                .authorizationEndpoint(oAuth2 -> oAuth2
-                                        .baseUri("/api/oauth2/authorization"))
-                                .redirectionEndpoint(oAuth2 -> oAuth2
-                                        .baseUri("/login/oauth2/code/*"))
-                                .userInfoEndpoint(userInfoEndpointConfig ->
-                                        userInfoEndpointConfig
-                                                .userService(customOAuth2UserService))
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .authorizationEndpoint(oAuth2 -> oAuth2
+                                .baseUri("/api/oauth2/authorization"))
+                        .redirectionEndpoint(oAuth2 -> oAuth2
+                                .baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                userInfoEndpointConfig
+                                        .userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 ).logout(logout -> logout   // TODO: 프론트 테스트를 위한 임시 로그아웃 구현 -> 수정 필요
                         .logoutUrl("/api/v1/auth/logout")
@@ -62,6 +65,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .clearAuthentication(true)
                         .logoutSuccessHandler(customLogoutSuccessHandler)
+                ).exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
         ;
 
