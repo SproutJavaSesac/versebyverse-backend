@@ -69,7 +69,7 @@ public class ReportService {
     }
 
     /**
-     * 게시글 신고를 등록하기 전 검증하는 기능입니다. 댓글을 신고합니다.
+     * 댓글을 신고합니다.
      *
      * @param reportRequestDto 신고 요청 DTO
      * @param reporterId       신고자 ID
