@@ -1,7 +1,6 @@
 package today.sesac.versebyverse.report.controller;
 
 import jakarta.validation.Valid;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +20,8 @@ import today.sesac.versebyverse.report.dto.request.ReportActionRequestDto;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
-import today.sesac.versebyverse.report.dto.response.ReportActionResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.dto.response.ReportResponseDto;
 import today.sesac.versebyverse.report.entity.StatusType;
 import today.sesac.versebyverse.report.exception.ReportException;
 import today.sesac.versebyverse.report.service.ReportService;
@@ -107,13 +106,11 @@ public class ReportController {
      * @throws IllegalArgumentException reportId가 유효하지 않은 경우
      */
     @PatchMapping("/admin/reports/{reportId}")
-    public ApiResponse<?> handleReport(@PathVariable int reportId,
+    public ApiResponse<ReportResponseDto> handleReport(@PathVariable Long reportId,
             @RequestBody ReportActionRequestDto reportActionRequestDto) {
 
         return ApiResponse.success(
-                ReportActionResponseDto.builder().reportId(reportId).statusType(
-                                reportActionRequestDto.getAction())
-                        .updateAt(LocalDateTime.now()).build());
+                reportService.handleReportAction(reportId, reportActionRequestDto));
     }
 
 }
