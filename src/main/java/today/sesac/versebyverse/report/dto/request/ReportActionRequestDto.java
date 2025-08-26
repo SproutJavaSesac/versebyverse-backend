@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.report.dto.request;
 
 import lombok.Getter;
+import today.sesac.versebyverse.report.entity.StatusType;
 
 /**
  * 신고 처리 요청 DTO (ACCEPT / REJECT).
@@ -8,5 +9,5 @@ import lombok.Getter;
 @Getter
 public class ReportActionRequestDto {
 
-    private String action;
+    private StatusType action;
 }

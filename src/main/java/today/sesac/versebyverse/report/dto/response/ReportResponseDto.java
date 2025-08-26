@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import today.sesac.versebyverse.report.entity.ReasonType;
+import today.sesac.versebyverse.report.entity.Report;
 import today.sesac.versebyverse.report.entity.ReportType;
 import today.sesac.versebyverse.report.entity.StatusType;
 
@@ -38,4 +39,50 @@ public class ReportResponseDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    /**
+     * 댓글 신고 응답 DTO를 생성합니다.
+     *
+     * @param report 신고 엔티티
+     * @return 댓글 신고 응답 DTO
+     */
+    public static ReportResponseDto createCommentReportResponse(Report report) {
+
+        return new ReportResponseDto(report.getId(),
+                report.getReporter().getId(),
+                report.getReporter().getNickname(),
+                report.getComment().getPost().getId(),
+                report.getComment().getId(),
+                ReportType.COMMENT,
+                report.getReasonType(),
+                report.getReasonDetail(),
+                report.getStatusType(),
+                report.getComment().getReportCount(),
+                report.getCreatedAt(),
+                report.getUpdatedAt()
+        );
+    }
+
+    /**
+     * 게시글 신고 응답 DTO를 생성합니다.
+     *
+     * @param report 신고 엔티티
+     * @return 게시글 신고 응답 DTO
+     */
+    public static ReportResponseDto createPostReportResponse(Report report) {
+
+        return new ReportResponseDto(report.getId(),
+                report.getReporter().getId(),
+                report.getReporter().getNickname(),
+                report.getPost().getId(),
+                null,
+                ReportType.POST,
+                report.getReasonType(),
+                report.getReasonDetail(),
+                report.getStatusType(),
+                report.getPost().getReportCount(),
+                report.getCreatedAt(),
+                report.getUpdatedAt());
+    }
+
 }
