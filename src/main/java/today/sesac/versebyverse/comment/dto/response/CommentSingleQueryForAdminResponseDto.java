@@ -25,7 +25,7 @@ public record CommentSingleQueryForAdminResponseDto(
 
         int reactionTotalCount,
 
-        Map<Emotion, Integer> reactions, // TODO: 리액션 기능 추가 예정
+        Map<Emotion, Integer> reactionDetails,
 
         Boolean isDeleted,
 

@@ -15,6 +15,7 @@ public enum BadgeType {
     private final String badgeName;
 
     BadgeType(String badgeName) {
+
         this.badgeName = badgeName;
     }
 }

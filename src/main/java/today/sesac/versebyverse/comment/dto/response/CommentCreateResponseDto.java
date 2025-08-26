@@ -31,7 +31,7 @@ public class CommentCreateResponseDto {
 
     private final int reactionTotalCount;
 
-    private final Map<Emotion, Integer> reactions; // TODO: 리액션 기능 추가 예정
+    private final Map<Emotion, Integer> reactionDetails;
 
     private final Boolean isDeleted;
 
@@ -47,7 +47,8 @@ public class CommentCreateResponseDto {
      * @param comment 댓글 엔티티
      * @return 첫 번째 레벨의 댓글 응답 DTO
      */
-    public static CommentCreateResponseDto of(Comment comment) {
+    public static CommentCreateResponseDto of(Comment comment, int reacitonTotalCount,
+            Map<Emotion, Integer> reactionDetails) {
 
         return new CommentCreateResponseDto(
                 comment.getId(),
@@ -57,8 +58,8 @@ public class CommentCreateResponseDto {
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
                 comment.getAfterContent(),
                 comment.getLevel(),
-                6, // TODO comment.getReactions().size(),
-                Map.of(), // TODO: 리액션 기능 추가 예정
+                reacitonTotalCount,
+                reactionDetails,
                 comment.isDeleted(),
                 comment.isBlocked(),
                 comment.getCreatedAt(),

@@ -56,7 +56,8 @@ public class BadgeService {
 
         if (postCount > 0 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
-                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.FIRST_POST.getBadgeName()));
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            BadgeType.FIRST_POST.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
             memberBadgeRepository.save(memberBadge);
@@ -76,7 +77,8 @@ public class BadgeService {
 
         if (postCount >= 10 && !hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
-                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.NOVICE_WRITER.getBadgeName()));
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            BadgeType.NOVICE_WRITER.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
             memberBadgeRepository.save(memberBadge);
@@ -104,7 +106,8 @@ public class BadgeService {
 
         if (!hasTargetBadge) {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
-                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND, BadgeType.FIRST_SIGNUP.getBadgeName()));
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            BadgeType.FIRST_SIGNUP.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(member, badge);
             memberBadgeRepository.save(memberBadge);
