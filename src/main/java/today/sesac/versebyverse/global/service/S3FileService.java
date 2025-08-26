@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.global.service;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class S3FileService {
      * @param directory S3 내 저장할 디렉토리 (예: "posts", "profiles")
      * @return 업로드된 파일의 S3 URL
      */
-    public String uploadImage(MultipartFile file, String directory) {
+    public String uploadImage(MultipartFile file, String directory) throws RuntimeException {
 
         try {
             // 파일 검증
@@ -106,11 +107,13 @@ public class S3FileService {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("업로드할 이미지 파일이 없습니다.");
         }
-//
-//        String contentType = file.getContentType();
-//        if (contentType == null || !contentType.startsWith("image/")) {
-//            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
-//        }
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+
+        Set<String> allowedExtensions = Set.of(".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg");
+
+        if (!allowedExtensions.contains(fileExtension)) {
+            throw new IllegalArgumentException("지원하지 않는 파일 형식입니다.");
+        }
 
         // 파일 크기 제한 (10MB)
         if (file.getSize() > 10 * 1024 * 1024) {
