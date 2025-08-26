@@ -60,6 +60,6 @@ class PostQueryServiceTest {
                 () -> postQueryService.getActivePostById(postId))
                 .isInstanceOf(PostException.class)
                 .hasFieldOrPropertyWithValue("param", "postId")
-                .hasFieldOrPropertyWithValue("IErrorCode", PostErrorCode.POST_NOT_FOUND);
+                .hasFieldOrPropertyWithValue("errorCode", PostErrorCode.POST_NOT_FOUND);
     }
 }

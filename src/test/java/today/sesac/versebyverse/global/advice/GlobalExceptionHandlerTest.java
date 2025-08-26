@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import java.util.Locale;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import today.sesac.versebyverse.global.config.MessageConfig;
 import today.sesac.versebyverse.global.config.TestSecurityConfig;
 import today.sesac.versebyverse.global.exception.LoginRequiredException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
@@ -29,8 +31,10 @@ import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 /**
  * 전역 예외 처리 테스트.
  */
-@Import(TestSecurityConfig.class) //TODO: 테스트 커스텀 유저 추가 애노테이션 구현 필요
-@WebMvcTest(controllers = GlobalExceptionHandlerTest.class)
+@Import({GlobalExceptionHandler.class, TestSecurityConfig.class,
+        MessageConfig.class})
+//TODO: 테스트 커스텀 유저 추가 애노테이션 구현 필요
+@WebMvcTest(controllers = GlobalExceptionHandlerTest.TestController.class)
 class GlobalExceptionHandlerTest {
 
     static final String IS_SUCCESS = "$.isSuccess";
@@ -48,7 +52,8 @@ class GlobalExceptionHandlerTest {
     @DisplayName("[예외]-RuntimeException 처리 테스트")
     void handleRuntimeException() throws Exception {
 
-        mockMvc.perform(get("/test/error/runtime"))
+        mockMvc.perform(get("/test/error/runtime").header("Accept-Language", "ko") // 언어 설정
+                )
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath(IS_SUCCESS).value(false))
                 .andExpect(jsonPath(ERROR_NAME).value("INTERNAL_SERVER"))
@@ -87,11 +92,48 @@ class GlobalExceptionHandlerTest {
     @DisplayName("[예외]-NoHandlerFoundException 처리 테스트")
     void handleNoHandlerFoundException() throws Exception {
 
-        mockMvc.perform(get("/test/not-found"))
+        mockMvc.perform(get("/test/not-found")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "ko") // 언어 설정
+                )
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath(IS_SUCCESS).value(false))
-                .andExpect(jsonPath(ERROR_NAME).value("UNDISCOVERED"))
-                .andExpect(jsonPath(ERROR_MESSAGE).value("요청하신 정보를 찾을 수 없습니다."))
+                .andExpect(jsonPath(ERROR_NAME).value("NOT_FOUND"))
+                .andExpect(jsonPath(ERROR_MESSAGE).value("요청하신 URL을 찾을 수 없습니다."))
+                .andExpect(jsonPath(ERROR_PARAM).isEmpty());
+    }
+
+    @Test
+    @DisplayName("[예외]-header에 ko를 따로 설정하지 않은 경우 시스템 로케일을 사용해야 한다.")
+    void handleNoHandlerFoundExceptionInKorean() throws Exception {
+        // 현재 시스템 로케일이 한국어로 설정되어 있다고 가정
+        Locale.setDefault(Locale.KOREAN); // 기본 로케일을 한국어로 설정
+
+        mockMvc.perform(get("/test/not-found")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "ja")
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(IS_SUCCESS).value(false))
+                .andExpect(jsonPath(ERROR_NAME).value("NOT_FOUND"))
+                .andExpect(jsonPath(ERROR_MESSAGE).value("요청하신 URL을 찾을 수 없습니다."))
+                .andExpect(jsonPath(ERROR_PARAM).isEmpty());
+    }
+
+    @Test
+    @DisplayName("[예외]-header에 정의하지 않은 로케일이 온 경우, 시스템 로케일을 사용하고, 없다면 기본 Messages를 참고해야 한다.")
+    void handleNoHandlerFoundExceptionInEnglish() throws Exception {
+
+        Locale.setDefault(Locale.ENGLISH); // 기본 로케일을 영어로 설정
+
+        mockMvc.perform(get("/test/not-found")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Accept-Language", "en")
+                )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath(IS_SUCCESS).value(false))
+                .andExpect(jsonPath(ERROR_NAME).value("NOT_FOUND"))
+                .andExpect(jsonPath(ERROR_MESSAGE).value("The requested URL was not found."))
                 .andExpect(jsonPath(ERROR_PARAM).isEmpty());
     }
 
@@ -146,7 +188,7 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * 테스트용 요청 DTO
+     * 테스트용 요청 DTO.
      *
      * @param email 이메일
      */
@@ -158,7 +200,7 @@ class GlobalExceptionHandlerTest {
     }
 
     /**
-     * 테스트용 컨트롤러를 빈으로 등록하는 설정 클래스
+     * 테스트용 컨트롤러를 빈으로 등록하는 설정 클래스.
      */
     @TestConfiguration
     static class TestConfig {
