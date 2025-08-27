@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.post.entity.Post;
 
 /**
@@ -56,46 +56,46 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllOrderByReactionCount(Pageable pageable);
 
     /**
-     * 컨셉별 조회 + 최신순 정렬.
+     * 장르별 조회 + 최신순 정렬.
      *
-     * @param conceptType 컨셉 타입
+     * @param genreType 장르 타입
      * @param pageable    페이지네이션 정보
      */
     @Query("""
-            SELECT p FROM Post p
-            WHERE p.conceptType = :conceptType
+            SELECT p FROM Post p 
+            WHERE p.genreType = :genreType
             AND p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             """)
-    Page<Post> findByConceptType(Concept conceptType, Pageable pageable);
+    Page<Post> findByGenreType(Genre genreType, Pageable pageable);
 
     /**
-     * 컨셉별 조회 + 댓글순 정렬.
+     * 장르별 조회 + 댓글순 정렬.
      *
-     * @param conceptType 컨셉 타입
+     * @param genreType 장르 타입
      * @param pageable    페이지네이션 정보
      */
     @Query("""
             SELECT p FROM Post p
             LEFT JOIN Comment c ON p.id = c.post.id
-            WHERE p.conceptType = :conceptType
+            WHERE p.genreType = :genreType
             AND p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             GROUP BY p
             ORDER BY COUNT(c.id) DESC
             """)
-    Page<Post> findByConceptTypeOrderByCommentCount(Concept conceptType, Pageable pageable);
+    Page<Post> findByGenreTypeOrderByCommentCount(Genre genreType, Pageable pageable);
 
     /**
-     * 컨셉별 조회 + 반응 총갯수 정렬.
+     * 장르별 조회 + 반응 총갯수 정렬.
      *
-     * @param conceptType 컨셉 타입
-     * @param pageable    페이지네이션 정보
+     * @param genreType 장르 타입
+     * @param pageable  페이지네이션 정보
      */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id 
-            WHERE p.conceptType = :conceptType 
+            WHERE p.genreType = :genreType 
             GROUP BY p.id 
             ORDER BY COUNT(r.id) DESC""")
-    Page<Post> findByConceptTypeOrderByReactionCount(Concept conceptType, Pageable pageable);
+    Page<Post> findByGenreTypeOrderByReactionCount(Genre genreType, Pageable pageable);
 
     /**
      * 게시글 ID로 게시글이 존재하는지 확인합니다. 삭제되지 않고, 차단되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
