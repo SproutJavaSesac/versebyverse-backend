@@ -40,6 +40,8 @@ public class PostSingleQueryResponseDto {
 
     Emotion myReaction;
 
+    Emotion authorSelectEmotion; //작성자 혹은 ai가 글에 지정한 감정
+
     Map<Emotion, Integer> reactionDetailCount;
 
     /**
@@ -69,6 +71,7 @@ public class PostSingleQueryResponseDto {
                 commentCount,
                 reactionCount,
                 myReaction,
+                post.getEmotionType(),
                 reactionDetails
         );
     }
