@@ -179,6 +179,6 @@ public class Post extends BaseEntity {
      */
     public boolean isMine(Long memberId) {
 
-        return memberId.equals(this.getAuthor().getId());
+        return this.getAuthor().getId().equals(memberId);
     }
 }
