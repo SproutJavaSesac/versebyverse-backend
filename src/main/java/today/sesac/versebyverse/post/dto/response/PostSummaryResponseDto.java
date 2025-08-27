@@ -1,7 +1,7 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.post.entity.Post;
 
 /**
@@ -23,7 +23,7 @@ public record PostSummaryResponseDto(
 
         int commentCount,
 
-        Concept conceptType,
+        Genre genreType,
 
         Long postId,
 
@@ -47,7 +47,7 @@ public record PostSummaryResponseDto(
                 post.getCreatedAt(),
                 reactionCount,
                 commentCount,
-                post.getConceptType(),
+                post.getGenreType(),
                 post.getId(),
                 post.getImageUrl()
         );

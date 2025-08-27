@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
-import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.FileUploadException;
@@ -74,14 +73,13 @@ public class PostCommandService {
 
         //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
-                PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConceptType(),
+                PostAiRequestDto.of(beforeTitle,
+                        postCreateRequestDto.getGenreType(),
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
         //5. ai 호출 게시글 변환
-        // TODO: AI 호출이 트랜잭션 범위 내에 있어서 ai 요청 지연시 데드락 가능성있음.(DB 커넥션 장시간 점유) => 어떻게 대처해야할지 고민하기-qkralstjr
         PostAiResponseDto postAiResponseDto =
-                postAiService.executeAiWithValidation(postAiRequestDto,
-                        PromptType.POST_CONCEPT_TRANSFORM);
+                postAiService.executeAiWithValidation(postAiRequestDto);
 
         //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
@@ -96,7 +94,7 @@ public class PostCommandService {
                 afterTitle,
                 imageUrl,
                 postAiResponseDto.getEmotionType(),
-                postAiResponseDto.getConceptType()
+                postAiResponseDto.getGenreType()
         );
 
         Post savedPost = postRepository.save(post);
