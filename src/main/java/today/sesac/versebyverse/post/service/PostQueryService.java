@@ -18,6 +18,10 @@ import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.exception.PostErrorCode;
 import today.sesac.versebyverse.post.exception.PostException;
 import today.sesac.versebyverse.post.repository.PostRepository;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
+import today.sesac.versebyverse.reaction.repository.ReactionRepository;
+import today.sesac.versebyverse.reaction.service.ReactionService;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * 게시글 조회 service.
@@ -28,13 +32,19 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 public class PostQueryService {
 
     private final PostRepository postRepository;
+
     private final CommentRepository commentRepository;
+
+    private final ReactionRepository reactionRepository;
+
+    private final ReactionService reactionService;
+    //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
      * 게시글 목록 리스트 조회.
      */
     public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sort,
-                                                 int page, int size) {
+            int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
         Pageable pageable = PageRequest.of(page, size);
@@ -45,18 +55,14 @@ public class PostQueryService {
         //repository를 통해 jpa 가 db 에서 받아온 post 엔티티 + 페이지 정보
         Page<Post> postPage;
 
-
         if (!filterByConcept) {
             //filterByConcept이 false 일때 (concept이 all 이거나 null 이어서 필터링 없이 전체조회)
             postPage = switch (sort) {
                 //전체조회 + comment순 정렬
                 case "comments" -> postRepository.findAllOrderByCommentCount(pageable);
                 //전체조회 + reaction순 정렬
-                case "reactions" ->
-                    //TODO 반응하기 임시 기본 정렬 대체
-                        postRepository.findByConceptType(conceptType, pageable);
-//                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
-//                            pageable);
+                case "reactions" -> postRepository.findAllOrderByReactionCount(pageable);
+
                 //전체 조회 + 최신순 정렬
                 default -> postRepository.findAllOrderByCreatedAt(pageable);
             };
@@ -67,21 +73,20 @@ public class PostQueryService {
                         pageable);
                 //컨셉별 조회 + reaction순 정렬
                 case "reactions" ->
-                    //TODO 반응하기 임시 기본 정렬 대체
-                        postRepository.findByConceptType(conceptType, pageable);
-//                    postPage = postRepository.findByConceptTypeOrderByReactionCount(conceptType,
-//                            pageable);
+                        postRepository.findByConceptTypeOrderByReactionCount(conceptType, pageable);
                 //컨셉별 조회 + 최신순 정렬
                 default -> postRepository.findByConceptType(conceptType, pageable);
             };
         }
-        //Post 객체를 dto객체로 변환
+        //Post 객체를 dto 객체로 변환
         return postPage.map(post -> {
-            Long commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
-                    post.getId());
-            // TODO reaction개수 임시 0으로 고정
-            int reactionCount = 0;
-            //int reactionCount = reactionRepository.countByPostId(post.getId());
+            int commentCount =
+                    commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
+                            post.getId());
+            int reactionCount =
+                    reactionRepository.countByPostId(
+                            post.getId());
+
             return PostSummaryResponseDto.of(post, commentCount, reactionCount);
         });
     }
@@ -94,7 +99,7 @@ public class PostQueryService {
      * @return 작성자와 게시글 수의 리스트
      */
     public List<AuthorPostCountDto> getAuthorAndPostCount(LocalDateTime startDate,
-                                                          LocalDateTime endDate) {
+            LocalDateTime endDate) {
 
         return postRepository.findActiveAuthorActivePostCount(startDate, endDate)
                 .stream()
@@ -108,15 +113,34 @@ public class PostQueryService {
     /**
      * 게시글 단건 상세 조회.
      *
-     * @param postId   게시글id
-     * @param memberId 작성자id
+     * @param postId   게시글 id
+     * @param memberId 작성자 id
      * @return postSingleQueryResponseDto
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
+
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
-        // TODO 댓글갯수,반응갯수, 댓글 총갯수 추가
-        return PostSingleQueryResponseDto.of(foundPost, memberId);
+
+        //댓글 갯수 조회
+        int commentCount =
+                commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
+                        postId);
+
+        ReactionResponseDto reactionInfo;
+        if (memberId != null) {
+            // 로그인 사용자: 개인 반응 정보 포함
+            reactionInfo = reactionService.getReactions(TargetType.POST, postId, memberId);
+        } else {
+            // 비로그인 사용자: 전체 반응 통계만
+            reactionInfo =
+                    reactionService.getTotalReactionAndReactionDetailsByTargetType(null, postId,
+                            TargetType.POST);
+        }
+
+        return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
+                reactionInfo.reactionTotalCount(), reactionInfo.myReaction(),
+                reactionInfo.reactionDetails());
     }
 
     /**
@@ -142,6 +166,19 @@ public class PostQueryService {
 
         if (!postRepository.existsByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId)) {
             throw new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString());
+        }
+    }
+
+    /**
+     * 게시글의 상태(정상/삭제/신고)와 관계없이 DB에 실제로 존재하는지 확인합니다.
+     *
+     * @param postId 게시글 ID
+     * @throws PostException 게시글이 존재하지 않을 경우
+     */
+    public void validatePostExistsOrThrow(Long postId) {
+
+        if (!postRepository.existsById(postId)) {
+            throw new PostException(PostErrorCode.POST_NOT_FOUND, "postId");
         }
     }
 }

@@ -952,6 +952,180 @@ VALUES
 ('fuxk', 'dang', '영어 욕설 우회 표현', 'MODIFIED_SWEAR', NOW(), NOW()),
 ('tlqkf', '젠장', '한글 자판 치환 욕설', 'MODIFIED_SWEAR', NOW(), NOW());
 
+-- === Reaction 더미 데이터 생성 ===
+-- member_reactions 테이블에 게시글 및 댓글 반응 데이터를 생성합니다.
+-- 제약 조건: 한 회원은 하나의 게시글 또는 댓글에 대해 오직 하나의 반응만 가능
+-- Emotion: HAPPY, SAD, ANGRY, EXCITED, CONFUSED, PROUD
+
+-- === 게시글 반응 데이터 (Post Reactions) ===
+-- Post 1~10에 대한 반응들 (총 50개)
+
+-- Post 1에 대한 반응 (5개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(1, 2, 1, NULL, 'HAPPY', NOW(), NOW()),
+(2, 3, 1, NULL, 'EXCITED', NOW(), NOW()),
+(3, 4, 1, NULL, 'PROUD', NOW(), NOW()),
+(4, 5, 1, NULL, 'HAPPY', NOW(), NOW()),
+(5, 6, 1, NULL, 'EXCITED', NOW(), NOW());
+
+-- Post 2에 대한 반응 (6개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(6, 1, 2, NULL, 'SAD', NOW(), NOW()),
+(7, 3, 2, NULL, 'CONFUSED', NOW(), NOW()),
+(8, 4, 2, NULL, 'SAD', NOW(), NOW()),
+(9, 7, 2, NULL, 'HAPPY', NOW(), NOW()),
+(10, 8, 2, NULL, 'PROUD', NOW(), NOW()),
+(11, 9, 2, NULL, 'EXCITED', NOW(), NOW());
+
+-- Post 3에 대한 반응 (4개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(12, 2, 3, NULL, 'ANGRY', NOW(), NOW()),
+(13, 5, 3, NULL, 'ANGRY', NOW(), NOW()),
+(14, 8, 3, NULL, 'CONFUSED', NOW(), NOW()),
+(15, 10, 3, NULL, 'SAD', NOW(), NOW());
+
+-- Post 4에 대한 반응 (7개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(16, 1, 4, NULL, 'EXCITED', NOW(), NOW()),
+(17, 2, 4, NULL, 'HAPPY', NOW(), NOW()),
+(18, 3, 4, NULL, 'EXCITED', NOW(), NOW()),
+(19, 6, 4, NULL, 'PROUD', NOW(), NOW()),
+(20, 7, 4, NULL, 'HAPPY', NOW(), NOW()),
+(21, 9, 4, NULL, 'EXCITED', NOW(), NOW()),
+(22, 10, 4, NULL, 'HAPPY', NOW(), NOW());
+
+-- Post 5에 대한 반응 (3개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(23, 2, 5, NULL, 'CONFUSED', NOW(), NOW()),
+(24, 4, 5, NULL, 'CONFUSED', NOW(), NOW()),
+(25, 8, 5, NULL, 'SAD', NOW(), NOW());
+
+-- Post 6에 대한 반응 (5개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(26, 3, 6, NULL, 'PROUD', NOW(), NOW()),
+(27, 5, 6, NULL, 'HAPPY', NOW(), NOW()),
+(28, 7, 6, NULL, 'PROUD', NOW(), NOW()),
+(29, 9, 6, NULL, 'EXCITED', NOW(), NOW()),
+(30, 10, 6, NULL, 'PROUD', NOW(), NOW());
+
+-- Post 7에 대한 반응 (6개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(31, 2, 7, NULL, 'HAPPY', NOW(), NOW()),
+(32, 4, 7, NULL, 'EXCITED', NOW(), NOW()),
+(33, 6, 7, NULL, 'HAPPY', NOW(), NOW()),
+(34, 8, 7, NULL, 'PROUD', NOW(), NOW()),
+(35, 9, 7, NULL, 'HAPPY', NOW(), NOW()),
+(36, 10, 7, NULL, 'EXCITED', NOW(), NOW());
+
+-- Post 8에 대한 반응 (4개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(37, 2, 8, NULL, 'SAD', NOW(), NOW()),
+(38, 3, 8, NULL, 'CONFUSED', NOW(), NOW()),
+(39, 5, 8, NULL, 'SAD', NOW(), NOW()),
+(40, 7, 8, NULL, 'ANGRY', NOW(), NOW());
+
+-- Post 9에 대한 반응 (5개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(41, 1, 9, NULL, 'ANGRY', NOW(), NOW()),
+(42, 3, 9, NULL, 'PROUD', NOW(), NOW()),
+(43, 6, 9, NULL, 'ANGRY', NOW(), NOW()),
+(44, 8, 9, NULL, 'CONFUSED', NOW(), NOW()),
+(45, 10, 9, NULL, 'ANGRY', NOW(), NOW());
+
+-- Post 10에 대한 반응 (5개)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+(46, 2, 10, NULL, 'EXCITED', NOW(), NOW()),
+(47, 4, 10, NULL, 'HAPPY', NOW(), NOW()),
+(48, 6, 10, NULL, 'EXCITED', NOW(), NOW()),
+(49, 8, 10, NULL, 'PROUD', NOW(), NOW()),
+(50, 9, 10, NULL, 'EXCITED', NOW(), NOW());
+
+-- === 댓글 반응 데이터 (Comment Reactions) ===
+-- 주요 댓글들에 대한 반응 (총 30개)
+
+-- Post 1의 댓글들에 대한 반응
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+-- Comment 1에 대한 반응 (member 2가 작성한 댓글이므로 본인 제외)
+(51, 1, NULL, 1, 'HAPPY', NOW(), NOW()),
+(52, 4, NULL, 1, 'PROUD', NOW(), NOW()),
+(53, 7, NULL, 1, 'EXCITED', NOW(), NOW()),
+
+-- Comment 2에 대한 반응 (member 3이 작성한 댓글이므로 본인 제외)
+(54, 2, NULL, 2, 'HAPPY', NOW(), NOW()),
+(55, 5, NULL, 2, 'PROUD', NOW(), NOW()),
+
+-- Comment 3에 대한 반응 (member 4가 작성한 댓글이므로 본인 제외)
+(56, 1, NULL, 3, 'CONFUSED', NOW(), NOW()),
+(57, 6, NULL, 3, 'HAPPY', NOW(), NOW()),
+
+-- Comment 5에 대한 반응 (member 6이 작성한 댓글이므로 본인 제외)
+(58, 3, NULL, 5, 'EXCITED', NOW(), NOW()),
+(59, 8, NULL, 5, 'HAPPY', NOW(), NOW());
+
+-- Post 2의 댓글들에 대한 반응
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+-- Comment 16에 대한 반응 (member 1이 작성한 댓글이므로 본인 제외)
+(60, 2, NULL, 16, 'HAPPY', NOW(), NOW()),
+(61, 5, NULL, 16, 'EXCITED', NOW(), NOW()),
+(62, 8, NULL, 16, 'PROUD', NOW(), NOW()),
+
+-- Comment 17에 대한 반응 (member 2가 작성한 댓글이므로 본인 제외)
+(63, 4, NULL, 17, 'EXCITED', NOW(), NOW()),
+(64, 7, NULL, 17, 'HAPPY', NOW(), NOW()),
+
+-- Comment 20에 대한 반응 (member 5가 작성한 댓글이므로 본인 제외)
+(65, 1, NULL, 20, 'EXCITED', NOW(), NOW()),
+(66, 6, NULL, 20, 'HAPPY', NOW(), NOW()),
+
+-- Comment 23에 대한 반응 (member 8이 작성한 댓글이므로 본인 제외)
+(67, 3, NULL, 23, 'PROUD', NOW(), NOW()),
+(68, 9, NULL, 23, 'EXCITED', NOW(), NOW());
+
+-- Post 6의 댓글들에 대한 반응 (가장 많은 댓글을 가진 포스트)
+INSERT INTO member_reactions (id, member_id, post_id, comment_id, type, created_at, updated_at)
+VALUES
+-- Comment 91에 대한 반응
+(69, 2, NULL, 91, 'HAPPY', NOW(), NOW()),
+(70, 4, NULL, 91, 'EXCITED', NOW(), NOW()),
+(71, 8, NULL, 91, 'PROUD', NOW(), NOW()),
+
+-- Comment 92에 대한 반응
+(72, 1, NULL, 92, 'HAPPY', NOW(), NOW()),
+(73, 5, NULL, 92, 'EXCITED', NOW(), NOW()),
+
+-- Comment 95에 대한 반응
+(74, 3, NULL, 95, 'PROUD', NOW(), NOW()),
+(75, 7, NULL, 95, 'HAPPY', NOW(), NOW()),
+
+-- Comment 100에 대한 반응
+(76, 2, NULL, 100, 'EXCITED', NOW(), NOW()),
+(77, 6, NULL, 100, 'HAPPY', NOW(), NOW()),
+
+-- Comment 105에 대한 반응 (대댓글)
+(78, 1, NULL, 105, 'CONFUSED', NOW(), NOW()),
+(79, 8, NULL, 105, 'SAD', NOW(), NOW()),
+
+-- Comment 110에 대한 반응 (대댓글)
+(80, 3, NULL, 110, 'ANGRY', NOW(), NOW());
+
+-- === 배지 초기 데이터 삽입 ===
+INSERT INTO badges (name, description, image_url, created_at, updated_at) VALUES
+('첫 게시글', '첫 번째 게시글을 작성한 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
+('새로운 가족', '회원가입을 완료한 새로운 멤버에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
+('신진 작가', '게시글을 10개 이상 작성하는 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW());
+
 -- === Report 더미 데이터 50개 ==
 -- reasonDetail은 reasonType이 OTHER일 때만 값을 설정하고, 나머지는 NULL
 -- 게시글 신고와 댓글 신고를 적절히 분배하여 생성

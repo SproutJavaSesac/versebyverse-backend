@@ -4,14 +4,19 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.service.SocialLoginService;
+import today.sesac.versebyverse.badge.entity.MemberBadge;
+import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.event.MemberCreatedEvent;
 import today.sesac.versebyverse.global.response.PaginationDto;
+import today.sesac.versebyverse.member.dto.response.MyBadgeListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyCommentSummaryDto;
 import today.sesac.versebyverse.member.dto.response.MyInfoEditResponseDto;
@@ -44,13 +49,32 @@ public class MemberService {
 
     private final SocialLoginService socialLoginService;
 
+    private final MemberBadgeRepository memberBadgeRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
+
     /**
-     *  회원을 삭제합니다.
-     *  soft-delete 방식으로 isDeleted 필드만 변경합니다.
+     * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
+     */
+    @Transactional
+    public Member createMember(RoleType roleType, SocialType socialType, String email,
+            String nickname) {
+
+        Member member = Member.create(roleType, socialType, email, nickname);
+        Member savedMember = memberRepository.save(member);
+
+        eventPublisher.publishEvent(new MemberCreatedEvent(savedMember));
+
+        return savedMember;
+    }
+
+    /**
+     * 회원을 삭제합니다. soft-delete 방식으로 isDeleted 필드만 변경합니다.
      *
      * @param memberId 회원의 id
      */
     private void deleteMember(Long memberId) {
+
         log.info("회원 삭제 시작, memberId: {}", memberId);
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
@@ -82,7 +106,6 @@ public class MemberService {
 
         log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
     }
-
 
     /**
      * 회원의 id로 db에서 회원의 정보를 조회합니다.
@@ -188,8 +211,9 @@ public class MemberService {
         validateMemberActiveExists(memberId);
 
         // 작성한 게시글을 Page 객체으로 조회
-        Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
-                memberId, pageable);
+        Page<Post> pageByAuthorIdWithPageable =
+                postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                        memberId, pageable);
 
         List<MyPostSummaryDto> postSummaries = convertPostsToSummaries(pageByAuthorIdWithPageable);
 
@@ -203,15 +227,18 @@ public class MemberService {
     }
 
     private List<MyPostSummaryDto> convertPostsToSummaries(Page<Post> pagePosts) {
+
         return pagePosts.getContent().stream()
                 .map(post -> {
-                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    int commentCount =
+                            commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
                     return MyPostSummaryDto.of(post, commentCount);
                 })
                 .toList();
     }
 
     private PaginationDto getPaginationDto(Page<?> page) {
+
         return new PaginationDto(
                 page.getNumber(),
                 page.getTotalPages(),
@@ -236,10 +263,11 @@ public class MemberService {
         // 작성한 댓글을 Page 객체로 조회
         Page<Comment> pageByCommenterIdWithPageable =
                 commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
-                memberId, pageable
-        );
+                        memberId, pageable
+                );
 
-        List<MyCommentSummaryDto> commentSummaries = convertCommentsToSummaries(pageByCommenterIdWithPageable);
+        List<MyCommentSummaryDto> commentSummaries =
+                convertCommentsToSummaries(pageByCommenterIdWithPageable);
 
         PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
 
@@ -250,6 +278,7 @@ public class MemberService {
     }
 
     private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
+
         return pageComments.getContent().stream()
                 .map(MyCommentSummaryDto::of)
                 .toList();
@@ -284,5 +313,18 @@ public class MemberService {
                             memberId
                     ));
         }
+    }
+
+    /**
+     * 사용자가 보유한 배지 목록을 조회합니다.
+     *
+     * @param memberId 사용자 ID
+     * @return 사용자가 보유한 배지 목록 응답 DTO
+     */
+    public MyBadgeListResponseDto getMyBadges(Long memberId) {
+
+        List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(memberId);
+
+        return MyBadgeListResponseDto.of(memberBadgeList);
     }
 }

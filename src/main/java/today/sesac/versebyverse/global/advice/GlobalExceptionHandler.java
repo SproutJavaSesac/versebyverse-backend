@@ -122,7 +122,6 @@ public class GlobalExceptionHandler {
      *   <li>잘못된 JSON 문법 (예: 쉼표 누락, 중괄호 미완성 등)</li>
      * </ul>
      * </p>
-     *
      * 예외 발생 시 400 Bad Request 응답을 반환하며, 오류 메시지는 {@link GlobalErrorCode#INVALID_REQUEST}를 따릅니다.
      *
      * @param exception 변환 실패로 인해 발생한 예외

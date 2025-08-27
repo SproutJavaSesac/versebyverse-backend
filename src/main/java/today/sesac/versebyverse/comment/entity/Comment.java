@@ -211,4 +211,13 @@ public class Comment extends BaseEntity {
         }
         return commenter.getNickname();
     }
+
+    /**
+     * 신고된 댓글이 관리자에 의해 승인됐을때 isBlocked 상태를 변경합니다.
+     */
+    public void block() {
+
+        this.isBlocked = true;
+    }
+
 }

@@ -106,7 +106,7 @@ class PostRepositoryTest {
     @DisplayName("[예외] - 차단된 게시물 ID로 조회 시 조회되지 않는다.")
     void findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse_blocked() {
         // given
-        savedPost.report();
+        savedPost.block();
 
         // when
         Optional<Post> foundPost = postRepository
