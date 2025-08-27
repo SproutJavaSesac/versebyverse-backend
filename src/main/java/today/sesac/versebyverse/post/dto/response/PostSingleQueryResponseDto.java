@@ -34,6 +34,8 @@ public class PostSingleQueryResponseDto {
 
     Boolean isMine;
 
+    Boolean isHidden;
+
     int commentCount;
 
     int reactionCount;
@@ -68,6 +70,7 @@ public class PostSingleQueryResponseDto {
                 post.getImageUrl(),
                 post.getConceptType().toString(),
                 post.isMine(memberId),
+                post.isHidden(),
                 commentCount,
                 reactionCount,
                 myReaction,
