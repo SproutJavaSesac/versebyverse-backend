@@ -1128,10 +1128,10 @@ VALUES
 (80, 3, NULL, 110, 'ANGRY', NOW(), NOW());
 
 -- === 배지 초기 데이터 삽입 ===
-INSERT INTO badges (name, description, image_url, created_at, updated_at) VALUES
-('첫 게시글', '첫 번째 게시글을 작성한 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
-('새로운 가족', '회원가입을 완료한 새로운 멤버에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
-('신진 작가', '게시글을 10개 이상 작성하는 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW());
+INSERT INTO badges (name, description, image_url, created_at, updated_at)
+VALUES ('첫 게시글', '첫 번째 게시글을 작성한 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
+       ('새로운 가족', '회원가입을 완료한 새로운 멤버에게 주어지는 배지입니다.', NULL, NOW(), NOW()),
+       ('신진 작가', '게시글을 10개 이상 작성하는 사용자에게 주어지는 배지입니다.', NULL, NOW(), NOW());
 
 -- === Report 더미 데이터 50개 ==
 -- reasonDetail은 reasonType이 OTHER일 때만 값을 설정하고, 나머지는 NULL
