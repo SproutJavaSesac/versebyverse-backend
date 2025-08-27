@@ -3,11 +3,13 @@ package today.sesac.versebyverse.post.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
+import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.FileUploadException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.global.service.S3FileService;
@@ -35,6 +37,8 @@ public class PostCommandService {
     private final MemberService memberService;
 
     private final PostAiService postAiService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     private final S3FileService s3FileService;
 
@@ -67,7 +71,7 @@ public class PostCommandService {
                 throw new FileUploadException("이미지 업로드에 실패했습니다.", e);
             }
         }
-        
+
         //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
                 PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConceptType(),
@@ -97,6 +101,8 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
+        eventPublisher.publishEvent(new PostCreatedEvent(author));
+
         return PostCreateResponseDto.of(savedPost);
     }
 
@@ -111,18 +117,6 @@ public class PostCommandService {
 
         Post post = getPostById(postId);
         validatePostOwnership(post, memberId);
-
-        // S3에서 이미지 삭제
-        if (post.getImageUrl() != null) {
-            try {
-                s3FileService.deleteImage(post.getImageUrl());
-                log.info("게시글 이미지 삭제 완료: {}", post.getImageUrl());
-            } catch (Exception e) {
-                log.error("게시글 이미지 삭제 실패: {}", post.getImageUrl(), e);
-                // 이미지 삭제 실패 시에도 게시글 삭제는 진행
-            }
-        }
-        
         //soft deleted
         post.delete();
         postRepository.save(post);

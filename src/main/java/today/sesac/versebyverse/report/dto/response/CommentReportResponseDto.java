@@ -1,27 +1,30 @@
 package today.sesac.versebyverse.report.dto.response;
 
 import java.time.LocalDateTime;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.versebyverse.report.entity.ReasonType;
+import today.sesac.versebyverse.report.entity.StatusType;
 
 /**
- * 댓글 신고 요청 dto.
+ * 댓글 신고 응답 dto.
  */
 @Getter
-@Builder
+@AllArgsConstructor(staticName = "of")
 public class CommentReportResponseDto {
 
-    private int reportId;
+    private Long reportId;
 
-    private int commentId;
+    private Long reporterId;
 
-    private String reportType; // POST
+    private Long commentId;
 
-    private String reasonType;
+    private ReasonType reasonType;
 
     private String reasonDetail;
 
-    private String statusType;
+    private StatusType statusType;
 
     private LocalDateTime createdAt;
+
 }

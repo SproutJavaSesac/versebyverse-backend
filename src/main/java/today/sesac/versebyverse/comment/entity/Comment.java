@@ -90,16 +90,17 @@ public class Comment extends BaseEntity {
 
     /**
      * 관리자에 신고 승인 처리에 의해 차단 여부. 기본값 = 0
+     * <br>
+     * {@link today.sesac.versebyverse.report.entity.Report}의 StatusType이 ACCEPTED가 되면 true가 됩니다.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean isBlocked;
 
     /**
      * 댓글 삭제 여부.
      */
-    @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
     private boolean isDeleted;
-
 
     private Comment(
             String beforeContent, String afterContent, int level,
@@ -210,4 +211,13 @@ public class Comment extends BaseEntity {
         }
         return commenter.getNickname();
     }
+
+    /**
+     * 신고된 댓글이 관리자에 의해 승인됐을때 isBlocked 상태를 변경합니다.
+     */
+    public void block() {
+
+        this.isBlocked = true;
+    }
+
 }
