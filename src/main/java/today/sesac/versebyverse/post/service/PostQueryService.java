@@ -119,8 +119,11 @@ public class PostQueryService {
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {
 
-        Post foundPost = postRepository.findById(postId).orElseThrow(
-                () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
+        Post foundPost =
+                postRepository.findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(postId)
+                        .orElseThrow(
+                                () -> new PostException(PostErrorCode.POST_NOT_FOUND,
+                                        postId.toString()));
 
         //댓글 갯수 조회
         int commentCount =
