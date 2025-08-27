@@ -66,7 +66,6 @@ public class PostCommandService {
         //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
         String afterContent = postAiResponseDto.getContent();
-        log.info(postAiResponseDto.toString());
 
         //정적 팩토리 메서드
         Post post = Post.createPost(
