@@ -87,7 +87,6 @@ public class PostCommandService {
         return PostCreateResponseDto.of(savedPost);
     }
 
-
     /**
      * 게시물 삭제.
      *

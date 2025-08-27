@@ -42,4 +42,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      */
     @Query("SELECT r FROM Report r WHERE (:statusType IS NULL OR r.statusType = :statusType)")
     Page<Report> findAllByStatusType(@Param("statusType") StatusType statusType, Pageable pageable);
+
 }

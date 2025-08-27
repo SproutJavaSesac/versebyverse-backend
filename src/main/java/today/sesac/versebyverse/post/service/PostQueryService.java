@@ -18,6 +18,10 @@ import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.exception.PostErrorCode;
 import today.sesac.versebyverse.post.exception.PostException;
 import today.sesac.versebyverse.post.repository.PostRepository;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
+import today.sesac.versebyverse.reaction.repository.ReactionRepository;
+import today.sesac.versebyverse.reaction.service.ReactionService;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * 게시글 조회 service.
@@ -30,6 +34,11 @@ public class PostQueryService {
     private final PostRepository postRepository;
 
     private final CommentRepository commentRepository;
+
+    private final ReactionRepository reactionRepository;
+
+    private final ReactionService reactionService;
+    //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
      * 게시글 목록 리스트 조회.
@@ -52,11 +61,8 @@ public class PostQueryService {
                 //전체조회 + comment순 정렬
                 case "comments" -> postRepository.findAllOrderByCommentCount(pageable);
                 //전체조회 + reaction순 정렬
-                case "reactions" ->
-                    //TODO 반응하기 임시 기본 정렬 대체
-                        postRepository.findByGenreType(genreType, pageable);
-//                    postPage = postRepository.findByGenreTypeOrderByReactionCount(genreType,
-//                            pageable);
+                case "reactions" -> postRepository.findAllOrderByReactionCount(pageable);
+
                 //전체 조회 + 최신순 정렬
                 default -> postRepository.findAllOrderByCreatedAt(pageable);
             };
@@ -67,17 +73,14 @@ public class PostQueryService {
                         pageable);
                 //장르별 조회 + reaction순 정렬
                 case "reactions" ->
-                    //TODO 반응하기 임시 기본 정렬 대체
-                        postRepository.findByGenreType(genreType, pageable);
-//                    postPage = postRepository.findByGenreTypeOrderByReactionCount(genreType,
-//                            pageable);
-                //장르별 조회 + 최신순 정렬
+                        postRepository.findByGenreTypeOrderByReactionCount(genreType, pageable);
+                //컨셉별 조회 + 최신순 정렬
                 default -> postRepository.findByGenreType(genreType, pageable);
             };
         }
-        //Post 객체를 dto객체로 변환
+        //Post 객체를 dto 객체로 변환
         return postPage.map(post -> {
-            Long commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
+            int commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
                     post.getId());
             // TODO reaction개수 임시 0으로 고정
             int reactionCount = 0;
@@ -116,8 +119,26 @@ public class PostQueryService {
 
         Post foundPost = postRepository.findById(postId).orElseThrow(
                 () -> new PostException(PostErrorCode.POST_NOT_FOUND, postId.toString()));
-        // TODO 댓글갯수,반응갯수, 댓글 총갯수 추가
-        return PostSingleQueryResponseDto.of(foundPost, memberId);
+
+        //댓글 갯수 조회
+        int commentCount =
+                commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
+                        postId);
+
+        ReactionResponseDto reactionInfo;
+        if (memberId != null) {
+            // 로그인 사용자: 개인 반응 정보 포함
+            reactionInfo = reactionService.getReactions(TargetType.POST, postId, memberId);
+        } else {
+            // 비로그인 사용자: 전체 반응 통계만
+            reactionInfo =
+                    reactionService.getTotalReactionAndReactionDetailsByTargetType(null, postId,
+                            TargetType.POST);
+        }
+
+        return PostSingleQueryResponseDto.of(foundPost, memberId, commentCount,
+                reactionInfo.reactionTotalCount(), reactionInfo.myReaction(),
+                reactionInfo.reactionDetails());
     }
 
     /**

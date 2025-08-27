@@ -33,6 +33,8 @@ public class CommentResponseDto {
 
     private final int reactionCount;
 
+    private final Emotion myReaction;
+
     private final Map<Emotion, Integer> reactions;
 
     private final Boolean isDeleted;
@@ -44,12 +46,17 @@ public class CommentResponseDto {
     private final LocalDateTime updatedAt;
 
     /**
-     * Comment 객체를 CommentResponseDto로 변환합니다.
+     * Comment 객체를 CommentResponseDto로 변환합니다 (리액션 정보 포함).
      *
-     * @param comment 변환할 Comment 객체
+     * @param comment       변환할 Comment 객체
+     * @param order         순서
+     * @param reactionCount 리액션 총 개수
+     * @param reactions     리액션별 상세 개수
      * @return 변환된 CommentResponseDto 객체
      */
-    public static CommentResponseDto of(Comment comment, int order) {
+    public static CommentResponseDto of(Comment comment, int order, int reactionCount,
+            Emotion myReaction,
+            Map<Emotion, Integer> reactions) {
 
         return new CommentResponseDto(
                 comment.getId(),
@@ -59,13 +66,9 @@ public class CommentResponseDto {
                 order,
                 comment.getLevel(),
                 comment.getDisplayContent(),
-                6, // TODO: reactionCount 필드 구현 필요
-                Map.of(
-                        Emotion.HAPPY, 3,
-                        Emotion.SAD, 1,
-                        Emotion.ANGRY, 0,
-                        Emotion.EXCITED, 2
-                ), // TODO: reactions 필드 구현 필요
+                reactionCount,
+                myReaction,
+                reactions,
                 comment.isDeleted(),
                 comment.isBlocked(),
                 comment.getCreatedAt(),

@@ -112,7 +112,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.result.content").value(content))
                 .andExpect(jsonPath("$.result.level").value(0))
                 .andExpect(jsonPath("$.result.reactionTotalCount").value(0))
-                .andExpect(jsonPath("$.result.reactions").isEmpty())
+                .andExpect(jsonPath("$.result.reactionDetails").isEmpty())
                 .andExpect(jsonPath("$.result.isDeleted").value(false))
                 .andExpect(jsonPath("$.result.isBlocked").value(false))
                 .andExpect(jsonPath("$.result.createdAt").isNotEmpty())
@@ -133,6 +133,9 @@ class CommentControllerTest {
         boolean hasNext = false; // 다음 페이지 여부
         boolean hasPrevious = false; // 이전 페이지 여부
 
+        //비로그인 사용자
+        Long memberId = null;
+
         // CommentListResponseDto를 직접 생성하지 말고 Service에서 반환할 완성된 객체 Mock
         CommentListResponseDto mockResponse = mock(CommentListResponseDto.class);
         when(mockResponse.postId()).thenReturn(postId);
@@ -150,7 +153,8 @@ class CommentControllerTest {
         when(mockResponse.pagination()).thenReturn(mockPagination);
 
         when(commentService
-                .getCommentsByPostId(postId, PageRequest.of(page, size))).thenReturn(mockResponse);
+                .getCommentsByPostId(postId, PageRequest.of(page, size), memberId)).thenReturn(
+                mockResponse);
 
         // when, then
         mockMvc.perform(

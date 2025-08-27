@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.comment.service;
 
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,9 @@ import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
+import today.sesac.versebyverse.reaction.dto.response.ReactionResponseDto;
+import today.sesac.versebyverse.reaction.service.ReactionService;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * CommentService는 댓글 관련 비즈니스 로직을 처리하는 서비스입니다.
@@ -37,6 +41,8 @@ public class CommentService {
     private final PostQueryService postQueryService;
 
     private final CommentAiService commentAiService;
+
+    private final ReactionService reactionService;
 
     /**
      * 댓글을 작성합니다.
@@ -67,7 +73,14 @@ public class CommentService {
                 activePost, member);
         Comment savedComment = commentRepository.save(comment);
         savedComment.updatePath(); // 댓글 경로 자동 생성
-        return CommentCreateResponseDto.of(savedComment);
+
+        ReactionResponseDto reactionInfo =
+                reactionService.getTotalReactionAndReactionDetailsByTargetType(null,
+                        savedComment.getId(),
+                        TargetType.COMMENT);
+
+        return CommentCreateResponseDto.of(savedComment, reactionInfo.reactionTotalCount(),
+                reactionInfo.reactionDetails());
 
     }
 
@@ -119,16 +132,27 @@ public class CommentService {
      * @param pageable 페이지네이션 정보
      * @return 댓글 목록 응답 DTO
      */
-    public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable) {
+    public CommentListResponseDto getCommentsByPostId(Long postId, Pageable pageable,
+            Long memberId) {
 
         postQueryService.validateActivePostByIdOrThrow(postId);
 
         Page<Comment> pageByPostIdWithPageable = commentRepository
                 .findByPostIdOrderByPathAsc(postId, pageable);
 
+        //post id에 대한 모든 댓글 id 추출
+        List<Long> commentIds = pageByPostIdWithPageable.getContent().stream()
+                .map(Comment::getId)
+                .toList();
+
+        //모든 댓글에 대한 리액션 정보 한번에 조회
+        Map<Long, ReactionResponseDto> reactionsMap =
+                reactionService.getReactionsForComments(commentIds, memberId);
+
         return new CommentListResponseDto(
                 postId,
-                pageByPostIdWithPageable
+                pageByPostIdWithPageable,
+                reactionsMap
         );
     }
 
@@ -187,6 +211,13 @@ public class CommentService {
                 .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND,
                         "commentId"));
 
+        ReactionResponseDto reactionInfo =
+                reactionService.getTotalReactionAndReactionDetailsByTargetType(
+                        null,
+                        comment.getId(),
+                        TargetType.COMMENT
+                );
+
         return new CommentSingleQueryForAdminResponseDto(
                 comment.getId(),
                 comment.getPost().getId(),
@@ -195,8 +226,8 @@ public class CommentService {
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
                 comment.getAfterContent(),
                 comment.getLevel(),
-                6, // TODO: comment.getReactions().size(),
-                Map.of(), // TODO: 리액션 기능 추가 예정
+                reactionInfo.reactionTotalCount(),
+                reactionInfo.reactionDetails(),
                 comment.isDeleted(),
                 comment.isBlocked(),
                 comment.getCreatedAt(),

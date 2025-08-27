@@ -11,11 +11,14 @@ import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.service.PostQueryService;
+import today.sesac.versebyverse.report.dto.request.ReportActionRequestDto;
 import today.sesac.versebyverse.report.dto.request.ReportRequestDto;
 import today.sesac.versebyverse.report.dto.response.CommentReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.PostReportResponseDto;
 import today.sesac.versebyverse.report.dto.response.ReportListResponseWrapperDto;
+import today.sesac.versebyverse.report.dto.response.ReportResponseDto;
 import today.sesac.versebyverse.report.entity.Report;
+import today.sesac.versebyverse.report.entity.ReportType;
 import today.sesac.versebyverse.report.entity.StatusType;
 import today.sesac.versebyverse.report.exception.ReportErrorCode;
 import today.sesac.versebyverse.report.exception.ReportException;
@@ -66,7 +69,7 @@ public class ReportService {
     }
 
     /**
-     * 게시글 신고를 등록하기 전 검증하는 기능입니다. 댓글을 신고합니다.
+     * 댓글을 신고합니다.
      *
      * @param reportRequestDto 신고 요청 DTO
      * @param reporterId       신고자 ID
@@ -193,4 +196,66 @@ public class ReportService {
 
         return ReportListResponseWrapperDto.of(reportPage);
     }
+
+    /**
+     * 신고에 대한 관리자 액션을 처리합니다.
+     *
+     * <p>이 메서드는 다음과 같은 작업을 수행합니다:</p>
+     * <ul>
+     *   <li>신고 존재 여부 및 처리 상태 확인</li>
+     *   <li>신고 유형에 따른 적절한 조치 실행</li>
+     *   <li>신고 처리 결과 반환</li>
+     * </ul>
+     *
+     * <p>신고가 승인된 경우:</p>
+     * <ul>
+     *   <li>게시글 신고: 해당 게시글을 차단</li>
+     *   <li>댓글 신고: 해당 댓글을 차단</li>
+     * </ul>
+     *
+     * <p>신고가 거부된 경우:</p>
+     * <ul>
+     *   <li>신고 상태만 REJECTED로 변경</li>
+     * </ul>
+     *
+     * @param reportId               처리할 신고의 ID
+     * @param reportActionRequestDto 신고 처리 액션 정보 (승인/거부)
+     * @return 처리된 신고 정보를 담은 응답 DTO
+     */
+    @Transactional
+    public ReportResponseDto handleReportAction(Long reportId,
+            ReportActionRequestDto reportActionRequestDto) {
+        // 신고 존재 여부 확인
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(
+                        () -> new ReportException(ReportErrorCode.REPORT_NOT_FOUND, "reportId"));
+
+        // 이미 처리된 신고인지 확인
+        if (report.getStatusType() != StatusType.PENDING) {
+            throw new ReportException(ReportErrorCode.REPORT_ALREADY_PROCESSED, "reportId");
+        }
+
+        ReportType reportType = report.checkReportType();
+        StatusType statusType = reportActionRequestDto.getAction();
+        switch (statusType) {
+            case ACCEPTED -> {
+                report.accept();
+                Post post = report.getPost();
+                Comment comment = report.getComment();
+                if (post == null) {
+                    comment.block();
+                } else {
+                    post.block();
+                }
+            }
+            case REJECTED -> report.reject();
+            default ->
+                    throw new ReportException(ReportErrorCode.REPORT_ACTION_TYPE_WRONG, "action");
+
+        }
+
+        return reportType == ReportType.POST ? ReportResponseDto.createPostReportResponse(report)
+                : ReportResponseDto.createCommentReportResponse(report);
+    }
+
 }

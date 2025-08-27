@@ -19,7 +19,7 @@ import today.sesac.versebyverse.post.entity.Post;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     /**
-     * 게시물 전체 조회 + 최신순 기본 정렬
+     * 게시물 전체 조회 + 최신순 기본 정렬.
      *
      * @param pageable 페이지네이션 정보
      */
@@ -29,7 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             ORDER BY p.createdAt DESC
             """)
     Page<Post> findAllOrderByCreatedAt(Pageable pageable);
-
 
     /**
      * 게시물 전체 조회 + 댓글 순 정렬.
@@ -44,15 +43,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """)
     Page<Post> findAllOrderByCommentCount(Pageable pageable);
 
-    // TODO reaction 임시 주석 처리
-    //전체 조회 reaction순 sort
-//    @Query("""
-//    SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id
-//    GROUP BY p.id
-//    ORDER BY COUNT(r.id) DESC
-//      """)
-//Page<Post> findAllOrderByReactionCount(Pageable pageable);
-
+    /**
+     * 게시물 전체 조회 + 반응 총 갯수 정렬.
+     *
+     * @param pageable 페이지네이션 정보
+     */
+    @Query("""
+            SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id
+            GROUP BY p.id
+            ORDER BY COUNT(r.id) DESC
+            """)
+    Page<Post> findAllOrderByReactionCount(Pageable pageable);
 
     /**
      * 장르별 조회 + 최신순 정렬.
@@ -83,14 +84,18 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """)
     Page<Post> findByGenreTypeOrderByCommentCount(Genre genreType, Pageable pageable);
 
-    // TODO reaction 임시 주석 처리
-//    //컨셉별 reaction sort
-//    @Query("""
-//            SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id \
-//            WHERE p.genreType = :genreType \
-//            GROUP BY p.id \
-//            ORDER BY COUNT(r.id) DESC""")
-//    Page<Post> findByConceptTypeOrderByReactionCount(Concept genreType, Pageable pageable);
+    /**
+     * 컨셉별 조회 + 반응 총갯수 정렬.
+     *
+     * @param genreType 컨셉 타입
+     * @param pageable  페이지네이션 정보
+     */
+    @Query("""
+            SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id 
+            WHERE p.genreType = :genreType 
+            GROUP BY p.id 
+            ORDER BY COUNT(r.id) DESC""")
+    Page<Post> findByGenreTypeOrderByReactionCount(Genre genreType, Pageable pageable);
 
     /**
      * 게시글 ID로 게시글이 존재하는지 확인합니다. 삭제되지 않고, 차단되지 않았으며, 숨겨지지 않은 게시글만 확인합니다.
@@ -131,18 +136,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByIdAndIsDeletedFalseAndIsBlockedFalseAndIsHiddenFalse(Long postId);
 
     /**
-     * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다.
-     * 신고되거나, 숨겨진 게시글도 포함합니다. 삭제된 게시글은 포함하지 않습니다.
+     * 게시글 작성자의 id로 작성자가 작성한 게시글의 목록을 페이지로 가져옵니다. 신고되거나, 숨겨진 게시글도 포함합니다. 삭제된 게시글은 포함하지 않습니다.
      *
      * @param authorId 게시글 작성자 ID
      * @param pageable 페이지네이션 정보
      * @return 페이지로 가져온 작성자 게시글 목록
      */
-    Page<Post> findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(Long authorId, Pageable pageable);
+    Page<Post> findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(Long authorId,
+            Pageable pageable);
 
     /**
-     * 특정 사용자가 작성한 총 게시글 수를 조회합니다.
-     * 신고되거나, 숨겨진 게시글의 수도 포함합니다. 삭제된 게시글은 포함하지 않습니다.
+     * 특정 사용자가 작성한 총 게시글 수를 조회합니다. 신고되거나, 숨겨진 게시글의 수도 포함합니다. 삭제된 게시글은 포함하지 않습니다.
      *
      * @param authorId 게시글 작성자 ID
      * @return 특정 사용자가 작성한 총 게시글의 수

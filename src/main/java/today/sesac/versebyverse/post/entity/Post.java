@@ -14,8 +14,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.global.domain.BaseEntity;
-import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
 
 /**
@@ -164,9 +164,9 @@ public class Post extends BaseEntity {
     }
 
     /**
-     * 게시글을 신고합니다.
+     * 신고된 게시글이 관리자에 의해 승인됐을때 isBlocked 상태를 변경합니다.
      */
-    public void report() {
+    public void block() {
 
         this.isBlocked = true;
     }

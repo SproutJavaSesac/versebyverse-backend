@@ -3,9 +3,9 @@ package today.sesac.versebyverse.member.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +44,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    private final RankingService rankingService;
+
     /**
      * 탈퇴 요청을 수행합니다.
      *
@@ -70,14 +72,13 @@ public class MemberController {
         return ApiResponse.success("회원 탈퇴가 완료되었습니다.");
     }
 
-    private final RankingService rankingService;
-
     // TODO: 프론트 테스트를 위한 임시 마이페이지 게시글 확인 메서드 - 수정하기
+
     /**
      * 사용자가 작성한 전체 게시글을 페이지네이션 방식으로 조회합니다.
      *
-     * @param page page 페이지 번호 (0부터 시작)
-     * @param size 페이지 크기 (기본값: 10)
+     * @param page          page 페이지 번호 (0부터 시작)
+     * @param size          페이지 크기 (기본값: 10)
      * @param userPrincipal 사용자의 인증 정보
      * @return 사용자가 작성한 게시글 목록 응답 DTO
      */
@@ -99,8 +100,8 @@ public class MemberController {
     /**
      * 사용자가 작성한 전체 댓글을 페이지네이션 방식으로 조회합니다.
      *
-     * @param page 페이지 번호 (0부터 시작)
-     * @param size 페이지 크기 (기본값: 10)
+     * @param page          페이지 번호 (0부터 시작)
+     * @param size          페이지 크기 (기본값: 10)
      * @param userPrincipal 사용자의 인증 정보
      * @return 사용자가 작성한 댓글 목록 응답 DTO
      */
@@ -182,7 +183,7 @@ public class MemberController {
     /**
      * 사용자의 정보를 수정합니다.
      *
-     * @param userPrincipal 사용자의 인증 정보
+     * @param userPrincipal        사용자의 인증 정보
      * @param myInfoEditRequestDto 사용자의 정보 수정 요청 DTO
      * @return 사용자의 정보 수정 응답 DTO
      */
