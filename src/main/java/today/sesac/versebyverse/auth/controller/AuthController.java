@@ -29,11 +29,13 @@ public class AuthController {
      * @return 로그인 상태 반환 DTO
      */
     @GetMapping("/status")
-    public ApiResponse<LoginStatusResponseDto> getLoginStatus(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ApiResponse<LoginStatusResponseDto> getLoginStatus(
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         // 미인증된 사용자일 경우 - isAuthenticated를 false로 설정하고 응답
         if (userPrincipal == null) {
-            LoginStatusResponseDto loginStatusResponseDto = LoginStatusResponseDto.createUnauthenticated();
+            LoginStatusResponseDto loginStatusResponseDto =
+                    LoginStatusResponseDto.createUnauthenticated();
             return ApiResponse.success(loginStatusResponseDto);
         }
 

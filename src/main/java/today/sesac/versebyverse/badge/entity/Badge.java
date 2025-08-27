@@ -34,6 +34,7 @@ public class Badge extends BaseEntity {
     private String imageUrl;    //TODO: 이미지 동적으로 추가할 경우를 생각해 imageUrl 필드 미리 추가, 현재는 프론트에서 이미지 구현
 
     private Badge(String name, String description, String imageUrl) {
+
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
@@ -42,12 +43,13 @@ public class Badge extends BaseEntity {
     /**
      * 배지를 생성합니다.
      *
-     * @param name 배지의 이름
+     * @param name        배지의 이름
      * @param description 배지의 상세 설명
-     * @param imageUrl 배지의 이미지
+     * @param imageUrl    배지의 이미지
      * @return 새로운 배지 엔티티
      */
     public static Badge create(String name, String description, String imageUrl) {
+
         return new Badge(name, description, imageUrl);
     }
 }
