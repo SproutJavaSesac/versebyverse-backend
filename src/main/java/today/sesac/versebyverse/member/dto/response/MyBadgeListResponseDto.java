@@ -28,6 +28,7 @@ public class MyBadgeListResponseDto {
     }
 
     private static List<MyBadgeSummaryDto> convertBadgesToSummaries(List<MemberBadge> badges) {
+
         return badges.stream()
                 .map(badge -> MyBadgeSummaryDto.of(
                         badge.getId(),

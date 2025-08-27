@@ -81,8 +81,7 @@ public class Report extends BaseEntity {
     private StatusType statusType;
 
     /**
-     * 신고를 생성하는 생성자입니다.
-     * 게시글과 댓글 중 하나만 신고 대상이 될 수 있으며, 신고 상태는 기본적으로 PENDING으로 설정됩니다.
+     * 신고를 생성하는 생성자입니다. 게시글과 댓글 중 하나만 신고 대상이 될 수 있으며, 신고 상태는 기본적으로 PENDING으로 설정됩니다.
      *
      * @param reporter     신고를 한 회원
      * @param post         신고된 게시글 (댓글 신고 시 null)
@@ -102,8 +101,7 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * 게시글 신고를 생성하는 정적 팩토리 메서드입니다.
-     * 게시글 신고 전용 Report 엔티티를 생성합니다.
+     * 게시글 신고를 생성하는 정적 팩토리 메서드입니다. 게시글 신고 전용 Report 엔티티를 생성합니다.
      *
      * @param reporter     신고를 한 회원
      * @param post         신고된 게시글
@@ -118,8 +116,7 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * 댓글 신고를 생성하는 정적 팩토리 메서드입니다.
-     * 댓글 신고 전용 Report 엔티티를 생성합니다.
+     * 댓글 신고를 생성하는 정적 팩토리 메서드입니다. 댓글 신고 전용 Report 엔티티를 생성합니다.
      *
      * @param reporter     신고를 한 회원
      * @param comment      신고된 댓글
@@ -134,17 +131,15 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * 신고 상태를 승인으로 변경합니다.
-     * 신고된 게시글 또는 댓글에 대한 조치가 승인되었음을 의미합니다.
+     * 신고 상태를 승인으로 변경합니다. 신고된 게시글 또는 댓글에 대한 조치가 승인되었음을 의미합니다.
      */
     public void accept() {
-        //TODO: isBlocked 필드 변경 메서드 호출.
+
         this.statusType = StatusType.ACCEPTED;
     }
 
     /**
-     * 신고 상태를 거부로 변경합니다.
-     * 신고된 게시글 또는 댓글에 대한 조치가 거부되었음을 의미합니다.
+     * 신고 상태를 거부로 변경합니다. 신고된 게시글 또는 댓글에 대한 조치가 거부되었음을 의미합니다.
      */
     public void reject() {
 
@@ -152,12 +147,20 @@ public class Report extends BaseEntity {
     }
 
     /**
-     * 신고 상태를 보류로 변경합니다.
-     * 신고된 게시글 또는 댓글이 이미 삭제되어 조치가 보류되었음을 의미합니다.
+     * 신고 상태를 보류로 변경합니다. 신고된 게시글 또는 댓글이 이미 삭제되어 조치가 보류되었음을 의미합니다.
      */
     public void postpone() {
 
         this.statusType = StatusType.POSTPONE;
+    }
+
+    /**
+     * 신고된 대상이 post인지 comment인지 구분합니다.
+     */
+    public ReportType checkReportType() {
+
+        return post == null ? ReportType.COMMENT : ReportType.POST;
+
     }
 
 }

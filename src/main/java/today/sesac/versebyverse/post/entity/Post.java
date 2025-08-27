@@ -14,8 +14,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.global.domain.BaseEntity;
-import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
 
 /**
@@ -101,17 +101,17 @@ public class Post extends BaseEntity {
     private Emotion emotionType;
 
     /**
-     * 글의 컨셉. enum 타입으로 총 5가지 입니다.
+     * 글의 장르. enum 타입으로 총 9가지 입니다.
      */
     @Enumerated(EnumType.STRING)
-    private Concept conceptType;
+    private Genre genreType;
 
     /**
      * Post 생성자.
      */
     private Post(Member author, String beforeContent, String afterContent, String beforeTitle,
             String afterTitle,
-            String imageUrl, Emotion emotionType, Concept conceptType) {
+            String imageUrl, Emotion emotionType, Genre genreType) {
 
         this.author = author;
         this.beforeContent = beforeContent;
@@ -124,7 +124,7 @@ public class Post extends BaseEntity {
         this.isDeleted = false;
         this.isHidden = false;
         this.emotionType = emotionType;
-        this.conceptType = conceptType;
+        this.genreType = genreType;
     }
 
     /**
@@ -133,10 +133,10 @@ public class Post extends BaseEntity {
     public static Post createPost(Member author, String beforeContent, String afterContent,
             String beforeTitle, String afterTitle, String imageUrl,
             Emotion emotionType,
-            Concept conceptType) {
+            Genre genreType) {
 
         return new Post(author, beforeContent, afterContent, beforeTitle, afterTitle, imageUrl,
-                emotionType, conceptType);
+                emotionType, genreType);
     }
 
     /**
@@ -164,9 +164,9 @@ public class Post extends BaseEntity {
     }
 
     /**
-     * 게시글을 신고합니다.
+     * 신고된 게시글이 관리자에 의해 승인됐을때 isBlocked 상태를 변경합니다.
      */
-    public void report() {
+    public void block() {
 
         this.isBlocked = true;
     }
