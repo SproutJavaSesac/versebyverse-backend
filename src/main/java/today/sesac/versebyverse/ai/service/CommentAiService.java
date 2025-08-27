@@ -48,7 +48,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
      *
      * @param requestDto AI 요청 데이터 전송 객체
      * @return responseDto AI 응답 DTO
-     * @throws AiException 응답의 필수 필드(conceptType, content)가 null인 경우
+     * @throws AiException 응답의 필수 필드(genreType, content)가 null인 경우
      */
     public CommentAiResponseDto executeAiWithValidation(CommentAiRequestDto requestDto) {
 
@@ -60,7 +60,7 @@ public class CommentAiService extends AbstractAiService<CommentAiRequestDto, Com
             log.warn("AI 응답 필수 필드 누락");
             throw new AiException(AiErrorCode.REQUIRED_FIELD_MISSING,
                     (responseDto.getGenreType() == null)
-                            ? "conceptType"
+                            ? "genreType"
                             : "content");
         }
         return responseDto;

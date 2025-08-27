@@ -55,7 +55,7 @@ public class PostCommandService {
         String beforeContent = postCreateRequestDto.getContent();
         //4.executeAi()﹒ai 요청dto of 생성자
         PostAiRequestDto postAiRequestDto =
-                PostAiRequestDto.of(beforeTitle, postCreateRequestDto.getConcept(),
+                PostAiRequestDto.of(beforeTitle,
                         postCreateRequestDto.getGenreType(),
                         postCreateRequestDto.getEmotionType(), beforeContent);
 
@@ -66,6 +66,7 @@ public class PostCommandService {
         //6. ai 처리된 afterTitle, afterContent 생성
         String afterTitle = postAiResponseDto.getTitle();
         String afterContent = postAiResponseDto.getContent();
+        log.info(postAiResponseDto.toString());
 
         //정적 팩토리 메서드
         Post post = Post.createPost(

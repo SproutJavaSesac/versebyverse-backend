@@ -29,7 +29,6 @@ profile
 
 input: {
 "title": "『82년생 김지영』을 읽고",
-"conceptType" : "INTELLECTUAL_DISPLAY",
 "genreType": "BOOK_REVIEW",
 "emotionType": "EXCITED",
 "content": "조남주 작가의 『82년생 김지영』을 읽었다. 주변 여성들의 이야기 같아서 현실적으로 다가왔다. 김지영이 겪는 일들이 내 친구들, 내 누나, 내 동료들의 경험과
@@ -39,9 +38,8 @@ input: {
 }
 output: {
 "title": "『82년생 김지영』- 일상 속 미시권력의 서사화",
-"conceptType" : "INTELLECTUAL_DISPLAY",
 "genreType": "BOOK_REVIEW",
-"emotionType": "PROUD",
+"emotionType": "EXCITED",
 "content": "조남주의 『82년생 김지영』이 출간 5년이 지난 지금까지도 논란과 공감을 동시에 불러일으키는 이유는 무엇일까. 이 소설의 힘은 거대 담론으로서의 페미니즘이
 아닌, 일상 속에 스며든 성차별의 미시적 권력관계를 섬세하게 포착한 데 있다. 작가는 김지영이라는 평범한 개인의 생애를 통해 한국 사회 여성들의 집합적 경험을 형상화했다. 특히
 주목할 점은 서사 구조다. 소설은 연대기적 구성을 취하면서도 각 시기마다 여성에게 가해지는 사회적 압력의 양상을 체계적으로 보여준다. 학창 시절의 '여학생다움' 강요에서 시작해,

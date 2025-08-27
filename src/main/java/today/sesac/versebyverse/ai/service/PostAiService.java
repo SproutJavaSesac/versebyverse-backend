@@ -78,7 +78,6 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
 
         return PostAiResponseDto.of(
                 requestDto.getTitle(),
-                requestDto.getConceptType(),
                 requestDto.getGenreType(),
                 requestDto.getEmotionType(),
                 requestDto.getContent()

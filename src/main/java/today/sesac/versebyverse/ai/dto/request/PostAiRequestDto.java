@@ -23,7 +23,6 @@ public class PostAiRequestDto extends AiRequestDto {
      */
     private String title;
 
-    private String conceptType;
 
     /**
      * 게시글 장르 타입.

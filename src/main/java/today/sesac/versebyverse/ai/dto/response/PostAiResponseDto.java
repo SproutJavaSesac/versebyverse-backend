@@ -23,8 +23,6 @@ public class PostAiResponseDto extends AiResponseDto {
      */
     private String title;
 
-    private String conceptType;
-
     /**
      * AI가 분석한 게시글 장르 타입.
      */

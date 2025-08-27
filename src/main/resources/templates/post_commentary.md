@@ -29,7 +29,6 @@ profile
 input:
 {
 "title": "청년 일자리 정책, 또 다른 전시행정인가",
-"conceptType" : "INTELLECTUAL_DISPLAY",
 "genreType": "COMMENTARY",
 "emotionType": "ANGRY",
 "content": "정부가 또 청년 일자리 창출에 수십조를 쏟아붓겠다고 한다. 하지만 현실은 어떤가? 나는 올해 20대 후반의 구직자로서 직접 경험했다. 청년 인턴십, 청년 창업

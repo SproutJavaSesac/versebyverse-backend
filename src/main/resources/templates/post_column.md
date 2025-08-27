@@ -23,7 +23,7 @@
 
 ## example
 
-input: {"title": "힘든 하루", "conceptType": "INTELLECTUAL_DISPLAY", "genreType": "COLUMN", "
+input: {"title": "힘든 하루", "genreType": "COLUMN", "
 emotionType": "SAD", "content": "요즘 회사에서 일이 너무 많아서
 지치는 느낌이야."}
 output: {"title": "업무 과부하, 당신도 이런 경험 있나요?", "conceptType": "INTELLECTUAL_DISPLAY", "genreType": "

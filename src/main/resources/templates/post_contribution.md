@@ -28,7 +28,6 @@ profile
 
 input: {
 "title": "원격근무, 생산성 향상의 해답인가",
-"conceptType" : "INTELLECTUAL_DISPLAY",
 "genreType": "CONTRIBUTION",
 "emotionType": "CONFUSED",
 "content": "코로나19 이후 우리 회사도 주 2회 재택근무를 도입했다. 처음에는 출퇴근 시간을 절약하고 집중도가 높아져서 좋았다. 하지만 6개월이 지난 지금, 과연

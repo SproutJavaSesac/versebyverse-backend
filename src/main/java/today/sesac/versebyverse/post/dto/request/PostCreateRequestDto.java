@@ -21,8 +21,6 @@ public class PostCreateRequestDto {
     @NotBlank
     private String title;
 
-    private String concept;
-
     /**
      * 게시물의 장르타입입니다.
      */
