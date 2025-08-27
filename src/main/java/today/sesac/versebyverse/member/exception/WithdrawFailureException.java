@@ -10,10 +10,11 @@ public class WithdrawFailureException extends AbstractBaseException {
     /**
      * 에러 코드와 커스텀 메시지를 사용해 exception 생성합니다.
      *
-     * @param param 에러가 발생한 파라미터
+     * @param param        에러가 발생한 파라미터
      * @param errorMessage 예외 스택에 남길 메시지
      */
     public WithdrawFailureException(String param, String errorMessage) {
+
         super(MemberErrorCode.WITHDRAW_FAILURE, param, errorMessage);
     }
 }

@@ -1,41 +1,60 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.post.entity.Post;
 
 /**
- * 게시글 단건 조회 응답 record.
+ * 게시글 단건 조회 응답 dto.
  */
-public record PostSingleQueryResponseDto(
+@Getter
+@AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
+public class PostSingleQueryResponseDto {
 
-        Long postId,
+    Long postId;
 
-        Long authorId,
+    Long authorId;
 
-        String afterTitle,
+    String afterTitle;
 
-        String afterContent,
+    String afterContent;
 
-        String nickname,
+    String nickname;
 
-        LocalDateTime createdAt,
+    LocalDateTime createdAt;
 
-        String imgUrl,
+    String imgUrl;
 
-        String conceptType,
+    String conceptType;
 
-        Boolean isMine
+    Boolean isMine;
 
-        // TODO comment와 reaction 부분 연결 필요
-//    int commentCount;
-//
-//    int reactionCount;
-//
-//    Map<String, Integer> reactionDetailCount;
+    int commentCount;
 
-) {
+    int reactionCount;
 
-    public static PostSingleQueryResponseDto of(Post post, Long memberId) {
+    Emotion myReaction;
+
+    Map<Emotion, Integer> reactionDetailCount;
+
+    /**
+     * dto of 정적 메서드.
+     *
+     * @param post            post 객체
+     * @param memberId        회원 id
+     * @param commentCount    게시글의 댓글 총 갯수
+     * @param reactionCount   게시글의 반응 총 갯수
+     * @param myReaction      사용자의 반응
+     * @param reactionDetails 게시글의 반응별 갯수
+     */
+    public static PostSingleQueryResponseDto of(Post post, Long memberId,
+            int commentCount, int reactionCount, Emotion myReaction,
+            Map<Emotion, Integer> reactionDetails) {
 
         return new PostSingleQueryResponseDto(
                 post.getId(),
@@ -46,7 +65,11 @@ public record PostSingleQueryResponseDto(
                 post.getCreatedAt(),
                 post.getImageUrl(),
                 post.getConceptType().toString(),
-                post.isMine(memberId)
+                post.isMine(memberId),
+                commentCount,
+                reactionCount,
+                myReaction,
+                reactionDetails
         );
     }
 }

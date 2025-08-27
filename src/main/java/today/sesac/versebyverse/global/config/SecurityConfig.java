@@ -24,12 +24,12 @@ public class SecurityConfig {
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
-    private String clientUrl;
-
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
+    private String clientUrl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,14 +47,14 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                                .authorizationEndpoint(oAuth2 -> oAuth2
-                                        .baseUri("/api/oauth2/authorization"))
-                                .redirectionEndpoint(oAuth2 -> oAuth2
-                                        .baseUri("/login/oauth2/code/*"))
-                                .userInfoEndpoint(userInfoEndpointConfig ->
-                                        userInfoEndpointConfig
-                                                .userService(customOAuth2UserService))
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .authorizationEndpoint(oAuth2 -> oAuth2
+                                .baseUri("/api/oauth2/authorization"))
+                        .redirectionEndpoint(oAuth2 -> oAuth2
+                                .baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                userInfoEndpointConfig
+                                        .userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
                         .failureHandler(oAuth2AuthenticationFailureHandler)
                 ).logout(logout -> logout   // TODO: 프론트 테스트를 위한 임시 로그아웃 구현 -> 수정 필요
                         .logoutUrl("/api/v1/auth/logout")

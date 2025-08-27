@@ -164,9 +164,9 @@ public class Post extends BaseEntity {
     }
 
     /**
-     * 게시글을 신고합니다.
+     * 신고된 게시글이 관리자에 의해 승인됐을때 isBlocked 상태를 변경합니다.
      */
-    public void report() {
+    public void block() {
 
         this.isBlocked = true;
     }

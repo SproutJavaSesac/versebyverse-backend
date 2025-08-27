@@ -23,7 +23,7 @@ public record PostSummaryResponseDto(
 
         int reactionCount,
 
-        Long commentCount,
+        int commentCount,
 
         Concept conceptType,
 
@@ -33,7 +33,14 @@ public record PostSummaryResponseDto(
 
 ) {
 
-    public static PostSummaryResponseDto of(Post post, Long commentCount, int reactionCount) {
+    /**
+     * 게시글 단건 조회 of 메서드.
+     *
+     * @param post          게시글 객체
+     * @param commentCount  게시글의 댓글 갯수
+     * @param reactionCount 반응 총 갯수
+     */
+    public static PostSummaryResponseDto of(Post post, int commentCount, int reactionCount) {
 
         return new PostSummaryResponseDto(
                 post.getAuthor().getId(),
