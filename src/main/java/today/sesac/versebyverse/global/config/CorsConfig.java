@@ -1,6 +1,8 @@
 package today.sesac.versebyverse.global.config;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +26,13 @@ public class CorsConfig {
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList(clientUrl));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
+        configuration.setAllowedOrigins(Collections.singletonList(clientUrl));
+        configuration.setAllowedMethods(
+                Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
