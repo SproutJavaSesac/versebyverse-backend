@@ -13,7 +13,7 @@ import today.sesac.versebyverse.ai.util.GenrePromptMapper;
 /**
  * 게시글 도메인의 AI 처리를 담당하는 서비스입니다.
  *
- * <p>컨셉에 맞는 글 변환, 감정 분석 등 게시글 관련 AI 작업을 수행합니다.</p>
+ * <p>장르에 맞는 글 변환, 감정 분석 등 게시글 관련 AI 작업을 수행합니다.</p>
  */
 @Service
 @Slf4j

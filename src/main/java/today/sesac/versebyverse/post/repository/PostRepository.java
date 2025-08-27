@@ -85,9 +85,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByGenreTypeOrderByCommentCount(Genre genreType, Pageable pageable);
 
     /**
-     * 컨셉별 조회 + 반응 총갯수 정렬.
+     * 장르별 조회 + 반응 총갯수 정렬.
      *
-     * @param genreType 컨셉 타입
+     * @param genreType 장르 타입
      * @param pageable  페이지네이션 정보
      */
     @Query("""

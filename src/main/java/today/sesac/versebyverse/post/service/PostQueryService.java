@@ -74,7 +74,7 @@ public class PostQueryService {
                 //장르별 조회 + reaction순 정렬
                 case "reactions" ->
                         postRepository.findByGenreTypeOrderByReactionCount(genreType, pageable);
-                //컨셉별 조회 + 최신순 정렬
+                //장르별 조회 + 최신순 정렬
                 default -> postRepository.findByGenreType(genreType, pageable);
             };
         }
