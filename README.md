@@ -287,88 +287,11 @@ graph TB
 
 ### 📊 ERD (Entity Relationship Diagram)
 
-```mermaid
-erDiagram
-    MEMBERS {
-        bigint id PK
-        varchar role_type
-        varchar social_type
-        varchar email
-        varchar nickname
-        varchar profile_image_url
-        boolean is_deleted
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    POSTS {
-        bigint id PK
-        bigint author_id FK
-        text before_content
-        text after_content
-        varchar before_title
-        varchar after_title
-        varchar image_url
-        varchar emotion_type
-        varchar concept_type
-        int report_count
-        boolean is_blocked
-        boolean is_deleted
-        boolean is_hidden
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    COMMENTS {
-        bigint id PK
-        bigint post_id FK
-        bigint commenter_id FK
-        bigint parent_id FK
-        text before_content
-        text after_content
-        int level
-        varchar path
-        boolean is_deleted
-        boolean is_blocked
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    RANKINGS {
-        bigint id PK
-        bigint post_id FK
-        varchar category
-        varchar period_type
-        int rank_position
-        timestamp created_at
-    }
-    
-    REPORTS {
-        bigint id PK
-        bigint reporter_id FK
-        bigint post_id FK
-        bigint comment_id FK
-        varchar reason
-        varchar status
-        timestamp created_at
-        timestamp updated_at
-    }
-    
-    PROFANITIES {
-        bigint id PK
-        varchar word
-        timestamp created_at
-    }
-    
-    MEMBERS ||--o{ POSTS : writes
-    MEMBERS ||--o{ COMMENTS : writes
-    POSTS ||--o{ COMMENTS : has
-    COMMENTS ||--o{ COMMENTS : replies_to
-    POSTS ||--o{ RANKINGS : ranked_in
-    MEMBERS ||--o{ REPORTS : reports
-    POSTS ||--o{ REPORTS : reported
-    COMMENTS ||--o{ REPORTS : reported
-```
+![Image](https://github.com/user-attachments/assets/907e11a5-d6c2-4c71-a8d5-e328c4b293c2)
+
+### API 설계
+
+[API 설계](https://www.notion.so/hannanana/API-20d33717f91380739342c33da2c7b92e?source=copy_link)
 
 ### 🔄 배포 아키텍처
 
