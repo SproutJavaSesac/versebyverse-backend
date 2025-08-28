@@ -35,7 +35,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         SocialType socialType = extractSocialType(registrationId);
 
-        // 사용자 정보를 가져옵니다.
         String email = extractEmail(oAuth2User, socialType);
         if (email == null) {
             throw new OAuth2AuthenticationException(
@@ -61,7 +60,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 member.getEmail());
     }
 
-    private SocialType extractSocialType (String registrationId) {
+    private SocialType extractSocialType(String registrationId) {
+
         if (registrationId.equals("google")) {
             return SocialType.GOOGLE;
         } else if (registrationId.equals("kakao")) {
@@ -74,7 +74,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private String extractNickname (OAuth2User oAuth2User, SocialType socialType) {
+    private String extractNickname(OAuth2User oAuth2User, SocialType socialType) {
+
         String nickname = null;
         if (socialType.equals(SocialType.GOOGLE)) {
             nickname = oAuth2User.getAttribute("name");
@@ -84,7 +85,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return null;
             }
 
-            Map<String, Object> profile = (Map<String, Object>)kakaoAccount.get("profile");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
             if (profile == null) {
                 return null;
             }
@@ -93,7 +94,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return nickname;
     }
 
-    private String extractEmail (OAuth2User oAuth2User, SocialType socialType) {
+    private String extractEmail(OAuth2User oAuth2User, SocialType socialType) {
+
         String email = null;
         if (socialType.equals(SocialType.GOOGLE)) {
             email = oAuth2User.getAttribute("email");
