@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.dto.response.LoginStatusResponseDto;
 import today.sesac.versebyverse.member.entity.Member;
+import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.service.MemberService;
 
 /**
@@ -30,8 +31,9 @@ public class AuthService {
         Member member = memberService.findById(memberId);
         String nickname = member.getNickname();
         String email = member.getEmail();
+        RoleType roleType = member.getRoleType();
 
-        return LoginStatusResponseDto.createAuthenticated(memberId, nickname, email);
+        return LoginStatusResponseDto.createAuthenticated(memberId, nickname, email, roleType);
     }
 
 }
