@@ -1,13 +1,13 @@
 package today.sesac.versebyverse.global.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.web.cors.CorsConfigurationSource;
 import today.sesac.versebyverse.auth.CustomAuthenticationEntryPoint;
 import today.sesac.versebyverse.auth.CustomLogoutSuccessHandler;
 import today.sesac.versebyverse.auth.OAuth2AuthenticationSuccessHandler;
@@ -25,12 +25,11 @@ public class SecurityConfig {
 
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    @Value("${client.url}")     //TODO: 방식 맞는지 다시 체크하기
-    private String clientUrl;
-
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+    private final CorsConfigurationSource corsConfigurationSource;
 
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -38,6 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(AbstractHttpConfigurer::disable)  // TODO: 세션의 경우 csrf 보안 대책 필요 -> 보완하기
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/oauth2/authorization",
                                 "/login/oauth2/code/*",
-                                "/api/v1/posts/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
+                                "/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

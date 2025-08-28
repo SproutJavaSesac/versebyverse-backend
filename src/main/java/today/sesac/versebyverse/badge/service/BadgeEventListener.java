@@ -23,8 +23,7 @@ public class BadgeEventListener {
     private final BadgeService badgeService;
 
     /**
-     * 게시글이 생성되었을 때 실행되는 메서드.
-     * 게시글 생성이 성공적으로 커밋된 후에만 이 메서드를 실행합니다.
+     * 게시글이 생성되었을 때 실행되는 메서드. 게시글 생성이 성공적으로 커밋된 후에만 이 메서드를 실행합니다.
      *
      * @param postCreatedEvent 게시글 생성 이벤트
      */
@@ -40,8 +39,7 @@ public class BadgeEventListener {
     }
 
     /**
-     * 회원이 생성되었을 때 실행되는 메서드.
-     * 회원 생성이 성공적으로 커밋된 후에만 이 메서드를 실행합니다.
+     * 회원이 생성되었을 때 실행되는 메서드. 회원 생성이 성공적으로 커밋된 후에만 이 메서드를 실행합니다.
      *
      * @param memberCreatedEvent 회원 생성 이벤트
      */

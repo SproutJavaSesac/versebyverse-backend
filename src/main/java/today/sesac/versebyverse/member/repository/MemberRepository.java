@@ -23,7 +23,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     /**
      * email과 소셜 로그인 타입(ex. 카카오, 구글)으로 회원 정보를 조회합니다. 삭제되지 않은 회원만 조회합니다.
      *
-     * @param email 회원의 이메일
+     * @param email      회원의 이메일
      * @param socialType 소셜 로그인 타입(ex. 카카오, 구글)
      * @return {@code Optional<Member>} 삭제되지 않은 회원 정보.
      */

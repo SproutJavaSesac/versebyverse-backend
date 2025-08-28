@@ -2,8 +2,8 @@ package today.sesac.versebyverse.ai.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 
 /**
  * 게시글 AI 응답 데이터 전송 객체(DTO)입니다.
@@ -24,9 +24,9 @@ public class PostAiResponseDto extends AiResponseDto {
     private String title;
 
     /**
-     * AI가 분석한 게시글 컨셉 타입.
+     * AI가 분석한 게시글 장르 타입.
      */
-    private Concept conceptType;
+    private Genre genreType;
 
     /**
      * AI가 분석한 게시글 감정 타입.
