@@ -146,7 +146,7 @@ public class S3FileService {
 
         String timestamp = String.valueOf(System.currentTimeMillis());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
-        return directory + "/" + memberId + "/" + timestamp + "/" + uuid + extension;
+        return directory + "/member/" + memberId + "/" + timestamp + "/" + uuid + extension;
     }
 
     /**
