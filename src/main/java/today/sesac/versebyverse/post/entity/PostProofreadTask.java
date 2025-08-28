@@ -13,7 +13,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import today.sesac.versebyverse.global.domain.BaseEntity;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
 
 /**
@@ -42,7 +42,7 @@ public class PostProofreadTask extends BaseEntity {
     private TaskStatus status; // IN_PROGRESS, COMPLETED, ABANDONED
 
     @Enumerated(EnumType.STRING)
-    private Concept concept; // 게시글의 컨셉 타입
+    private Genre genreType; // 게시글의 컨셉 타입
 
     @Column(columnDefinition = "TEXT")
     private String initialTitle; // 사용자가 최초 입력한 원본 제목 (A)
@@ -57,7 +57,7 @@ public class PostProofreadTask extends BaseEntity {
     private PostProofreadTask(
             String uuid,
             Member member,
-            Concept concept,
+            Genre genreType,
             String initialTitle,
             String initialContent
     ) {
@@ -65,7 +65,7 @@ public class PostProofreadTask extends BaseEntity {
         this.uuid = uuid;
         this.member = member;
         this.status = TaskStatus.IN_PROGRESS; // 초기 상태는 IN_PROGRESS
-        this.concept = concept;
+        this.genreType = genreType;
         this.initialTitle = initialTitle;
         this.initialContent = initialContent;
         this.finalAttempt = null;
@@ -74,12 +74,12 @@ public class PostProofreadTask extends BaseEntity {
     public static PostProofreadTask createProofreadTask(
             String uuid,
             Member member,
-            Concept concept,
+            Genre genre,
             String initialTitle,
             String initialContent
     ) {
 
-        return new PostProofreadTask(uuid, member, concept, initialTitle, initialContent);
+        return new PostProofreadTask(uuid, member, genre, initialTitle, initialContent);
     }
 
     /**

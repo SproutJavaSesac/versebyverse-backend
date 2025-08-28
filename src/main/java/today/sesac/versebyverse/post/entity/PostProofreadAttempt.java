@@ -29,7 +29,7 @@ public class PostProofreadAttempt extends BaseEntity {
     private PostProofreadTask task;
 
     @Column(nullable = false)
-    private Emotion emotion;
+    private Emotion emotionType;
 
     @Column(columnDefinition = "TEXT")
     private String afterContent; // AI가 생성한 내용
@@ -38,13 +38,13 @@ public class PostProofreadAttempt extends BaseEntity {
 
     private PostProofreadAttempt(
             PostProofreadTask task,
-            Emotion emotion,
+            Emotion emotionType,
             String afterContent,
             String afterTitle
     ) {
 
         this.task = task;
-        this.emotion = emotion;
+        this.emotionType = emotionType;
         this.afterContent = afterContent;
         this.afterTitle = afterTitle;
     }

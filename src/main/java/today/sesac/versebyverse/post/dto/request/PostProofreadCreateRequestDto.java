@@ -4,8 +4,8 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
-import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 
 public record PostProofreadCreateRequestDto(
 
@@ -19,7 +19,7 @@ public record PostProofreadCreateRequestDto(
          * 게시물의 컨셉타입입니다.
          */
         @NotNull
-        Concept conceptType,
+        Genre genreType,
 
         /*
          * 감정 타입 null일 경우 ai가 감정 분석을 해줍니다.

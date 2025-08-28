@@ -1,7 +1,7 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 
 /**
  * 게시글 교정 생성 응답 DTO.
@@ -16,7 +16,7 @@ public record PostProofreadCreateResponseDto(
 
         String afterContent,
 
-        Concept conceptType,
+        Genre genreType,
 
         LocalDateTime createdAt,
         LocalDateTime updatedAt

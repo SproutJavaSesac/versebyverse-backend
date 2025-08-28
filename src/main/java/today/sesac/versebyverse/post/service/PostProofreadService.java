@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
-import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.PostAiService;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -57,11 +56,10 @@ public class PostProofreadService {
         PostAiResponseDto postAiResponseDto = postAiService.executeAiWithValidation(
                 PostAiRequestDto.of(
                         postProofreadCreateRequestDto.title(),
-                        postProofreadCreateRequestDto.conceptType(),
+                        postProofreadCreateRequestDto.genreType(),
                         postProofreadCreateRequestDto.emotionType(),
                         postProofreadCreateRequestDto.content()
-                ),
-                PromptType.POST_CONCEPT_TRANSFORM
+                )
         );
 
         Member member = memberService.findById(memberId);
@@ -80,7 +78,7 @@ public class PostProofreadService {
             task = PostProofreadTask.createProofreadTask(
                     newUuid,
                     member,
-                    postProofreadCreateRequestDto.conceptType(), // 사용자가 선택한 컨셉
+                    postProofreadCreateRequestDto.genreType(), // 사용자가 선택한 컨셉
                     postProofreadCreateRequestDto.title(), // 사용자가 입력한 원본 제목 저장
                     postProofreadCreateRequestDto.content() // 사용자의 원본 글 저장
             );
@@ -113,7 +111,7 @@ public class PostProofreadService {
                 member.getNickname(),
                 postAiResponseDto.getTitle(),
                 postAiResponseDto.getContent(),
-                task.getConcept(),
+                task.getGenreType(),
                 newAttempt.getCreatedAt(),
                 newAttempt.getUpdatedAt()
         );
@@ -162,8 +160,8 @@ public class PostProofreadService {
                 task.getInitialTitle(),        // 원본 제목은 Task에서 가져옴 (엔티티 수정 필요, 아래 설명 참조)
                 attempt.getAfterTitle(),       // AI 변환 제목은 Attempt에서 가져옴
                 postProofreadPublishRequestDto.imageUrl(),         // 이미지는 DTO에서 가져옴
-                attempt.getEmotion(), // 감정 타입은 Attempt에서 가져옴
-                task.getConcept()          // 컨셉 정보는 Task에서 가져옴 (엔티티 수정 필요, 아래 설명 참조)
+                attempt.getEmotionType(), // 감정 타입은 Attempt에서 가져옴
+                task.getGenreType()          // 컨셉 정보는 Task에서 가져옴 (엔티티 수정 필요, 아래 설명 참조)
         );
         Post savedPost = postRepository.save(post);
 
