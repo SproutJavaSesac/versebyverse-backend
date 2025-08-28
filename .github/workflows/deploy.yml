@@ -23,7 +23,7 @@ jobs:
 
       - name: Build app
         run: |
-          ./gradlew clean test -x integrationTest  
+          ./gradlew clean test  
 
       # ECR 로그인
       - name: Configure AWS credentials
