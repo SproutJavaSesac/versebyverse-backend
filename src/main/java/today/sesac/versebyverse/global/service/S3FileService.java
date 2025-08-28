@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import today.sesac.versebyverse.auth.service.UserPrincipal;
 
 /**
  * S3 파일 업로드 및 관리를 담당하는 서비스입니다.
@@ -137,9 +139,14 @@ public class S3FileService {
      */
     private String generateUniqueFileName(String directory, String extension) {
 
+        UserPrincipal userPrincipal =
+                (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+                        .getPrincipal();
+        Long memberId = userPrincipal.getMemberId();
+
         String timestamp = String.valueOf(System.currentTimeMillis());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
-        return directory + "_" + timestamp + "_" + uuid + extension;
+        return directory + "/" + memberId + "/" + timestamp + "/" + uuid + extension;
     }
 
     /**
