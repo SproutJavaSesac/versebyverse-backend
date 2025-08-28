@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.dto.response.LoginStatusResponseDto;
+import today.sesac.versebyverse.auth.dto.response.UpdateRoleResponseDto;
 import today.sesac.versebyverse.auth.service.AuthService;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
@@ -44,6 +46,24 @@ public class AuthController {
         LoginStatusResponseDto loginStatusResponseDto = authService.getLoginStatus(memberId);
 
         return ApiResponse.success(loginStatusResponseDto);
+    }
+
+    /**
+     * 사용자의 권한을 관리자일 경우 일반 회원으로, 일반 회원일 경우 관리자로 변경합니다.
+     *
+     * @param userPrincipal 사용자의 인증 정보
+     * @return 성공 메시지
+     */
+    @PatchMapping("/role")
+    public ApiResponse<UpdateRoleResponseDto> updateRole(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+
+        Long memberId = userPrincipal.getMemberId();
+
+        UpdateRoleResponseDto updateRoleResponseDto = authService.updateRole(memberId);
+
+        return ApiResponse.success(updateRoleResponseDto);
     }
 
 }

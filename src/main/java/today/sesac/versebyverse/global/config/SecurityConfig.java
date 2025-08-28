@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/login/oauth2/code/*",
                                 "/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
                         ).permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
