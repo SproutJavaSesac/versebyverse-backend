@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.ai.dto.request.CommentAiRequestDto;
-import today.sesac.versebyverse.ai.prompt.PromptType;
 import today.sesac.versebyverse.ai.service.CommentAiService;
 import today.sesac.versebyverse.comment.dto.request.CommentCreateRequestDto;
 import today.sesac.versebyverse.comment.dto.response.CommentCreateResponseDto;
@@ -63,10 +62,12 @@ public class CommentService {
                 commenterId);
 
         CommentAiRequestDto commentAiRequestDto =
-                CommentAiRequestDto.of(activePost.getConceptType(),
+                CommentAiRequestDto.of(activePost.getGenreType(),
                         commentCreateRequestDto.content(), null);
-        String afterContent = commentAiService.executeAiWithValidation(commentAiRequestDto,
-                PromptType.COMMENT_CONCEPT_TRANSFORM).getContent();
+        // 장르에 따라 프롬프트 타입 자동 결정
+        String afterContent =
+                commentAiService.executeAiWithValidation(commentAiRequestDto)
+                        .getContent();
 
         Comment comment = createRootOrReplyComment(commentCreateRequestDto, afterContent,
                 activePost, member);

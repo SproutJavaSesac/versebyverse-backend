@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.post.dto.AuthorPostCountDto;
 import today.sesac.versebyverse.post.dto.response.PostSingleQueryResponseDto;
@@ -43,20 +43,20 @@ public class PostQueryService {
     /**
      * 게시글 목록 리스트 조회.
      */
-    public Page<PostSummaryResponseDto> getPosts(Concept conceptType, String sort,
+    public Page<PostSummaryResponseDto> getPosts(Genre genreType, String sort,
             int page, int size) {
 
         //jpa 에게 요청하는 데이터 양식, 최신순 정렬이 기본
         Pageable pageable = PageRequest.of(page, size);
 
-        //concept이 all일 경우 필터링은 false
-        boolean filterByConcept = !Concept.ALL.equals(conceptType);
+        //genre가 all일 경우 필터링은 false
+        boolean filterByGenre = !Genre.ALL.equals(genreType);
 
         //repository를 통해 jpa 가 db 에서 받아온 post 엔티티 + 페이지 정보
         Page<Post> postPage;
 
-        if (!filterByConcept) {
-            //filterByConcept이 false 일때 (concept이 all 이거나 null 이어서 필터링 없이 전체조회)
+        if (!filterByGenre) {
+            //filterByGenre이 false 일때 (genre가 all 이거나 null 이어서 필터링 없이 전체조회)
             postPage = switch (sort) {
                 //전체조회 + comment순 정렬
                 case "comments" -> postRepository.findAllOrderByCommentCount(pageable);
@@ -66,27 +66,25 @@ public class PostQueryService {
                 //전체 조회 + 최신순 정렬
                 default -> postRepository.findAllOrderByCreatedAt(pageable);
             };
-        } else { //concept별 필터링
+        } else { //genre별 필터링
             postPage = switch (sort) {
-                //컨셉별 조회 + comment순 정렬
-                case "comments" -> postRepository.findByConceptTypeOrderByCommentCount(conceptType,
+                //장르별 조회 + comment순 정렬
+                case "comments" -> postRepository.findByGenreTypeOrderByCommentCount(genreType,
                         pageable);
-                //컨셉별 조회 + reaction순 정렬
+                //장르별 조회 + reaction순 정렬
                 case "reactions" ->
-                        postRepository.findByConceptTypeOrderByReactionCount(conceptType, pageable);
-                //컨셉별 조회 + 최신순 정렬
-                default -> postRepository.findByConceptType(conceptType, pageable);
+                        postRepository.findByGenreTypeOrderByReactionCount(genreType, pageable);
+                //장르별 조회 + 최신순 정렬
+                default -> postRepository.findByGenreType(genreType, pageable);
             };
         }
         //Post 객체를 dto 객체로 변환
         return postPage.map(post -> {
-            int commentCount =
-                    commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
-                            post.getId());
-            int reactionCount =
-                    reactionRepository.countByPostId(
-                            post.getId());
-
+            int commentCount = commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(
+                    post.getId());
+            // TODO reaction개수 임시 0으로 고정
+            int reactionCount = 0;
+            //int reactionCount = reactionRepository.countByPostId(post.getId());
             return PostSummaryResponseDto.of(post, commentCount, reactionCount);
         });
     }
@@ -113,8 +111,8 @@ public class PostQueryService {
     /**
      * 게시글 단건 상세 조회.
      *
-     * @param postId   게시글 id
-     * @param memberId 작성자 id
+     * @param postId   게시글id
+     * @param memberId 작성자id
      * @return postSingleQueryResponseDto
      */
     public PostSingleQueryResponseDto getPostDetail(Long postId, Long memberId) {

@@ -30,8 +30,8 @@ import today.sesac.versebyverse.comment.dto.response.CommentListResponseDto;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.service.CommentService;
 import today.sesac.versebyverse.global.config.TestSecurityConfig;
-import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.response.PaginationDto;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.entity.RoleType;
@@ -228,7 +228,7 @@ class CommentControllerTest {
                 "변환 후 게시글 제목",
                 null,
                 Emotion.HAPPY,
-                Concept.DRAMA
+                Genre.BOOK_REVIEW
         ));
         when(post.getId()).thenReturn(postId);
 
