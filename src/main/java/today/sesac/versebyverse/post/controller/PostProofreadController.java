@@ -2,11 +2,13 @@ package today.sesac.versebyverse.post.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import today.sesac.versebyverse.auth.service.UserPrincipal;
 import today.sesac.versebyverse.global.response.ApiResponse;
@@ -34,6 +36,7 @@ public class PostProofreadController {
      * @return 생성된 게시글 첨삭 정보
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostProofreadCreateResponseDto> proofreadPost(
             @Valid @RequestBody PostProofreadCreateRequestDto postProofreadCreateRequestDto,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -53,6 +56,7 @@ public class PostProofreadController {
      * @return 발행된 게시글 정보
      */
     @PostMapping("/{taskUuid}/posts")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostCreateResponseDto> publishProofreadPost(
             @PathVariable String taskUuid,
             @Valid @RequestBody PostProofreadPublishRequestDto postProofreadPublishRequestDto,
