@@ -49,9 +49,9 @@ jobs:
           echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/ai.json
           echo "AI_KEY_PATH=ai.json" >> $GITHUB_ENV               # 클래스패스용 이름만!
           echo "DB_TEST_PORT=3306" >> $GITHUB_ENV
-          echo "DB_TEST_NAME=vbv_test" >> $GITHUB_ENV
-          echo "DB_TEST_USERNAME=test" >> $GITHUB_ENV
-          echo "DB_TEST_PASSWORD=test" >> $GITHUB_ENV
+          echo "DB_TEST_NAME=versebyverse_test" >> $GITHUB_ENV
+          echo "DB_TEST_USERNAME=testuser " >> $GITHUB_ENV
+          echo "DB_TEST_PASSWORD=testuser12341" >> $GITHUB_ENV
           echo "GOOGLE_CLIENT_ID=dummy" >> $GITHUB_ENV
           echo "GOOGLE_CLIENT_SECRET=dummy" >> $GITHUB_ENV
           echo "S3_ACCESS_KEY=dummy" >> $GITHUB_ENV
