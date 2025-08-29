@@ -88,7 +88,12 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
     }
 
+    /**
+     * 회원을 삭제합니다. soft delete 방식을 사용합니다.
+     * 재가입을 고려하여 삭제될 때는 email에 deleted라는 문구와 회원의 id를 결합하여 중복을 방지합니다.
+     */
     public void delete() {
         this.isDeleted = true;
+        this.email = email + "_deleted" + this.id.toString();
     }
 }
