@@ -3,10 +3,10 @@ spring:
     name: versebyverse
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # 이미 설치되어 있을 수 있어서 포트 번호를 임의로 변경
-    url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    # 테스트용 DB 설정 - 로컬과 GitHub Actions 모두 동일한 환경변수 사용
+    url: jdbc:mysql://localhost:${DB_TEST_PORT}/${DB_TEST_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${DB_TEST_USERNAME}
+    password: ${DB_TEST_PASSWORD}
   sql:
     init:
       data-locations: classpath:data.sql # 초기 데이터 로딩을 위한 SQL 파일 위치

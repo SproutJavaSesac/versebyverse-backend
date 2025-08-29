@@ -3,10 +3,16 @@ name: CI-CD to EC2 (ECR + Docker Compose)
 on:
   push:
     branches: [ "develop", "204-deploy/ci-deploy" ]  # 배포 브랜치, 테스트를 위해 임시 브랜치 포함
+  pull_request:
+    branches: [ "main", "develop" ]
   workflow_dispatch: #테스트 위해 커밋/푸시 안해도 수동으로 실행
 
 jobs:
+  test:
+    uses: ./.github/workflows/ci.yml  # 테스트 먼저 실행
+  
   build-and-deploy:
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
