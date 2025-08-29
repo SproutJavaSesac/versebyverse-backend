@@ -19,11 +19,12 @@ public class MyBadgeSummaryDto {
     /**
      * 사용자가 보유한 배지 DTO를 반환합니다.
      *
-     * @param name 배지의 이름
+     * @param name        배지의 이름
      * @param description 배지 상세 설명
      * @return 사용자가 보유한 배지 DTO
      */
     public static MyBadgeSummaryDto of(Long badgeId, String name, String description) {
+
         return new MyBadgeSummaryDto(badgeId, name, description);
     }
 }

@@ -9,8 +9,7 @@ import today.sesac.versebyverse.report.entity.ReportType;
 import today.sesac.versebyverse.report.entity.StatusType;
 
 /**
- * 관리자용 신고 목록 응답 DTO입니다.
- * 신고된 게시글 또는 댓글의 상세 정보와 신고 관련 정보를 제공합니다.
+ * 관리자용 신고 목록 응답 DTO입니다. 신고된 게시글 또는 댓글의 상세 정보와 신고 관련 정보를 제공합니다.
  */
 @Getter
 @AllArgsConstructor(staticName = "of")

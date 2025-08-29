@@ -37,6 +37,7 @@ public class MemberBadge extends BaseEntity {
     private Badge badge;
 
     private MemberBadge(Member member, Badge badge) {
+
         this.member = member;
         this.badge = badge;
     }
@@ -45,10 +46,11 @@ public class MemberBadge extends BaseEntity {
      * 새로운 MemberBadge 엔티티를 생성합니다.
      *
      * @param member 배지를 획득한 회원
-     * @param badge 배지
+     * @param badge  배지
      * @return 새로운 배지 소유 여부 엔티티
      */
     public static MemberBadge create(Member member, Badge badge) {
+
         return new MemberBadge(member, badge);
     }
 }

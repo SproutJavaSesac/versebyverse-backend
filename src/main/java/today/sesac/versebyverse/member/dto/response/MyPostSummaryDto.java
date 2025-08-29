@@ -3,7 +3,7 @@ package today.sesac.versebyverse.member.dto.response;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import today.sesac.versebyverse.global.domain.Concept;
+import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.post.entity.Post;
 
@@ -28,7 +28,7 @@ public class MyPostSummaryDto {
 
     private Emotion emotionType;
 
-    private Concept conceptType;
+    private Genre genreType;
 
     private int reactionCount;
 
@@ -54,7 +54,7 @@ public class MyPostSummaryDto {
                 post.getAfterContent(),
                 post.getCreatedAt(),
                 post.getEmotionType(),
-                post.getConceptType(),
+                post.getGenreType(),
                 3,  // TODO: 반응하기 미구현된 관계로 하드코딩 - 삭제하기
                 commentCount,
                 post.getImageUrl(),

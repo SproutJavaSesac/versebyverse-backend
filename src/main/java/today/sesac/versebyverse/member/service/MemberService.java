@@ -69,12 +69,12 @@ public class MemberService {
     }
 
     /**
-     *  회원을 삭제합니다.
-     *  soft-delete 방식으로 isDeleted 필드만 변경합니다.
+     * 회원을 삭제합니다. soft-delete 방식으로 isDeleted 필드만 변경합니다.
      *
      * @param memberId 회원의 id
      */
     private void deleteMember(Long memberId) {
+
         log.info("회원 삭제 시작, memberId: {}", memberId);
 
         Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
@@ -96,15 +96,16 @@ public class MemberService {
 
         log.info("회원 탈퇴 시작, memberId: {}, username: {}", memberId, username);
 
+        Member member = getActiveMemberOrThrow(memberId);
+
         // 1. DB에서 회원 삭제
         deleteMember(memberId);
 
         // 2. 소셜 로그인 연동 해제 API 호출
-        socialLoginService.revokeAccess(username);
+        socialLoginService.revokeAccess(username, member.getSocialType());
 
         log.info("회원 탈퇴 완료, memberId: {}, username: {}", memberId, username);
     }
-
 
     /**
      * 회원의 id로 db에서 회원의 정보를 조회합니다.
@@ -210,8 +211,9 @@ public class MemberService {
         validateMemberActiveExists(memberId);
 
         // 작성한 게시글을 Page 객체으로 조회
-        Page<Post> pageByAuthorIdWithPageable = postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
-                memberId, pageable);
+        Page<Post> pageByAuthorIdWithPageable =
+                postRepository.findByAuthorIdAndIsDeletedFalseOrderByCreatedAtDesc(
+                        memberId, pageable);
 
         List<MyPostSummaryDto> postSummaries = convertPostsToSummaries(pageByAuthorIdWithPageable);
 
@@ -225,15 +227,18 @@ public class MemberService {
     }
 
     private List<MyPostSummaryDto> convertPostsToSummaries(Page<Post> pagePosts) {
+
         return pagePosts.getContent().stream()
                 .map(post -> {
-                    int commentCount = commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
+                    int commentCount =
+                            commentRepository.countByPostIdAndIsDeletedFalse(post.getId());
                     return MyPostSummaryDto.of(post, commentCount);
                 })
                 .toList();
     }
 
     private PaginationDto getPaginationDto(Page<?> page) {
+
         return new PaginationDto(
                 page.getNumber(),
                 page.getTotalPages(),
@@ -258,10 +263,11 @@ public class MemberService {
         // 작성한 댓글을 Page 객체로 조회
         Page<Comment> pageByCommenterIdWithPageable =
                 commentRepository.findByCommenterIdAndIsDeletedFalseOrderByCreatedAtDesc(
-                memberId, pageable
-        );
+                        memberId, pageable
+                );
 
-        List<MyCommentSummaryDto> commentSummaries = convertCommentsToSummaries(pageByCommenterIdWithPageable);
+        List<MyCommentSummaryDto> commentSummaries =
+                convertCommentsToSummaries(pageByCommenterIdWithPageable);
 
         PaginationDto paginationDto = getPaginationDto(pageByCommenterIdWithPageable);
 
@@ -272,6 +278,7 @@ public class MemberService {
     }
 
     private List<MyCommentSummaryDto> convertCommentsToSummaries(Page<Comment> pageComments) {
+
         return pageComments.getContent().stream()
                 .map(MyCommentSummaryDto::of)
                 .toList();

@@ -1,5 +1,6 @@
 package today.sesac.versebyverse.auth.service;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -30,31 +31,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 사용자의 정보를 가져옵니다.
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String email = oAuth2User.getAttribute("email");
+        // 소셜 로그인 타입을 가져옵니다.
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        SocialType socialType = extractSocialType(registrationId);
+
+        String email = extractEmail(oAuth2User, socialType);
         if (email == null) {
             throw new OAuth2AuthenticationException(
                     new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "이메일 정보가 존재하지 않습니다.", null
             );
         }
 
-        String nickname = oAuth2User.getAttribute("name"); // TODO: 현재는 프로필의 이름을 그대로 받는 중, 변경 필요
+        String nickname = extractNickname(oAuth2User, socialType);
         if (nickname == null) {
             throw new OAuth2AuthenticationException(
                     new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "닉네임 정보가 존재하지 않습니다.", null
-            );
-        }
-
-        // 사용자의 소셜 로그인 타입을 가져옵니다.
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        SocialType socialType = null;   //TODO: 다른 소셜 로그인 추가할 때 메서드로 추출하고 리팩토링
-        if (registrationId.equals("google")) {
-            socialType = SocialType.GOOGLE;
-        }
-
-        if (socialType == null) {
-            throw new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "지원하지 않는 소셜 로그인 제공자입니다.",
-                    null
             );
         }
 
@@ -67,5 +58,54 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         return UserPrincipal.create(member.getId(), member.getRoleType(), member.getSocialType(),
                 member.getEmail());
+    }
+
+    private SocialType extractSocialType(String registrationId) {
+
+        if (registrationId.equals("google")) {
+            return SocialType.GOOGLE;
+        } else if (registrationId.equals("kakao")) {
+            return SocialType.KAKAO;
+        } else {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), "지원하지 않는 소셜 로그인 제공자입니다.",
+                    null
+            );
+        }
+    }
+
+    private String extractNickname(OAuth2User oAuth2User, SocialType socialType) {
+
+        String nickname = null;
+        if (socialType.equals(SocialType.GOOGLE)) {
+            nickname = oAuth2User.getAttribute("name");
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            if (kakaoAccount == null) {
+                return null;
+            }
+
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+            if (profile == null) {
+                return null;
+            }
+            nickname = (String) profile.get("nickname");
+        }
+        return nickname;
+    }
+
+    private String extractEmail(OAuth2User oAuth2User, SocialType socialType) {
+
+        String email = null;
+        if (socialType.equals(SocialType.GOOGLE)) {
+            email = oAuth2User.getAttribute("email");
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
+            if (kakaoAccount == null) {
+                return null;
+            }
+            email = (String) kakaoAccount.get("email");
+        }
+        return email;
     }
 }

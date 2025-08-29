@@ -81,11 +81,13 @@ public class CommentController {
      */
     @GetMapping("/posts/{postId}/comments")
     public ApiResponse<CommentListResponseDto> getComments(@PathVariable("postId") Long postId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
 
+        Long memberId = userPrincipal != null ? userPrincipal.getMemberId() : null;
         CommentListResponseDto commentListResponseDto = commentService.getCommentsByPostId(postId,
-                PageRequest.of(page, size));
+                PageRequest.of(page, size), memberId);
 
         return ApiResponse.success(commentListResponseDto);
     }

@@ -34,6 +34,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     Optional<Comment> findByIdAndIsDeletedFalse(Long postId);
 
+
     /**
      * 댓글 작성자의 id로 작성자가 작성한 댓글의 목록을 페이지로 가져옵니다. 삭제된 댓글은 포함하지 않습니다.
      *
@@ -58,7 +59,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param id 게시글 ID
      * @return Long 으로 해당 게시글의 댓글 수
      */
-    Long countByPostIdAndIsDeletedFalseAndIsBlockedFalse(Long id);
+    int countByPostIdAndIsDeletedFalseAndIsBlockedFalse(Long id);
 
     /**
      * 게시글 id로 해당 게시글의 댓글 수를 조회합니다.
