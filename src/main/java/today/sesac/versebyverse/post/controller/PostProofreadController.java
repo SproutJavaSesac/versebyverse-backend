@@ -17,7 +17,7 @@ import today.sesac.versebyverse.post.dto.response.PostProofreadCreateResponseDto
 import today.sesac.versebyverse.post.service.PostProofreadService;
 
 /**
- * 게시글 교정 관련 API를 제공하는 컨트롤러입니다.
+ * 게시글 첨삭 관련 API를 제공하는 컨트롤러입니다.
  */
 @RestController
 @RequiredArgsConstructor
@@ -27,11 +27,11 @@ public class PostProofreadController {
     private final PostProofreadService postProofreadService;
 
     /**
-     * 게시글 교정을 생성합니다.
+     * 게시글 첨삭본을 생성합니다.
      *
-     * @param postProofreadCreateRequestDto 게시글 교정 생성 요청 DTO
+     * @param postProofreadCreateRequestDto 게시글 첨삭 생성 요청 DTO
      * @param userPrincipal                 인증된 사용자 정보
-     * @return 생성된 게시글 교정 정보
+     * @return 생성된 게시글 첨삭 정보
      */
     @PostMapping
     public ApiResponse<PostProofreadCreateResponseDto> proofreadPost(
@@ -45,10 +45,10 @@ public class PostProofreadController {
     }
 
     /**
-     * 교정된 글을 게시글로 발행합니.
+     * 첨삭된 글을 게시글로 발행합니다.
      *
-     * @param taskUuid                       게시글 교정 세션의 UUID
-     * @param postProofreadPublishRequestDto 게시글 교정 발행 요청 DTO
+     * @param taskUuid                       게시글 첨삭 세션의 UUID
+     * @param postProofreadPublishRequestDto 게시글 첨삭 발행 요청 DTO
      * @param userPrincipal                  인증된 사용자 정보
      * @return 발행된 게시글 정보
      */

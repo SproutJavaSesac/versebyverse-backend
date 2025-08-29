@@ -4,20 +4,15 @@ import java.time.LocalDateTime;
 import today.sesac.versebyverse.global.domain.Genre;
 
 /**
- * 게시글 교정 생성 응답 DTO.
+ * 게시글 첨삭 생성 응답 DTO.
  */
 public record PostProofreadCreateResponseDto(
-        String taskUuid,  // 이 첨삭 세션 전체를 식별하는 ID
-        Long attemptId, // 방금 생성된 이 결과물을 식별하는 ID
-
+        String taskUuid,
+        Long attemptId,
         String nickname,
-
         String afterTitle,
-
         String afterContent,
-
         Genre genreType,
-
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

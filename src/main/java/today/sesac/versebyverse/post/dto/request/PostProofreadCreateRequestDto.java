@@ -7,33 +7,24 @@ import org.hibernate.validator.constraints.Length;
 import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.global.domain.Genre;
 
+/**
+ * 게시글 첨삭 생성 요청 DTO.
+ */
 public record PostProofreadCreateRequestDto(
 
-        /*
-         * 변환 전 사용자가 작성하는 게시물 제목입니다.
-         */
         @NotBlank
         String title,
 
-        /*
-         * 게시물의 컨셉타입입니다.
-         */
         @NotNull
         Genre genreType,
 
-        /*
-         * 감정 타입 null일 경우 ai가 감정 분석을 해줍니다.
-         */
         Emotion emotionType,
 
-        /*
-         * 변환 전 사용자가 쓴 게시물 내용입니다.
-         */
         @NotBlank
         @Length(max = 1000)
         String content,
 
-        // 같은 게시글에 대한 교정임을 알려주는 UUID입니다.
+        // 재첨삭 요청 시, 현재 Task UUID (없을 시 null)
         @Nullable
         String taskUuid
 ) {
