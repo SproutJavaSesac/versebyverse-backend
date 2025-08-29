@@ -59,6 +59,11 @@ jobs:
             sleep 3
           done
 
+      - name: Prepare AI credentials for tests
+        run: |
+          mkdir -p src/test/resources
+          echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/versebyverse-ai-c27e5aadece5.json
+
       - name: Run tests
         run: ./gradlew test --info
         env:
