@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
+import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.post.entity.Post;
 
@@ -10,6 +11,8 @@ import today.sesac.versebyverse.post.entity.Post;
 //image 값이 null인 경우도 있어서 image는 final 제외 -> 빌더쓰면 안 붙여도 됨
 
 public record PostSummaryResponseDto(
+
+        Long authorId,
 
         String nickname,
 
@@ -22,6 +25,8 @@ public record PostSummaryResponseDto(
         int reactionCount,
 
         int commentCount,
+
+        Emotion authorSelectEmotion,
 
         Genre genreType,
 
@@ -41,12 +46,14 @@ public record PostSummaryResponseDto(
     public static PostSummaryResponseDto of(Post post, int commentCount, int reactionCount) {
 
         return new PostSummaryResponseDto(
+                post.getAuthor().getId(),
                 post.getAuthor().getNickname(),
                 post.getAfterTitle(),
                 post.getAfterContent(),
                 post.getCreatedAt(),
                 reactionCount,
                 commentCount,
+                post.getEmotionType(),
                 post.getGenreType(),
                 post.getId(),
                 post.getImageUrl()

@@ -50,6 +50,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id
+            WHERE p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             GROUP BY p.id
             ORDER BY COUNT(r.id) DESC
             """)
@@ -92,7 +93,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query("""
             SELECT p FROM Post p LEFT JOIN Reaction r ON p.id = r.post.id 
-            WHERE p.genreType = :genreType 
+            WHERE p.genreType = :genreType And p.isDeleted = false And p.isHidden = false And p.isBlocked = false
             GROUP BY p.id 
             ORDER BY COUNT(r.id) DESC""")
     Page<Post> findByGenreTypeOrderByReactionCount(Genre genreType, Pageable pageable);

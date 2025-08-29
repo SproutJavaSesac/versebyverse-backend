@@ -18,6 +18,8 @@ public class PostSingleQueryResponseDto {
 
     Long postId;
 
+    Long authorId;
+
     String afterTitle;
 
     String afterContent;
@@ -32,11 +34,15 @@ public class PostSingleQueryResponseDto {
 
     Boolean isMine;
 
+    Boolean isHidden;
+
     int commentCount;
 
     int reactionCount;
 
     Emotion myReaction;
+
+    Emotion authorSelectEmotion; //작성자 혹은 ai가 글에 지정한 감정
 
     Map<Emotion, Integer> reactionDetailCount;
 
@@ -56,6 +62,7 @@ public class PostSingleQueryResponseDto {
 
         return new PostSingleQueryResponseDto(
                 post.getId(),
+                post.getAuthor().getId(),
                 post.getAfterTitle(),
                 post.getAfterContent(),
                 post.getAuthor().getNickname(),
@@ -63,9 +70,11 @@ public class PostSingleQueryResponseDto {
                 post.getImageUrl(),
                 post.getGenreType().toString(),
                 post.isMine(memberId),
+                post.isHidden(),
                 commentCount,
                 reactionCount,
                 myReaction,
+                post.getEmotionType(),
                 reactionDetails
         );
     }
