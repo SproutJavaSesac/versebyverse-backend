@@ -185,19 +185,10 @@ cd versebyverse-backend
 ./gradlew bootRun
 ```
 
-#### 5. 프론트엔드 실행
-
-```bash
-cd versebyverse-frontend
-npm install
-npm run dev
-```
-
-#### 6. 접속 확인
+#### 5. 접속 확인
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8080
-- **API 문서**: http://localhost:8080/swagger-ui.html
 
 ### 🧪 테스트 실행
 
@@ -205,11 +196,6 @@ npm run dev
 # 백엔드 테스트
 cd versebyverse-backend
 ./gradlew test
-
-# 프론트엔드 테스트
-cd versebyverse-frontend
-npm run test
-```
 
 ---
 
@@ -227,16 +213,6 @@ npm run test
 - **Testing**: JUnit 5, Mockito, TestContainers
 - **Build**: Gradle 8.x
 - **Code Quality**: SonarQube, JaCoCo, Checkstyle
-
-#### Frontend
-
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript 5.8
-- **Styling**: Tailwind CSS 3.4
-- **UI Components**: shadcn/ui, Radix UI
-- **State Management**: React Hook Form, Zustand
-- **HTTP Client**: Fetch API
-- **Testing**: Jest, React Testing Library
 
 #### Infrastructure
 
@@ -372,115 +348,6 @@ versebyverse-backend/
 └── src/test/                    # 테스트 코드
 ```
 
-### Frontend Structure
-
-```
-versebyverse-frontend/
-├── app/                         # Next.js App Router
-│   ├── (auth)/
-│   ├── posts/
-│   ├── profile/
-│   ├── admin/
-│   └── layout.tsx
-├── components/                  # React 컴포넌트
-│   ├── ui/                      # shadcn/ui 컴포넌트
-│   ├── posts/                   # 게시물 관련 컴포넌트
-│   ├── comments/                # 댓글 관련 컴포넌트
-│   ├── admin/                   # 관리자 컴포넌트
-│   └── commons/                 # 공통 컴포넌트
-├── apis/                        # API 호출 함수
-├── types/                       # TypeScript 타입 정의
-├── constants/                   # 상수 정의
-├── lib/                         # 유틸리티 함수
-│   ├── hooks/                   # 커스텀 훅
-│   └── utils/                   # 헬퍼 함수
-└── styles/                      # 스타일 파일
-```
-
----
-
-## ⚙️ 기능 구현 기술
-
-### 🔐 인증 시스템 (OAuth2)
-
-- **Google OAuth2** 연동으로 간편 로그인
-- **JWT 토큰** 기반 세션 관리
-- **Spring Security** 설정으로 API 보안
-
-```java
-
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-
-        return http
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)))
-                .build();
-    }
-}
-```
-
-### 🤖 AI 변환 서비스 (Spring AI + Vertex AI)
-
-- **Google Vertex AI Gemini 2.0 Flash** 모델 사용
-- **감정 분석** 기반 장르 추천
-- **프롬프트 엔지니어링**으로 문학적 변환 최적화
-
-```java
-
-@Service
-public class AIService {
-
-    @Autowired
-    private VertexAiGeminiChatModel chatModel;
-
-    public String convertToLiterature(String content, EmotionType emotion, ConceptType concept) {
-
-        String prompt = buildPrompt(content, emotion, concept);
-        return chatModel.call(prompt);
-    }
-}
-```
-
-### 💾 데이터베이스 설계 (JPA/Hibernate)
-
-- **Soft Delete** 패턴으로 데이터 보존
-- **계층형 댓글** 구조 (Path Enumeration)
-- **인덱스 최적화**로 검색 성능 향상
-
-```java
-
-@Entity
-@SQLDelete(sql = "UPDATE posts SET is_deleted = true WHERE id = ?")
-@Where(clause = "is_deleted = false")
-public class Post extends BaseTimeEntity {
-    // 엔티티 정의
-}
-```
-
-### 📱 반응형 UI (Next.js + Tailwind CSS)
-
-- **모바일 퍼스트** 디자인
-- **shadcn/ui** 컴포넌트 라이브러리 활용
-- **다크 모드** 지원
-
-```tsx
-export function PostCard({post}: { post: Post }) {
-  return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardContent className="p-6">
-          {/* 게시물 내용 */}
-        </CardContent>
-      </Card>
-  );
-}
-```
-
 ---
 
 ## 🧪 Testing
@@ -493,9 +360,8 @@ export function PostCard({post}: { post: Post }) {
 
 ### 테스트 커버리지
 
-- **목표**: 80% 이상
+- **목표**: 80% 이상 (예정)
 - **도구**: JaCoCo, SonarQube
-- **CI/CD**: GitHub Actions에서 자동 실행
 
 ```bash
 # 테스트 실행 및 커버리지 리포트 생성
@@ -607,22 +473,6 @@ main                    # 프로덕션 배포
 
 ---
 
-## 📈 성능 및 모니터링
-
-### 성능 지표
-
-- **응답 시간**: 평균 200ms 이하
-- **처리량**: 1000 RPS 지원
-- **가용성**: 99.9% 업타임
-
-### 모니터링 도구
-
-- **Spring Boot Actuator**: 헬스 체크
-- **Micrometer**: 메트릭 수집
-- **로그 분석**: Logback + ELK Stack (예정)
-
----
-
 ## 🚀 배포 및 운영
 
 ### 배포 환경
@@ -657,50 +507,6 @@ jobs:
 
 ---
 
-## 📞 문의 및 지원
-
-### 개발팀 연락처
-
-- **프로젝트 매니저**: [이메일]
-- **백엔드 개발자**: [이메일]
-- **프론트엔드 개발자**: [이메일]
-
-### 기여 방법
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-### 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
----
-
-## 🔮 로드맵
-
-### 2025 Q1
-
-- ✅ MVP 출시
-- 🔄 사용자 피드백 수집
-- 📱 모바일 최적화
-
-### 2025 Q2
-
-- 🔄 실시간 알림
-- 🔄 팔로우 시스템
-- 🔄 프리미엄 기능
-
-### 2025 Q3
-
-- 📋 모바일 앱 출시
-- 📋 다국어 지원
-- 📋 API 개방
-
----
-
 **⭐ 이 프로젝트가 마음에 드신다면 Star를 눌러주세요!**
 
-*마지막 업데이트: 2025년 1월*
+*마지막 업데이트: 2025년 8월*
