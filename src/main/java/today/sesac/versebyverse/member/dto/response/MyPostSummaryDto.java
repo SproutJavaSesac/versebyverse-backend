@@ -39,7 +39,7 @@ public class MyPostSummaryDto {
     private Boolean isHidden;
 
     /**
-     * \ Post 객체를 사용자가 작성한 게시글 응답 DTO로 변환합니다.
+     * Post 객체를 사용자가 작성한 게시글 응답 DTO로 변환합니다.
      *
      * @param post 변환할 post 객체
      * @return 사용자가 작성한 게시글 응답 DTO
