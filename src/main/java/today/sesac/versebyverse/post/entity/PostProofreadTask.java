@@ -14,6 +14,7 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import today.sesac.versebyverse.global.domain.BaseEntity;
 import today.sesac.versebyverse.global.domain.Genre;
 import today.sesac.versebyverse.member.entity.Member;
@@ -40,7 +41,8 @@ public class PostProofreadTask extends BaseEntity {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "default 'IN_PROGRESS'")
+    @Column(nullable = false)
+    @ColumnDefault("'IN_PROGRESS'")
     private TaskStatus status;
 
     @Enumerated(EnumType.STRING)
