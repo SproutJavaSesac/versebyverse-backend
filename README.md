@@ -13,15 +13,17 @@
 ## 목차
 
 ## 팀원 소개
+
 > **TEAM verseByVerse**
 
-|                                                   강소연                                                    |                                                   황한나                                                   |                                                   박민석                                                    |                                                   이상준                                                    |
-|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/c1576c1d-2762-4865-a27b-bbcd223de2bb" width="150"> | <img src="https://github.com/user-attachments/assets/bf52cc39-f60e-40c5-9928-4c3e09e91d5b" width="150" > | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" width="150" > |
-|                                [@wayandway](https://github.com/wayandway)                                |                                  [@un0211](https://github.com/un0211)                                   |                           [@oceanlee-seoul](https://github.com/oceanlee-seoul)                           |                                  [@wjsdncl](https://github.com/wjsdncl)                                  |
-|                                        유저기능, 대시보드 페이지, 할 일 카드 모달                                         |                                        헤더, 계정관리 페이지, 대시보드 관리 페이지                                        |                                      전역 모달 관리, 카드 생성/수정 모달, 대시보드 변경                                      |                                         사이드바, 내 대시보드 페이지(SSR 적용)                                         |
-|                                                할 일 카드 DnD                                                |                                        초대 알림, 대시보드 공유, 비밀번호 암호화                                         |                                                                                                          |                                             대시보드 즐겨찾기, 다크모드                                              |
-|                                        Tanstack Query 및 Redux 설정                                         |                                           깃/깃허브 관리, 문서 관리, 배포                                           |                                              발표 자료 준비 및 발표                                               |                                                 회의 내용 정리                                                 |
+|                                                  강소연                                                  |                                                 박민석                                                  |                                            이상준                                            |                                                Sooamazing                                                |
+| :------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
+| <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/bf52cc39-f60e-40c5-9928-4c3e09e91d5b" width="150"> | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" > | <img src="https://github.com/user-attachments/assets/41d6e961-29e4-4910-8e99-db72940c0a22" width="150" > |
+|                                [@wayandway](https://github.com/wayandway)                                |                                  [@un0211](https://github.com/un0211)                                   |                     [@oceanlee-seoul](https://github.com/oceanlee-seoul)                     |                               [@Sooamazing](https://github.com/Sooamazing)                               |
+|                                유저기능, 대시보드 페이지, 할 일 카드 모달                                |                               헤더, 계정관리 페이지, 대시보드 관리 페이지                               |                      전역 모달 관리, 카드 생성/수정 모달, 대시보드 변경                      |                                  사이드바, 내 대시보드 페이지(SSR 적용)                                  |
+|                                              할 일 카드 DnD                                              |                                초대 알림, 대시보드 공유, 비밀번호 암호화                                |                                                                                              |                                       대시보드 즐겨찾기, 다크모드                                        |
+|                                       Tanstack Query 및 Redux 설정                                       |                                     깃/깃허브 관리, 문서 관리, 배포                                     |                                    발표 자료 준비 및 발표                                    |                                              회의 내용 정리                                              |
+
 ## 📋 서비스 개요
 
 ### 🎯 서비스 소개 및 목적
@@ -86,15 +88,15 @@ graph LR
 
 ### 주요 경쟁 서비스 비교
 
-| 기능              | Verse by Verse | 브런치 | 네이버 블로그 | ChatGPT  |
-|-----------------|----------------|-----|---------|----------|
-| **AI 문학 변환**    | ✅ 전용 기능        | ❌   | ❌       | 🔶 수동 요청 |
-| **감정 기반 장르 추천** | ✅              | ❌   | ❌       | ❌        |
-| **소셜 기능**       | ✅              | ✅   | 🔶 제한적  | ❌        |
-| **실시간 변환**      | ✅              | ❌   | ❌       | ✅        |
-| **모바일 최적화**     | ✅              | ✅   | 🔶      | 🔶       |
-| **무료 사용**       | ✅              | ✅   | ✅       | 🔶 제한적   |
-| **한국어 특화**      | ✅              | ✅   | ✅       | 🔶       |
+| 기능                    | Verse by Verse | 브런치 | 네이버 블로그 | ChatGPT      |
+| ----------------------- | -------------- | ------ | ------------- | ------------ |
+| **AI 문학 변환**        | ✅ 전용 기능   | ❌     | ❌            | 🔶 수동 요청 |
+| **감정 기반 장르 추천** | ✅             | ❌     | ❌            | ❌           |
+| **소셜 기능**           | ✅             | ✅     | 🔶 제한적     | ❌           |
+| **실시간 변환**         | ✅             | ❌     | ❌            | ✅           |
+| **모바일 최적화**       | ✅             | ✅     | 🔶            | 🔶           |
+| **무료 사용**           | ✅             | ✅     | ✅            | 🔶 제한적    |
+| **한국어 특화**         | ✅             | ✅     | ✅            | 🔶           |
 
 ### 🎯 왜 Verse by Verse를 선택해야 하는가?
 
@@ -198,7 +200,7 @@ cd versebyverse-backend
 
 ### 🧪 테스트 실행
 
-```bash
+````bash
 # 백엔드 테스트
 cd versebyverse-backend
 ./gradlew test
@@ -235,11 +237,11 @@ graph TB
         A[Next.js Frontend]
         B[Mobile App<br/>향후 계획]
     end
-    
+
     subgraph "API Gateway"
         C[Spring Boot Backend]
     end
-    
+
     subgraph "Service Layer"
         D[Auth Service]
         E[Post Service]
@@ -247,17 +249,17 @@ graph TB
         G[AI Service]
         H[Admin Service]
     end
-    
+
     subgraph "Data Layer"
         I[MySQL Database]
         J[File Storage<br/>향후 계획]
     end
-    
+
     subgraph "External Services"
         K[Google OAuth2]
         L[Google Vertex AI]
     end
-    
+
     A --> C
     B --> C
     C --> D
@@ -271,7 +273,7 @@ graph TB
     G --> L
     H --> I
     D --> K
-```
+````
 
 ### 📊 ERD (Entity Relationship Diagram)
 
@@ -289,13 +291,13 @@ graph LR
         A[Developer]
         B[Git Repository]
     end
-    
+
     subgraph "CI/CD Pipeline"
         C[GitHub Actions]
         D[Build & Test]
         E[Docker Build]
     end
-    
+
     subgraph "Production Environment"
         F[Load Balancer]
         G[Frontend Container]
@@ -303,7 +305,7 @@ graph LR
         I[MySQL Database]
         J[Redis Cache<br/>향후 계획]
     end
-    
+
     A --> B
     B --> C
     C --> D
@@ -494,9 +496,9 @@ main                    # 프로덕션 배포
 name: CI/CD Pipeline
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -506,7 +508,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
+          java-version: "21"
       - name: Run tests
         run: ./gradlew test
 ```
@@ -515,4 +517,4 @@ jobs:
 
 **⭐ 이 프로젝트가 마음에 드신다면 Star를 눌러주세요!**
 
-*마지막 업데이트: 2025년 8월*
+_마지막 업데이트: 2025년 8월_
