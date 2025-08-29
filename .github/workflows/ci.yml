@@ -67,9 +67,9 @@ jobs:
           
           # Database settings (override for GitHub Actions MySQL service)
           DB_TEST_PORT: 3306  # GitHub Actions에서는 3306 포트 사용
-          DB_TEST_NAME: versebyverse  # 로컬과 동일
-          DB_TEST_USERNAME: user  # 로컬과 동일
-          DB_TEST_PASSWORD: user1234  # 로컬과 동일
+          DB_TEST_NAME: versebyverse_test
+          DB_TEST_USERNAME: testuser
+          DB_TEST_PASSWORD: testuser12341
           
           # Real values from GitHub Secrets
           AI_PROJECT_ID: ${{ secrets.AI_PROJECT_ID }}

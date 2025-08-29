@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 테스트용 DB 설정 - 로컬과 GitHub Actions 모두 동일한 환경변수 사용
-    url: jdbc:mysql://localhost:${DB_TEST_PORT}/${DB_TEST_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:${DB_TEST_PORT}/${DB_TEST_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_TEST_USERNAME}
     password: ${DB_TEST_PASSWORD}
   sql:
