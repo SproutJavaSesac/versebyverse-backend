@@ -21,8 +21,6 @@ import today.sesac.versebyverse.member.entity.Member;
 
 /**
  * 작업(Task)의 상태와 메타데이터 관리하는 도메인입니다.
- *
- *
  */
 @Getter
 @Entity
@@ -47,15 +45,15 @@ public class PostProofreadTask extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Genre genreType; // 게시글의 컨셉 타입
+    private Genre genreType;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String initialTitle; // 사용자가 최초 입력한 원본 제목
+    private String initialTitle;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String initialContent; // 사용자가 최초 입력한 원본 글
+    private String initialContent;
 
-    @OneToOne // 최종 선택된 결과물
+    @OneToOne
     @JoinColumn(name = "final_attempt_id")
     private PostProofreadAttempt finalAttempt;
 

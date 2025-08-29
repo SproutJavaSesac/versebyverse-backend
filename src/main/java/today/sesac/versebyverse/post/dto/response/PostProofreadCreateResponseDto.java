@@ -17,7 +17,8 @@ public record PostProofreadCreateResponseDto(
         String afterTitle,
         String afterContent,
         Genre genreType,
-        Emotion emotionType, LocalDateTime createdAt,
+        Emotion emotionType,
+        LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
 

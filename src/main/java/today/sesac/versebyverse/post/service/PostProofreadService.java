@@ -40,22 +40,6 @@ public class PostProofreadService {
 
     private final PostProofreadTaskRepository postProofreadTaskRepository;
 
-    private static void validatePostProofreadStatus(PostProofreadTask task,
-            PostProofreadAttempt attempt) {
-
-        // - 이 Task가 이미 'COMPLETED' 상태인지 확인하여 중복 발행을 막습니다.
-        if (task.getStatus() == TaskStatus.COMPLETED) {
-            throw new PostProofReadException(
-                    PostProofReadErrorCode.POST_PROOFREAD_ALREADY_PUBLISHED, "taskUuid");
-        }
-
-        // - 조회한 Attempt가 조회한 Task에 속해 있는지 확인하여 데이터가 일치하는지 검증합니다.
-        if (!attempt.getTask().getId().equals(task.getId())) {
-            throw new PostProofReadException(PostProofReadErrorCode.POST_PROOFREAD_TASK_MISMATCH,
-                    "chosenAttemptId");
-        }
-    }
-
     /**
      * 게시글을 첨삭합니다.
      *
@@ -115,9 +99,9 @@ public class PostProofreadService {
             Member member = memberService.findById(memberId);
             PostProofreadTask task = PostProofreadTask.createProofreadTask(
                     member,
-                    postProofreadCreateRequestDto.genreType(), // 사용자가 선택한 컨셉
-                    postProofreadCreateRequestDto.title(), // 사용자가 입력한 원본 제목 저장
-                    postProofreadCreateRequestDto.content() // 사용자의 원본 글 저장
+                    postProofreadCreateRequestDto.genreType(), 
+                    postProofreadCreateRequestDto.title(), 
+                    postProofreadCreateRequestDto.content() 
             );
             return postProofreadTaskRepository.save(task);
 
@@ -178,8 +162,24 @@ public class PostProofreadService {
         Post savedPost = postRepository.save(post);
 
         // 현재 첨삭 task 종료
-        task.complete(attempt); // Task 엔티티 내부에 상태 변경 로직을 두는 것이 좋습니다. (아래 설명 참조)
+        task.complete(attempt); 
 
         return PostCreateResponseDto.of(savedPost);
+    }
+
+    private static void validatePostProofreadStatus(PostProofreadTask task,
+            PostProofreadAttempt attempt) {
+
+        // 중복 발행 X -> Task가 이미 'COMPLETED' 상태인지 확인.
+        if (task.getStatus() == TaskStatus.COMPLETED) {
+            throw new PostProofReadException(
+                    PostProofReadErrorCode.POST_PROOFREAD_ALREADY_PUBLISHED, "taskUuid");
+        }
+
+        // Task와 Attempt의 연관관계 확인 -> 사용자가 선택한 Attempt가 실제로 해당 Task에 속하는지 확인.
+        if (!attempt.getTask().getId().equals(task.getId())) {
+            throw new PostProofReadException(PostProofReadErrorCode.POST_PROOFREAD_TASK_MISMATCH,
+                    "chosenAttemptId");
+        }
     }
 }
