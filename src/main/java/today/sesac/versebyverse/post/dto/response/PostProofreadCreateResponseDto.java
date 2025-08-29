@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.post.dto.response;
 
 import java.time.LocalDateTime;
+import today.sesac.versebyverse.global.domain.Emotion;
 import today.sesac.versebyverse.global.domain.Genre;
 
 /**
@@ -9,11 +10,14 @@ import today.sesac.versebyverse.global.domain.Genre;
 public record PostProofreadCreateResponseDto(
         String taskUuid,
         Long attemptId,
-        String nickname,
+        Long authorId,
+        String authorNickname,
+        String beforeTitle,
+        String beforeContent,
         String afterTitle,
         String afterContent,
         Genre genreType,
-        LocalDateTime createdAt,
+        Emotion emotionType, LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
 

@@ -92,10 +92,14 @@ public class PostProofreadService {
         return new PostProofreadCreateResponseDto(
                 savedAttempt.getTask().getUuid(),
                 savedAttempt.getId(),
+                savedAttempt.getTask().getMember().getId(),
                 savedAttempt.getTask().getMember().getNickname(),
+                savedAttempt.getTask().getInitialTitle(),
+                savedAttempt.getTask().getInitialContent(),
                 savedAttempt.getAfterTitle(),
                 savedAttempt.getAfterContent(),
                 savedAttempt.getTask().getGenreType(),
+                savedAttempt.getEmotionType(),
                 savedAttempt.getCreatedAt(),
                 savedAttempt.getUpdatedAt()
         );
