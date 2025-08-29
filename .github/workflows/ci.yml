@@ -44,27 +44,21 @@ jobs:
 
       - name: Prepare env for tests (map secrets -> test env)
         run: |
-          # --- DB (application-test.yml이 기대하는 이름으로 세팅) ---
+          echo "SPRING_PROFILES_ACTIVE=test" >> $GITHUB_ENV       # 프로필 강제
+          mkdir -p src/test/resources
+          echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/ai.json
+          echo "AI_KEY_PATH=ai.json" >> $GITHUB_ENV               # 클래스패스용 이름만!
           echo "DB_TEST_PORT=3306" >> $GITHUB_ENV
           echo "DB_TEST_NAME=vbv_test" >> $GITHUB_ENV
           echo "DB_TEST_USERNAME=test" >> $GITHUB_ENV
           echo "DB_TEST_PASSWORD=test" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_ID=dummy" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=dummy" >> $GITHUB_ENV
+          echo "S3_ACCESS_KEY=dummy" >> $GITHUB_ENV
+          echo "S3_SECRET_ACCESS_KEY=dummy" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=dummy" >> $GITHUB_ENV
+          echo "S3_REGION=ap-northeast-2" >> $GITHUB_ENV
 
-          # --- AI 키 파일: 시크릿 JSON을 파일로 만들고, 그 경로를 AI_KEY_PATH로 지정 ---
-          mkdir -p src/test/resources
-          echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/ai.json
-          echo "AI_KEY_PATH=src/test/resources/ai.json" >> $GITHUB_ENV
-          echo "AI_PROJECT_ID=${{ secrets.AI_PROJECT_ID }}" >> $GITHUB_ENV
-
-          # --- 그 외 필요한 값들: 있으면 시크릿, 없으면 더미 ---
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID || 'dummy' }}" >> $GITHUB_ENV
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET || 'dummy' }}" >> $GITHUB_ENV
-          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID || 'dummy' }}" >> $GITHUB_ENV
-          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET || 'dummy' }}" >> $GITHUB_ENV
-          echo "S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY || 'dummy' }}" >> $GITHUB_ENV
-          echo "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY || 'dummy' }}" >> $GITHUB_ENV
-          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME || 'dummy' }}" >> $GITHUB_ENV
-          echo "S3_REGION=${{ secrets.S3_REGION || 'ap-northeast-2' }}" >> $GITHUB_ENV
 
       - name: Setup MySQL charset
         run: |
