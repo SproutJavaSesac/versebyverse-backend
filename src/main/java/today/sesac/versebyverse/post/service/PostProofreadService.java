@@ -16,8 +16,8 @@ import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.entity.PostProofreadAttempt;
 import today.sesac.versebyverse.post.entity.PostProofreadTask;
 import today.sesac.versebyverse.post.entity.TaskStatus;
-import today.sesac.versebyverse.post.exception.PostProofReadErrorCode;
-import today.sesac.versebyverse.post.exception.PostProofReadException;
+import today.sesac.versebyverse.post.exception.PostProofreadErrorCode;
+import today.sesac.versebyverse.post.exception.PostProofreadException;
 import today.sesac.versebyverse.post.repository.PostProofreadAttemptRepository;
 import today.sesac.versebyverse.post.repository.PostProofreadTaskRepository;
 import today.sesac.versebyverse.post.repository.PostRepository;
@@ -89,6 +89,22 @@ public class PostProofreadService {
         );
     }
 
+    private static void validatePostProofreadStatus(PostProofreadTask task,
+            PostProofreadAttempt attempt) {
+
+        // 중복 발행 X -> Task가 이미 'COMPLETED' 상태인지 확인.
+        if (task.getStatus() == TaskStatus.COMPLETED) {
+            throw new PostProofreadException(
+                    PostProofreadErrorCode.POST_PROOFREAD_ALREADY_PUBLISHED, "taskUuid");
+        }
+
+        // Task와 Attempt의 연관관계 확인 -> 사용자가 선택한 Attempt가 실제로 해당 Task에 속하는지 확인.
+        if (!attempt.getTask().getId().equals(task.getId())) {
+            throw new PostProofreadException(PostProofreadErrorCode.POST_PROOFREAD_TASK_MISMATCH,
+                    "chosenAttemptId");
+        }
+    }
+
     private PostProofreadTask getCurrentPostProofreadTask(
             PostProofreadCreateRequestDto postProofreadCreateRequestDto, Long memberId) {
 
@@ -99,9 +115,9 @@ public class PostProofreadService {
             Member member = memberService.findById(memberId);
             PostProofreadTask task = PostProofreadTask.createProofreadTask(
                     member,
-                    postProofreadCreateRequestDto.genreType(), 
-                    postProofreadCreateRequestDto.title(), 
-                    postProofreadCreateRequestDto.content() 
+                    postProofreadCreateRequestDto.genreType(),
+                    postProofreadCreateRequestDto.title(),
+                    postProofreadCreateRequestDto.content()
             );
             return postProofreadTaskRepository.save(task);
 
@@ -118,8 +134,8 @@ public class PostProofreadService {
         // taskUuid와 memberId 같이 조회 -> 다른 사람의 글을 발행하는 가능성 차단.
         return postProofreadTaskRepository
                 .findByUuidAndMemberId(taskUuid, memberId)
-                .orElseThrow(() -> new PostProofReadException(
-                        PostProofReadErrorCode.POST_PROOFREAD_NOT_FOUND,
+                .orElseThrow(() -> new PostProofreadException(
+                        PostProofreadErrorCode.POST_PROOFREAD_NOT_FOUND,
                         "taskUuid"
                 ));
     }
@@ -140,8 +156,8 @@ public class PostProofreadService {
         PostProofreadTask task = getExistingPostProofreadTask(taskUuid, memberId);
         PostProofreadAttempt attempt = postProofreadAttemptRepository
                 .findById(postProofreadPublishRequestDto.chosenAttemptId())
-                .orElseThrow(() -> new PostProofReadException(
-                        PostProofReadErrorCode.POST_PROOFREAD_NOT_FOUND,
+                .orElseThrow(() -> new PostProofreadException(
+                        PostProofreadErrorCode.POST_PROOFREAD_NOT_FOUND,
                         "chosenAttemptId"
                 ));
 
@@ -162,24 +178,8 @@ public class PostProofreadService {
         Post savedPost = postRepository.save(post);
 
         // 현재 첨삭 task 종료
-        task.complete(attempt); 
+        task.complete(attempt);
 
         return PostCreateResponseDto.of(savedPost);
-    }
-
-    private static void validatePostProofreadStatus(PostProofreadTask task,
-            PostProofreadAttempt attempt) {
-
-        // 중복 발행 X -> Task가 이미 'COMPLETED' 상태인지 확인.
-        if (task.getStatus() == TaskStatus.COMPLETED) {
-            throw new PostProofReadException(
-                    PostProofReadErrorCode.POST_PROOFREAD_ALREADY_PUBLISHED, "taskUuid");
-        }
-
-        // Task와 Attempt의 연관관계 확인 -> 사용자가 선택한 Attempt가 실제로 해당 Task에 속하는지 확인.
-        if (!attempt.getTask().getId().equals(task.getId())) {
-            throw new PostProofReadException(PostProofReadErrorCode.POST_PROOFREAD_TASK_MISMATCH,
-                    "chosenAttemptId");
-        }
     }
 }
