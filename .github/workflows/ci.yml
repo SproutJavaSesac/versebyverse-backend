@@ -1,8 +1,8 @@
-name: CI - Run Tests
+name: CI (Test)
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop","204-deploy/ci-deploy" ]
   pull_request:
     branches: [ "main", "develop" ]
   workflow_dispatch: # 수동 실행
@@ -42,6 +42,30 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Prepare env for tests (map secrets -> test env)
+        run: |
+          # --- DB (application-test.yml이 기대하는 이름으로 세팅) ---
+          echo "DB_TEST_PORT=3306" >> $GITHUB_ENV
+          echo "DB_TEST_NAME=vbv_test" >> $GITHUB_ENV
+          echo "DB_TEST_USERNAME=test" >> $GITHUB_ENV
+          echo "DB_TEST_PASSWORD=test" >> $GITHUB_ENV
+
+          # --- AI 키 파일: 시크릿 JSON을 파일로 만들고, 그 경로를 AI_KEY_PATH로 지정 ---
+          mkdir -p src/test/resources
+          echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/ai.json
+          echo "AI_KEY_PATH=src/test/resources/ai.json" >> $GITHUB_ENV
+          echo "AI_PROJECT_ID=${{ secrets.AI_PROJECT_ID }}" >> $GITHUB_ENV
+
+          # --- 그 외 필요한 값들: 있으면 시크릿, 없으면 더미 ---
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID || 'dummy' }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET || 'dummy' }}" >> $GITHUB_ENV
+          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID || 'dummy' }}" >> $GITHUB_ENV
+          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET || 'dummy' }}" >> $GITHUB_ENV
+          echo "S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY || 'dummy' }}" >> $GITHUB_ENV
+          echo "S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY || 'dummy' }}" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME || 'dummy' }}" >> $GITHUB_ENV
+          echo "S3_REGION=${{ secrets.S3_REGION || 'ap-northeast-2' }}" >> $GITHUB_ENV
+
       - name: Setup MySQL charset
         run: |
           # MySQL이 준비될 때까지 대기
@@ -59,52 +83,5 @@ jobs:
             sleep 3
           done
 
-      - name: Prepare AI credentials for tests
-        run: |
-          mkdir -p src/test/resources
-          echo "${{ secrets.AI_KEY_JSON }}" > src/test/resources/versebyverse-ai-c27e5aadece5.json
-
       - name: Run tests
-        run: ./gradlew test --info
-        env:
-          # Spring Profile
-          SPRING_PROFILES_ACTIVE: test
-          
-          # Database settings (override for GitHub Actions MySQL service)
-          DB_TEST_PORT: 3306  # GitHub Actions에서는 3306 포트 사용
-          DB_TEST_NAME: versebyverse_test
-          DB_TEST_USERNAME: testuser
-          DB_TEST_PASSWORD: testuser12341
-          
-          # Real values from GitHub Secrets
-          AI_PROJECT_ID: ${{ secrets.AI_PROJECT_ID }}
-          AI_KEY_PATH: ${{ secrets.AI_KEY_PATH }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
-          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-          S3_REGION: ${{ secrets.S3_REGION }}
-          CLIENT_URL: "http://localhost:3000"
-          SERVER_URL: "http://localhost:8080"
-
-      - name: Publish Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Test Results
-          path: build/test-results/test/*.xml
-          reporter: java-junit
-
-      - name: Generate test report
-        if: always()
-        run: ./gradlew jacocoTestReport
-
-      - name: Upload coverage reports to Codecov
-        if: always()
-        uses: codecov/codecov-action@v4
-        with:
-          file: build/reports/jacoco/test/jacocoTestReport.xml
-          fail_ci_if_error: false
+        run: ./gradlew clean test -Dspring.profiles.active=test --info
