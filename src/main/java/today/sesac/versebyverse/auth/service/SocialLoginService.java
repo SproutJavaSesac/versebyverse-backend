@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import today.sesac.versebyverse.member.entity.SocialType;
 import today.sesac.versebyverse.member.exception.WithdrawFailureException;
 
 @Slf4j
@@ -30,9 +31,9 @@ public class SocialLoginService {
      *
      * @param email 스프링 시큐리티에서 사용자를 식별할 때 사용하는 email
      */
-    public void revokeAccess(String email) {
-        OAuth2AccessToken accessToken = getAccessToken(email);
-        sendRevoke(accessToken);
+    public void revokeAccess(String email, SocialType socialType) {
+        OAuth2AccessToken accessToken = getAccessToken(email, socialType);
+        sendRevoke(accessToken, socialType);
     }
 
     /**
@@ -42,10 +43,15 @@ public class SocialLoginService {
      * @param email 스프링 시큐리티에서 사용자를 식별할 때 사용하는 email
      * @return OAuth2AccessToken 엑세스 토큰
      */
-    private OAuth2AccessToken getAccessToken(String email) {
+    private OAuth2AccessToken getAccessToken(String email, SocialType socialType) {
 
-        OAuth2AuthorizedClient client = authorizedClientService
-                .loadAuthorizedClient("google", email);
+        OAuth2AuthorizedClient client = null;
+        if (socialType.equals(SocialType.GOOGLE)) {
+            client = authorizedClientService.loadAuthorizedClient("google", email);
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            client = authorizedClientService.loadAuthorizedClient("kakao", email);
+        }
+
         if (client == null) {
             throw new WithdrawFailureException("client", "OAuth2AuthorizedClient가 존재하지 않습니다.");
         }
@@ -54,12 +60,19 @@ public class SocialLoginService {
     }
 
     /**
-     * TODO: 카카오나 다른 소셜 로그인이 추가되면 어떻게 변경할지 고민하기
      * 구글 api를 호출하여 엑세스 토큰을 해제하는 메서드입니다.
      *
      * @param accessToken 엑세스 토큰
      */
-    private void sendRevoke(OAuth2AccessToken accessToken) {
+    private void sendRevoke(OAuth2AccessToken accessToken, SocialType socialType) {
+        if (socialType.equals(SocialType.GOOGLE)) {
+            sendRevokeGoogle(accessToken);
+        } else if (socialType.equals(SocialType.KAKAO)) {
+            sendRevokeKakao(accessToken);
+        }
+    }
+
+    private void sendRevokeGoogle(OAuth2AccessToken accessToken) {
 
         String revokeUrl = "https://oauth2.googleapis.com/revoke";
 
@@ -76,6 +89,24 @@ public class SocialLoginService {
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(revokeUrl, request,
                     String.class);
+            log.info("소셜 로그인 연동 해제에 성공했습니다: {}", response.getStatusCode());
+        } catch (HttpClientErrorException e) {
+            throw new WithdrawFailureException("clientError", "소셜 로그인 연동 해제 중 문제 발생");
+        }
+    }
+
+    private void sendRevokeKakao(OAuth2AccessToken accessToken) {
+
+        String unlinkUrl = "https://kapi.kakao.com/v1/user/unlink";
+
+        // http 요청을 위한 RestTemplate 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken.getTokenValue());
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(unlinkUrl, request, String.class);
             log.info("소셜 로그인 연동 해제에 성공했습니다: {}", response.getStatusCode());
         } catch (HttpClientErrorException e) {
             throw new WithdrawFailureException("clientError", "소셜 로그인 연동 해제 중 문제 발생");

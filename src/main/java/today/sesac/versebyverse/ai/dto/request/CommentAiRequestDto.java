@@ -2,8 +2,8 @@ package today.sesac.versebyverse.ai.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import today.sesac.versebyverse.global.domain.Concept;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.domain.Genre;
 
 /**
  * 댓글 AI 요청 데이터 전송 객체(DTO)입니다.
@@ -17,7 +17,7 @@ import today.sesac.versebyverse.global.domain.Emotion;
 @AllArgsConstructor(staticName = "of")
 public class CommentAiRequestDto extends AiRequestDto {
 
-    private Concept conceptType;
+    private Genre genreType;
 
     /**
      * 분석할 댓글 내용.

@@ -8,11 +8,12 @@ import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.prompt.PromptTemplateLoader;
 import today.sesac.versebyverse.ai.prompt.PromptType;
+import today.sesac.versebyverse.ai.util.GenrePromptMapper;
 
 /**
  * 게시글 도메인의 AI 처리를 담당하는 서비스입니다.
  *
- * <p>컨셉에 맞는 글 변환, 감정 분석 등 게시글 관련 AI 작업을 수행합니다.</p>
+ * <p>장르에 맞는 글 변환, 감정 분석 등 게시글 관련 AI 작업을 수행합니다.</p>
  */
 @Service
 @Slf4j
@@ -45,13 +46,13 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
      * 서비스 안정성을 보장합니다.</p>
      *
      * @param requestDto AI 요청 데이터 전송 객체
-     * @param promptType 사용할 프롬프트 타입
      * @return 검증된 AI 응답 DTO 또는 대체 응답 DTO
      */
-    public PostAiResponseDto executeAiWithValidation(PostAiRequestDto requestDto,
-            PromptType promptType) {
+    public PostAiResponseDto executeAiWithValidation(PostAiRequestDto requestDto) {
 
         try {
+            PromptType promptType =
+                    GenrePromptMapper.getPostPromptType(requestDto.getGenreType());
             PostAiResponseDto response = executeAi(requestDto, promptType);
 
             // 필수 필드 검증
@@ -77,7 +78,7 @@ public class PostAiService extends AbstractAiService<PostAiRequestDto, PostAiRes
 
         return PostAiResponseDto.of(
                 requestDto.getTitle(),
-                requestDto.getConceptType(),
+                requestDto.getGenreType(),
                 requestDto.getEmotionType(),
                 requestDto.getContent()
         );
