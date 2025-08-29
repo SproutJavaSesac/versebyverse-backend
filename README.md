@@ -10,6 +10,12 @@
 
 ---
 
+## 목차
+
+## 팀원 소개
+
+> **TEAM verseByVerse**
+
 ## 📋 서비스 개요
 
 ### 🎯 서비스 소개 및 목적
@@ -419,7 +425,7 @@ public class SecurityConfig {
 }
 ```
 
-### 🤖 AI 텍스트 변환 (Spring AI + Vertex AI)
+### 🤖 AI 변환 서비스 (Spring AI + Vertex AI)
 
 - **Google Vertex AI Gemini 2.0 Flash** 모델 사용
 - **감정 분석** 기반 장르 추천
