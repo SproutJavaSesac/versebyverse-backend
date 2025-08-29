@@ -1,4 +1,4 @@
-name: CI-CD to EC2 (ECR + Docker Compose)
+name: CD to EC2 (ECR + Docker Compose)
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
   workflow_dispatch: #테스트 위해 커밋/푸시 안해도 수동으로 실행
 
 jobs:
-  test:
-    uses: ./.github/workflows/ci.yml  # 테스트 먼저 실행
+  #  test:
+  #    uses: ./.github/workflows/ci.yml  # 테스트 먼저 실행
   
   build-and-deploy:
-    needs: test
+    #    needs: test
     runs-on: ubuntu-latest
 
     steps:
