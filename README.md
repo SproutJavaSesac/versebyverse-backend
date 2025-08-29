@@ -13,9 +13,15 @@
 ## 목차
 
 ## 팀원 소개
-
 > **TEAM verseByVerse**
 
+|                                                   강소연                                                    |                                                   황한나                                                   |                                                   박민석                                                    |                                                   이상준                                                    |
+|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|
+| <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/c1576c1d-2762-4865-a27b-bbcd223de2bb" width="150"> | <img src="https://github.com/user-attachments/assets/bf52cc39-f60e-40c5-9928-4c3e09e91d5b" width="150" > | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" width="150" > |
+|                                [@wayandway](https://github.com/wayandway)                                |                                  [@un0211](https://github.com/un0211)                                   |                           [@oceanlee-seoul](https://github.com/oceanlee-seoul)                           |                                  [@wjsdncl](https://github.com/wjsdncl)                                  |
+|                                        유저기능, 대시보드 페이지, 할 일 카드 모달                                         |                                        헤더, 계정관리 페이지, 대시보드 관리 페이지                                        |                                      전역 모달 관리, 카드 생성/수정 모달, 대시보드 변경                                      |                                         사이드바, 내 대시보드 페이지(SSR 적용)                                         |
+|                                                할 일 카드 DnD                                                |                                        초대 알림, 대시보드 공유, 비밀번호 암호화                                         |                                                                                                          |                                             대시보드 즐겨찾기, 다크모드                                              |
+|                                        Tanstack Query 및 Redux 설정                                         |                                           깃/깃허브 관리, 문서 관리, 배포                                           |                                              발표 자료 준비 및 발표                                               |                                                 회의 내용 정리                                                 |
 ## 📋 서비스 개요
 
 ### 🎯 서비스 소개 및 목적
