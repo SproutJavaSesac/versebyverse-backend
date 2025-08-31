@@ -1,11 +1,10 @@
-# Verse by Verse 📝✨
+# 구절구절 - Verse by Verse 📝✨
 
 > AI가 당신의 일상을 문학으로 변환해주는 소셜 플랫폼
 
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/your-repo/verse-by-verse)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ---
@@ -30,57 +29,66 @@
 
 **Verse by Verse**는 사용자가 작성한 일상의 글을 AI가 문학적으로 다듬어주는 혁신적인 소셜 플랫폼입니다.
 
-**개발 기간**: 2024년 12월 ~ 2025년 2월 (3개월, 스프린트 3주 단위)
-
-- **Sprint 1**: MVP 개발 (핵심 기능)
-- **Sprint 2**: 소셜 기능 및 AI 고도화
-- **Sprint 3**: QA, 성능 최적화, 배포
-- **Sprint 4**: 추가 기능 및 안정화
-
-### 🤔 이 프로젝트는 무엇을 위한 것인가?
-
-- **창작의 민주화**: 문학적 재능이 없어도 누구나 아름다운 글을 쓸 수 있도록 지원
-- **감정 표현의 확장**: 일상의 소소한 감정을 문학적으로 승화시켜 표현
-- **AI와의 협업**: 인간의 진정성과 AI의 표현력을 결합한 새로운 창작 경험
+**개발 기간**: 2025년 6월 ~ 2025년 8월 (3개월, 스프린트 3주 단위)
 
 ### 💡 어떤 문제를 해결할 수 있는가?
 
-1. **글쓰기 장벽 해소**: "글을 잘 못 써서" 표현을 포기하는 사람들을 위한 솔루션
-2. **감정 표현의 한계**: 단순한 일기나 SNS 포스팅을 넘어선 깊이 있는 표현
-3. **창작 동기 부족**: AI의 도움으로 자신의 글이 문학작품으로 변화하는 성취감 제공
-4. **소통의 질 향상**: 더 풍부하고 아름다운 언어로 타인과 소통
+1. **표현력의 한계**: "짜증나", "기뻐", "슬퍼" 같은 단조로운 감정 표현을 풍부하게 변환
+2. **글쓰기 실력 향상**: AI 첨삭을 통해 자연스럽게 어휘력과 표현력 향상
+3. **창작 동기 부여**: 내 글이 문학작품으로 변화하는 재미와 성취감 제공
+4. **소통의 질 개선**: SNS, 블로그에서 더 매력적이고 감각적인 글쓰기 가능
+5. **학습 효과**: 수능, 논술, 글쓰기 실력에 직접적인 도움
 
 ### 👥 어떤 사람들이 이 프로젝트를 사용하면 좋은가?
 
-**주요 타겟 (얼리어답터)**:
+**🎓 학습자 & 수험생**
 
-- 📝 **창작 지망생**: 글쓰기를 배우고 싶지만 시작이 어려운 사람들
-- 🎨 **감성적 표현을 좋아하는 사람들**: 일상을 아름답게 기록하고 싶은 사람들
-- 🤖 **AI 기술에 관심 있는 사용자**: 새로운 AI 서비스를 적극적으로 시도하는 사람들
-- 📱 **소셜 미디어 활용자**: 기존 SNS에서 차별화된 콘텐츠를 원하는 사람들
+- 수능, 논술, 글쓰기 실력 향상이 필요한 학생들
+- 감정을 다양하게 표현하는 어휘력 확장을 원하는 사람들
+- 문학 작품 연계로 국어 성적 향상을 목표로 하는 학습자들
 
-**확장 타겟**:
+**💼 직장인 & 전문가**
 
-- 📚 문학 애호가들
-- 🏫 교육 관계자 (글쓰기 교육)
-- 💼 마케터 (창의적 카피라이팅)
+- 업무, 소통에서 전문성을 보여주고 싶은 직장인들
+- 기획서, 보고서 작성 시 표현력 향상이 필요한 사람들
+- 개인 브랜딩을 위한 글쓰기 실력을 키우고 싶은 전문가들
+
+**✨ 세련된 표현을 원하는 사람들**
+
+- SNS, 일상 대화에서 매력적으로 소통하고 싶은 사람들
+- 인스타그램, 블로그 게시글을 더 감각적으로 작성하고 싶은 사용자들
+- "글 정말 잘 쓰네요" 칭찬을 받고 싶은 모든 사람들
+
+**📝 글쓰기 연습을 원하는 사람들**
+
+- 체계적인 피드백으로 글쓰기 실력을 늘리고 싶은 사람들
+- 매일 부담 없이 글쓰기 연습을 하고 싶은 사람들
+- 실제 활용 가능한 실용적 표현을 학습하고 싶은 사람들
 
 ### ⚙️ 이 프로젝트는 어떻게 작동하는가?
 
+**Verse by Verse**는 다음과 같은 과정으로 당신의 일상을 문학으로 변환합니다:
+
 ```mermaid
 graph LR
-    A[사용자 글 작성] --> B[감정/장르 선택]
-    B --> C[AI 변환 처리]
-    C --> D[문학적 결과물]
-    D --> E[소셜 공유]
-    E --> F[커뮤니티 반응]
+    A[일상 표현 입력<br/>"진짜 짜증나"] --> B[감정 인식<br/>😤 분노]
+    B --> C[AI 프리즘 변환<br/>목적별 스타일 적용]
+    C --> D[문학적 결과물<br/>"마음이 무거운 구름에<br/>가려진 듯하다"]
+    D --> E[점수 제공<br/>실시간 평가]
+    E --> F[소셜 공유<br/>커뮤니티 반응]
 ```
 
-1. **입력**: 사용자가 일상의 글을 자유롭게 작성
-2. **선택**: 감정 태그와 원하는 문학 장르 선택
-3. **변환**: Google Vertex AI가 문학적으로 변환
-4. **공유**: 변환된 작품을 커뮤니티에 공유
-5. **소통**: 다른 사용자들과 댓글, 반응으로 소통
+**🎯 핵심 변환 예시**:
+
+- **변환 전**: "오늘 진짜 짜증났어. 모든 게 다 싫다."
+- **변환 후**: "오늘 마음이 무거운 구름에 가려진 듯하다. 모든 것이 잿빛으로 물들어 보인다."
+
+**✨ 특별한 기능들**:
+
+1. **목적별 AI 첨삭**: 학술용, 전문가용, SNS용으로 각각 다른 톤앤매너
+2. **실시간 점수 시스템**: 작문 실력, 창의성, 감정 표현도 점수 제공
+3. **랭킹 & 소셜**: 다른 사용자들과 점수 비교 및 동기부여
+4. **SNS 공유**: 첨삭된 글을 바로 인스타, 블로그에 활용 가능
 
 ---
 
@@ -88,23 +96,26 @@ graph LR
 
 ### 주요 경쟁 서비스 비교
 
-| 기능                    | Verse by Verse | 브런치 | 네이버 블로그 | ChatGPT      |
-| ----------------------- | -------------- | ------ | ------------- | ------------ |
-| **AI 문학 변환**        | ✅ 전용 기능   | ❌     | ❌            | 🔶 수동 요청 |
-| **감정 기반 장르 추천** | ✅             | ❌     | ❌            | ❌           |
-| **소셜 기능**           | ✅             | ✅     | 🔶 제한적     | ❌           |
-| **실시간 변환**         | ✅             | ❌     | ❌            | ✅           |
-| **모바일 최적화**       | ✅             | ✅     | 🔶            | 🔶           |
-| **무료 사용**           | ✅             | ✅     | ✅            | 🔶 제한적    |
-| **한국어 특화**         | ✅             | ✅     | ✅            | 🔶           |
+| 기능                   | 구절구절     | 브런치 | 네이버 블로그 | ChatGPT      | 맞춤법검사기 |
+| ---------------------- | ------------ | ------ | ------------- | ------------ | ------------ |
+| **AI 문학 변환**       | ✅ 전용 기능 | ❌     | ❌            | 🔶 수동 요청 | ❌           |
+| **감정 기반 첨삭**     | ✅           | ❌     | ❌            | ❌           | ❌           |
+| **목적별 스타일 제공** | ✅ 3가지     | ❌     | ❌            | 🔶 수동      | ❌           |
+| **실시간 점수 시스템** | ✅           | ❌     | ❌            | ❌           | 🔶 기본적    |
+| **소셜 & 랭킹 기능**   | ✅           | ✅     | 🔶 제한적     | ❌           | ❌           |
+| **즉시 활용 가능**     | ✅ 원클릭    | ❌     | ❌            | 🔶 복사 필요 | 🔶 수정만    |
+| **학습 효과**          | ✅ 체계적    | 🔶     | ❌            | 🔶           | 🔶 기본적    |
+| **한국어 감정 특화**   | ✅           | 🔶     | ✅            | 🔶           | ✅           |
+| **무료 사용**          | ✅ 베타      | ✅     | ✅            | 🔶 제한적    | ✅           |
 
 ### 🎯 왜 Verse by Verse를 선택해야 하는가?
 
-1. **전용 AI 엔진**: 문학 변환에 특화된 AI 프롬프트 엔지니어링
-2. **원클릭 변환**: 복잡한 설정 없이 즉시 문학작품 생성
-3. **감정 중심 UX**: 사용자의 감정 상태에 맞는 맞춤형 변환
-4. **소셜 네트워킹**: 창작물 중심의 건전한 커뮤니티
-5. **학습 효과**: AI 변환 과정을 통한 자연스러운 글쓰기 학습
+1. **전용 AI 프리즘 엔진**: 문학 변환에 특화된 AI 프롬프트 엔지니어링으로 정확한 감정 변환
+2. **원클릭 변환**: 복잡한 설정 없이 즉시 "짜증나"를 "무지개빛 문학"으로 변환
+3. **목적별 맞춤 첨삭**: 학술용, 전문가용, SNS용 각각 다른 스타일 제공
+4. **실시간 성장 확인**: AI 점수로 객관적인 글쓰기 실력 향상 추적
+5. **즉시 활용 가능**: 첨삭된 글을 바로 SNS, 블로그, 과제 등에 활용
+6. **재미있는 학습**: 딱딱한 공부가 아닌 놀이하듯 글쓰기 실력 향상
 
 ---
 
@@ -112,36 +123,43 @@ graph LR
 
 ### 주요 화면 및 기능
 
-#### 1. 메인 피드
+#### 1. 🏠 메인 랜딩 페이지
 
-- 최신 게시물 타임라인
-- 감정별/장르별 필터링
-- 인기 게시물 추천
+- **프리즘 컨셉 소개**: "감정을 프리즘에 통과시켜 무지개빛 문학으로"
+- **실제 변환 예시**: "짜증나" → "마음이 무거운 구름에 가려진 듯하다"
+- **타겟별 어필**: 학습자, 직장인, 세련된 표현을 원하는 사람들
+- **바로 변환해보기 CTA**: 원클릭으로 서비스 체험
 
-#### 2. 글 작성 화면
+#### 2. ✨ AI 첨삭 변환 화면
 
-- 원본 글 입력 에디터
-- 감정 태그 선택 (6가지)
-- 문학 장르 선택 (5가지)
-- AI 변환 결과 미리보기
+- **일상 표현 입력**: 자유로운 감정 표현 작성
+- **감정 인식**: 😤 분노, 😄 기쁨, 😔 우울, 💕 설렘 등 자동 분류
+- **목적별 스타일 선택**: 학술용, 전문가용, SNS용 첨삭 옵션
+- **실시간 변환 결과**: 변환 전후 비교 뷰
+- **점수 시스템**: 작문 실력, 창의성, 감정 표현도 실시간 평가
 
-#### 3. 게시물 상세
+#### 3. 📊 점수 및 성장 추적
 
-- 원본 ↔ 변환본 비교 뷰
-- 댓글 시스템 (3단계 계층)
-- 반응 버튼 (좋아요, 북마크, 공유)
+- **개인 성장 그래프**: 글쓰기 실력 향상 추이
+- **세부 점수 분석**: 어휘력, 표현력, 창의성 등 영역별 점수
+- **성취 배지**: 다양한 도전과제 완료 시 획득
 
-#### 4. 프로필 페이지
+#### 4. 🏆 랭킹 및 커뮤니티
 
-- 사용자 작품 모음
-- 활동 통계
-- 팔로우/팔로워 (향후 구현)
+- **전체 랭킹**: 다른 사용자들과 점수 비교
+- **월간/주간 랭킹**: 꾸준한 동기부여를 위한 순위 시스템
+- **댓글 & 반응**: 다른 사용자들과 소통 및 피드백
 
-#### 5. 관리자 패널
+#### 5. 📱 SNS 공유 및 활용
 
-- 신고 관리
-- 욕설 필터 관리
-- 사용자 통계
+- **원클릭 공유**: 첨삭된 글을 인스타그램, 블로그에 즉시 공유
+- **공유 통계**: 좋아요, 댓글 수 등 반응 확인
+
+#### 6. 🛠️ 관리자 기능
+
+- **신고 관리 시스템**: 부적절한 콘텐츠 신고 및 처리
+- **욕설 필터**: 자동 욕설 감지 및 차단
+- **사용자 통계**: 서비스 사용 현황 및 분석
 
 ---
 
@@ -150,7 +168,6 @@ graph LR
 ### 📋 전제조건
 
 - **Java 21** 이상
-- **Node.js 18** 이상
 - **Docker & Docker Compose**
 - **MySQL 8.0**
 - **Google Cloud Platform** 계정 (Vertex AI 사용)
@@ -200,12 +217,11 @@ cd versebyverse-backend
 
 ### 🧪 테스트 실행
 
-````bash
+```bash
 # 백엔드 테스트
 cd versebyverse-backend
 ./gradlew test
-
----
+```
 
 ## 🛠️ 기술 개요 및 구현 상세
 
@@ -213,21 +229,23 @@ cd versebyverse-backend
 
 #### Backend
 
-- **Framework**: Spring Boot 3.5.0
-- **Language**: Java 21
-- **Security**: Spring Security + OAuth2
-- **Database**: MySQL 8.4, Spring Data JPA
-- **AI**: Spring AI + Google Vertex AI (Gemini 2.0 Flash)
-- **Testing**: JUnit 5, Mockito, TestContainers
-- **Build**: Gradle 8.x
-- **Code Quality**: SonarQube, JaCoCo, Checkstyle
+<img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"> <img src="https://img.shields.io/badge/Spring_Boot-3.5.0-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"> <img src="https://img.shields.io/badge/Spring_Security-6.3.0-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white"> <img src="https://img.shields.io/badge/Spring_Data_JPA-3.5.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 
-#### Infrastructure
+<img src="https://img.shields.io/badge/MySQL-8.4-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/Spring_AI-1.0.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/Google_Vertex_AI-Gemini_2.0_Flash-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white">
 
-- **Containerization**: Docker, Docker Compose
-- **Database**: MySQL 8.4
-- **Monitoring**: Spring Boot Actuator
-- **CI/CD**: GitHub Actions (예정)
+<img src="https://img.shields.io/badge/Gradle-8.x-02303A?style=for-the-badge&logo=gradle&logoColor=white"> <img src="https://img.shields.io/badge/JUnit5-5.x-25A162?style=for-the-badge&logo=junit5&logoColor=white"> <img src="https://img.shields.io/badge/Mockito-5.x-25A162?style=for-the-badge&logo=mockito&logoColor=white">
+
+#### Infrastructure & DevOps
+
+<img src="https://img.shields.io/badge/Docker-24.x-2496ED?style=for-the-badge&logo=docker&logoColor=white"> <img src="https://img.shields.io/badge/Docker_Compose-2.x-2496ED?style=for-the-badge&logo=docker&logoColor=white"> <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white">
+
+#### Code Quality & Testing
+
+<img src="https://img.shields.io/badge/JaCoCo-0.8.x-25A162?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/SonarQube-3.5.0-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white"> <img src="https://img.shields.io/badge/Checkstyle-10.x-FFA500?style=for-the-badge&logo=checkstyle&logoColor=white">
+
+#### Authentication & Cloud Services
+
+<img src="https://img.shields.io/badge/OAuth2-Google-4285F4?style=for-the-badge&logo=google&logoColor=white"> <img src="https://img.shields.io/badge/AWS_S3-Spring_Cloud-FF9900?style=for-the-badge&logo=amazon-s3&logoColor=white">
 
 ### 🏗️ 시스템 아키텍처
 
@@ -273,7 +291,7 @@ graph TB
     G --> L
     H --> I
     D --> K
-````
+```
 
 ### 📊 ERD (Entity Relationship Diagram)
 
