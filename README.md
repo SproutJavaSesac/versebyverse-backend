@@ -15,13 +15,13 @@
 
 > **TEAM verseByVerse**
 
-|                                                  강소연                                                  |                                                 박민석                                                  |                                            이상준                                            |                                                Sooamazing                                                |
-| :------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/bf52cc39-f60e-40c5-9928-4c3e09e91d5b" width="150"> | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" > | <img src="https://github.com/user-attachments/assets/41d6e961-29e4-4910-8e99-db72940c0a22" width="150" > |
-|                                [@wayandway](https://github.com/wayandway)                                |                                  [@un0211](https://github.com/un0211)                                   |                     [@oceanlee-seoul](https://github.com/oceanlee-seoul)                     |                               [@Sooamazing](https://github.com/Sooamazing)                               |
-|                                유저기능, 대시보드 페이지, 할 일 카드 모달                                |                               헤더, 계정관리 페이지, 대시보드 관리 페이지                               |                      전역 모달 관리, 카드 생성/수정 모달, 대시보드 변경                      |                                  사이드바, 내 대시보드 페이지(SSR 적용)                                  |
-|                                              할 일 카드 DnD                                              |                                초대 알림, 대시보드 공유, 비밀번호 암호화                                |                                                                                              |                                       대시보드 즐겨찾기, 다크모드                                        |
-|                                       Tanstack Query 및 Redux 설정                                       |                                     깃/깃허브 관리, 문서 관리, 배포                                     |                                    발표 자료 준비 및 발표                                    |                                              회의 내용 정리                                              |
+|                                                   강소연                                                    |                                                   박민석                                                   |                                                   이상준                                                    |                                               Sooamazing                                                |
+|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|
+| <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/dd92bb81-1911-4dda-a342-62ea41a1de52" width="150"> | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" width="150" > | <img src="https://github.com/user-attachments/assets/41d6e961-29e4-4910-8e99-db72940c0a22" width="150"> |
+|                                [@wayandway](https://github.com/wayandway)                                |                               [@qkralstjr](https://github.com/qkralstjr)                                |                           [@oceanlee-seoul](https://github.com/oceanlee-seoul)                           |                              [@Sooamazing](https://github.com/Sooamazing)                               |
+|                                        유저기능, 대시보드 페이지, 할 일 카드 모달                                         |                                     Vertex AI 연동 시스템, 신고 기능, 비속어 관리                                     |                                      전역 모달 관리, 카드 생성/수정 모달, 대시보드 변경                                      |                                        사이드바, 내 대시보드 페이지(SSR 적용)                                         |
+|                                                할 일 카드 DnD                                                |                                        초대 알림, 대시보드 공유, 비밀번호 암호화                                         |                                                                                                          |                                             대시보드 즐겨찾기, 다크모드                                             |
+|                                        Tanstack Query 및 Redux 설정                                         |                                           깃/깃허브 관리, 문서 관리, 배포                                           |                                              발표 자료 준비 및 발표                                               |                                                회의 내용 정리                                                 |
 
 ## 📋 서비스 개요
 
@@ -409,34 +409,23 @@ open build/jacocoHtml/index.html
 
 ### 📝 Commit Convention
 
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
 **Types:**
 
-- `feat`: 새로운 기능
-- `fix`: 버그 수정
-- `docs`: 문서 수정
-- `style`: 코드 포맷팅
-- `refactor`: 코드 리팩토링
-- `test`: 테스트 코드
-- `chore`: 빌드 업무 수정
+|   **Type**   | **설명**                                                                                                |
+|:------------:|-------------------------------------------------------------------------------------------------------|
+|   **Feat**   | 새로운 기능 추가                                                                                             |
+|   **Fix**    | 버그 수정                                                                                                 |
+| **Refactor** | 코드 리팩토링                                                                                               |
+|   **Test**   | 테스트 코드, 리팩토링 테스트 코드 추가                                                                                |
+|  **Chore**   | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우<br/>파일/폴더 이름 수정하거나 옮기는 작업<br/>파일 삭제<br/>필요한 주석 추가 및 수정<br/>문서 수정<br/>기타 |
 
 **Example:**
 
 ```
-feat(auth): add Google OAuth2 login
+[#issue]Type(obj): subject # 이슈 번호를 포함한 요약(무엇을(O), 왜(O) 변경했는지를 설명)
 
-- Implement OAuth2 configuration
-- Add custom user service
-- Update security config
+body # 선택, 상세 내용 적기 - 어떻게보다(X) 무엇을(O), 왜(O) 변경했는지를 설명
 
-Closes #123
 ```
 
 ### 🌿 Branch 전략 (Git Flow)
