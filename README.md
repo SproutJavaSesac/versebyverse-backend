@@ -32,6 +32,13 @@
 
 **개발 기간**: 2025년 6월 ~ 2025년 8월 (3개월, 스프린트 3주 단위)
 
+**✨ 특별한 기능들**:
+
+1. **목적별 AI 첨삭**: 학술용, 전문가용, SNS용으로 각각 다른 톤앤매너
+2. **실시간 점수 시스템**: 작문 실력, 창의성, 감정 표현도 점수 제공
+3. **랭킹 & 소셜**: 다른 사용자들과 점수 비교 및 동기부여
+4. **SNS 공유**: 첨삭된 글을 바로 인스타, 블로그에 활용 가능
+
 ### 💡 어떤 문제를 해결할 수 있는가?
 
 1. **표현력의 한계**: "짜증나", "기뻐", "슬퍼" 같은 단조로운 감정 표현을 풍부하게 변환
@@ -45,78 +52,22 @@
 **🎓 학습자 & 수험생**
 
 - 수능, 논술, 글쓰기 실력 향상이 필요한 학생들
-- 감정을 다양하게 표현하는 어휘력 확장을 원하는 사람들
 - 문학 작품 연계로 국어 성적 향상을 목표로 하는 학습자들
 
 **💼 직장인 & 전문가**
 
 - 업무, 소통에서 전문성을 보여주고 싶은 직장인들
-- 기획서, 보고서 작성 시 표현력 향상이 필요한 사람들
 - 개인 브랜딩을 위한 글쓰기 실력을 키우고 싶은 전문가들
 
 **✨ 세련된 표현을 원하는 사람들**
 
 - SNS, 일상 대화에서 매력적으로 소통하고 싶은 사람들
 - 인스타그램, 블로그 게시글을 더 감각적으로 작성하고 싶은 사용자들
-- "글 정말 잘 쓰네요" 칭찬을 받고 싶은 모든 사람들
 
 **📝 글쓰기 연습을 원하는 사람들**
 
 - 체계적인 피드백으로 글쓰기 실력을 늘리고 싶은 사람들
-- 매일 부담 없이 글쓰기 연습을 하고 싶은 사람들
 - 실제 활용 가능한 실용적 표현을 학습하고 싶은 사람들
-
-### ⚙️ 이 프로젝트는 어떻게 작동하는가?
-
-**Verse by Verse**는 다음과 같은 과정으로 당신의 일상을 문학으로 변환합니다:
-
-```mermaid
-graph LR
-    A[일상 표현 입력<br/>"진짜 짜증나"] --> B[감정 인식<br/>😤 분노]
-    B --> C[AI 프리즘 변환<br/>목적별 스타일 적용]
-    C --> D[문학적 결과물<br/>"마음이 무거운 구름에<br/>가려진 듯하다"]
-    D --> E[점수 제공<br/>실시간 평가]
-    E --> F[소셜 공유<br/>커뮤니티 반응]
-```
-
-**🎯 핵심 변환 예시**:
-
-- **변환 전**: "오늘 진짜 짜증났어. 모든 게 다 싫다."
-- **변환 후**: "오늘 마음이 무거운 구름에 가려진 듯하다. 모든 것이 잿빛으로 물들어 보인다."
-
-**✨ 특별한 기능들**:
-
-1. **목적별 AI 첨삭**: 학술용, 전문가용, SNS용으로 각각 다른 톤앤매너
-2. **실시간 점수 시스템**: 작문 실력, 창의성, 감정 표현도 점수 제공
-3. **랭킹 & 소셜**: 다른 사용자들과 점수 비교 및 동기부여
-4. **SNS 공유**: 첨삭된 글을 바로 인스타, 블로그에 활용 가능
-
----
-
-## 🆚 경쟁자 분석 ("X vs Y")
-
-### 주요 경쟁 서비스 비교
-
-| 기능             | 구절구절    | 브런치 | 네이버 블로그 | ChatGPT  | 맞춤법검사기 |
-|----------------|---------|-----|---------|----------|--------|
-| **AI 문학 변환**   | ✅ 전용 기능 | ❌   | ❌       | 🔶 수동 요청 | ❌      |
-| **감정 기반 첨삭**   | ✅       | ❌   | ❌       | ❌        | ❌      |
-| **목적별 스타일 제공** | ✅ 3가지   | ❌   | ❌       | 🔶 수동    | ❌      |
-| **실시간 점수 시스템** | ✅       | ❌   | ❌       | ❌        | 🔶 기본적 |
-| **소셜 & 랭킹 기능** | ✅       | ✅   | 🔶 제한적  | ❌        | ❌      |
-| **즉시 활용 가능**   | ✅ 원클릭   | ❌   | ❌       | 🔶 복사 필요 | 🔶 수정만 |
-| **학습 효과**      | ✅ 체계적   | 🔶  | ❌       | 🔶       | 🔶 기본적 |
-| **한국어 감정 특화**  | ✅       | 🔶  | ✅       | 🔶       | ✅      |
-| **무료 사용**      | ✅ 베타    | ✅   | ✅       | 🔶 제한적   | ✅      |
-
-### 🎯 왜 Verse by Verse를 선택해야 하는가?
-
-1. **전용 AI 프리즘 엔진**: 문학 변환에 특화된 AI 프롬프트 엔지니어링으로 정확한 감정 변환
-2. **원클릭 변환**: 복잡한 설정 없이 즉시 "짜증나"를 "무지개빛 문학"으로 변환
-3. **목적별 맞춤 첨삭**: 학술용, 전문가용, SNS용 각각 다른 스타일 제공
-4. **실시간 성장 확인**: AI 점수로 객관적인 글쓰기 실력 향상 추적
-5. **즉시 활용 가능**: 첨삭된 글을 바로 SNS, 블로그, 과제 등에 활용
-6. **재미있는 학습**: 딱딱한 공부가 아닌 놀이하듯 글쓰기 실력 향상
 
 ---
 
@@ -269,49 +220,11 @@ cd versebyverse-backend
 
 ### 🏗️ 시스템 아키텍처
 
-```mermaid
-graph TB
-    subgraph "Client Layer"
-        A[Next.js Frontend]
-        B[Mobile App<br/>향후 계획]
-    end
+![Deployment Architecture](docs/images/deployment-architecture.png)
 
-    subgraph "API Gateway"
-        C[Spring Boot Backend]
-    end
+> **배포 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다. Vertex
+> AI를 통한 AI 기능, MySQL 데이터베이스, S3 파일 저장소가 통합된 클라우드 기반 아키텍처입니다.
 
-    subgraph "Service Layer"
-        D[Auth Service]
-        E[Post Service]
-        F[Comment Service]
-        G[AI Service]
-        H[Admin Service]
-    end
-
-    subgraph "Data Layer"
-        I[MySQL Database]
-        J[File Storage<br/>향후 계획]
-    end
-
-    subgraph "External Services"
-        K[Google OAuth2]
-        L[Google Vertex AI]
-    end
-
-    A --> C
-    B --> C
-    C --> D
-    C --> E
-    C --> F
-    C --> G
-    C --> H
-    D --> I
-    E --> I
-    F --> I
-    G --> L
-    H --> I
-    D --> K
-```
 
 ### 📊 ERD (Entity Relationship Diagram)
 
@@ -320,13 +233,6 @@ graph TB
 ### API 설계
 
 [API 설계](https://www.notion.so/hannanana/API-20d33717f91380739342c33da2c7b92e?source=copy_link)
-
-### 🔄 배포 아키텍처
-
-![Deployment Architecture](docs/images/deployment-architecture.png)
-
-> **배포 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다. Vertex
-> AI를 통한 AI 기능, MySQL 데이터베이스, S3 파일 저장소가 통합된 클라우드 기반 아키텍처입니다.
 
 ---
 
@@ -451,26 +357,6 @@ main                    # 프로덕션 배포
 </module>
 ```
 
-#### Frontend (TypeScript)
-
-- **ESLint + Prettier** 설정
-- **Airbnb Style Guide** 기반
-- **자동 포맷팅** 설정
-
-```json
-{
-  "extends": [
-    "next/core-web-vitals",
-    "@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "rules": {
-    "prefer-const": "error",
-    "no-unused-vars": "error"
-  }
-}
-```
-
 ### 📋 Pull Request 규칙
 
 1. **브랜치명**: `feature/기능명` 또는 `fix/버그명`
@@ -555,40 +441,6 @@ main                    # 프로덕션 배포
 
 ---
 
-## 🚀 배포 및 운영
-
-### 배포 환경
-
-- **개발**: Docker Compose
-- **스테이징**: Kubernetes (예정)
-- **프로덕션**: AWS ECS (예정)
-
-### CI/CD 파이프라인
-
-```yaml
-# .github/workflows/ci.yml
-name: CI/CD Pipeline
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: "21"
-      - name: Run tests
-        run: ./gradlew test
-```
-
----
-
 **⭐ 이 프로젝트가 마음에 드신다면 Star를 눌러주세요!**
 
-_마지막 업데이트: 2025년 8월_
+_마지막 업데이트: 2025년 9월_
