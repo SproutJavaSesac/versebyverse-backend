@@ -323,37 +323,10 @@ graph TB
 
 ### 🔄 배포 아키텍처
 
-```mermaid
-graph LR
-    subgraph "Development"
-        A[Developer]
-        B[Git Repository]
-    end
+![Deployment Architecture](docs/images/deployment-architecture.png)
 
-    subgraph "CI/CD Pipeline"
-        C[GitHub Actions]
-        D[Build & Test]
-        E[Docker Build]
-    end
-
-    subgraph "Production Environment"
-        F[Load Balancer]
-        G[Frontend Container]
-        H[Backend Container]
-        I[MySQL Database]
-        J[Redis Cache<br/>향후 계획]
-    end
-
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    F --> H
-    H --> I
-    H --> J
-```
+> **배포 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다. Vertex
+> AI를 통한 AI 기능, MySQL 데이터베이스, S3 파일 저장소가 통합된 클라우드 기반 아키텍처입니다.
 
 ---
 
