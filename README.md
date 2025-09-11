@@ -87,7 +87,7 @@
 ![첨삭 미리보기 (GIF)](https://github.com/user-attachments/assets/16311031-f1a8-40fa-a3d9-2790200f6ad8)
 
 - 담당자: [@Sooamazing](https://github.com/Sooamazing)
-- 로직: **첨삭 요청** → 첨삭 세션 생성(세션/작업 ID 반환)  → 변환 결과를 비교 뷰(원본/변환/하이라이트)로 확인 → **재첨삭** / **발행**
+- 로직: **첨삭 요청** → 첨삭 세션 생성(세션/작업 ID 반환) → 변환 결과를 비교 뷰(원본/변환/하이라이트)로 확인 → **재첨삭** / **발행**
   - 첨삭 결과에 대한 피드백 수집 및 분석을 위해 세션을 생성해 반려/발행 여부 관리
 
 ### 3. 댓글
@@ -178,7 +178,7 @@
 
 ### 🏗️ 시스템 아키텍처
 
-![Deployment Architecture](docs/images/deployment-architecture.png)
+![Deployment Architecture](https://github.com/user-attachments/assets/cdf25e69-76f2-4e49-8ffd-95c5d7750720)
 
 > **시스템 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다.
 > Vertex
