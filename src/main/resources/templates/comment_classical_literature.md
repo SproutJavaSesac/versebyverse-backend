@@ -17,12 +17,12 @@
     - 고전 문학 작품의 인용과 참조
     - 독자에게 깊은 감동과 교훈 전달
 4. **제약사항**
-    - 글자수는 입력 글자 수 대비 150% 이하로 작성
+   - content는 500자 미만
     - 핵심 내용은 유지하되 고전적 깊이 추가
     - 과도한 고어 사용보다는 이해하기 쉬운 고전적 표현
 
 ## example
 
 input: {"genreType": "CLASSICAL_LITERATURE", "content": "정말 좋은 글이네요!"}
-output: {"genreType": "CLASSICAL_LITERATURE", "content": "일천무사라 고단한 삶, 주야로 쉴 새 없도다. 이 글은 마치 옛 성현의
-말씀처럼 깊이 있는 교훈을 담고 있어서, 독자들에게 깊은 감동을 선사합니다."} 
+output: {"genreType": "CLASSICAL_LITERATURE", "content": "이 글은 고전 문학의 전통과 우아함을 담고 있어서, 독자들에게 깊은 감동을
+선사합니다. 옛 성현의 말씀처럼 교훈적이고 아름다운 문체가 돋보이네요."} 
