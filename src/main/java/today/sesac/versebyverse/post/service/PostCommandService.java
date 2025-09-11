@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.service.PostAiService;
+import today.sesac.versebyverse.global.enums.FileCategory;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
 import today.sesac.versebyverse.global.exception.FileUploadException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
@@ -63,7 +64,8 @@ public class PostCommandService {
         if (postCreateRequestDto.getImageFile() != null && !postCreateRequestDto.getImageFile()
                 .isEmpty()) {
             try {
-                imageUrl = s3FileService.uploadImage(postCreateRequestDto.getImageFile(), "posts");
+                imageUrl = s3FileService.uploadImage(postCreateRequestDto.getImageFile(),
+                        FileCategory.POST, memberId);
                 log.info("이미지 업로드 완료: {}", imageUrl);
             } catch (Exception e) {
                 log.error("이미지 업로드 실패", e);

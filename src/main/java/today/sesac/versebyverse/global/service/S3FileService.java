@@ -6,7 +6,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -14,7 +13,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import today.sesac.versebyverse.auth.service.UserPrincipal;
+import today.sesac.versebyverse.global.enums.FileCategory;
 
 /**
  * S3 파일 업로드 및 관리를 담당하는 서비스입니다.
@@ -35,11 +34,12 @@ public class S3FileService {
     /**
      * 이미지 파일을 S3에 업로드합니다.
      *
-     * @param file      업로드할 이미지 파일
-     * @param directory S3 내 저장할 디렉토리 (예: "posts", "profiles")
+     * @param file         업로드할 이미지 파일
+     * @param fileCategory S3 내 저장할 디렉토리 (예: "posts", "profiles")
      * @return 업로드된 파일의 S3 URL
      */
-    public String uploadImage(MultipartFile file, String directory) throws RuntimeException {
+    public String uploadImage(MultipartFile file, FileCategory fileCategory, Long memberId)
+            throws RuntimeException {
 
         try {
             // 파일 검증
@@ -48,10 +48,10 @@ public class S3FileService {
             // 고유한 파일명 생성
             String originalFilename = file.getOriginalFilename();
             String fileExtension = getFileExtension(originalFilename);
-            String fileName = generateUniqueFileName(directory, fileExtension);
+            String fileName = generateUniqueFileName(fileCategory, memberId, fileExtension);
 
             // S3에 업로드
-            String key = directory + "/" + fileName;
+            String key = fileCategory + "/" + fileName;
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -135,19 +135,19 @@ public class S3FileService {
     }
 
     /**
-     * 고유한 파일명을 생성합니다.
+     * 게시글 이미지용 고유 파일명을 생성합니다.
      */
-    private String generateUniqueFileName(String directory, String extension) {
-
-        UserPrincipal userPrincipal =
-                (UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-                        .getPrincipal();
-        Long memberId = userPrincipal.getMemberId();
+    private String generateUniqueFileName(FileCategory fileCategory, Long memberId,
+            String extension) {
 
         String timestamp = String.valueOf(System.currentTimeMillis());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
-        return directory + "/member/" + memberId + "/" + timestamp + "/" + uuid + extension;
+
+        return String.format("%s/member/%d/%s/%s.%s", fileCategory, memberId,
+                timestamp, uuid, extension);
     }
+
+    //TODO: 프로필 이미지 업로드 구현완료시 generateUiqueFileName() 오버로딩하기
 
     /**
      * S3 URL을 생성합니다.
