@@ -19,9 +19,9 @@
 |:----------:|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|
 |    프로필     | <img src="https://github.com/user-attachments/assets/7ff482f5-7697-482a-8197-baf6f7136a11" width="150" > | <img src="https://github.com/user-attachments/assets/dd92bb81-1911-4dda-a342-62ea41a1de52" width="150"> | <img src="https://github.com/user-attachments/assets/2acb0026-3185-4168-9ff3-d2febc47db7f" width="150" > | <img src="https://github.com/user-attachments/assets/41d6e961-29e4-4910-8e99-db72940c0a22" width="150"> |
 |   GitHub   |                                  [@wosyh18](https://github.com/wosyh18)                                  |                               [@qkralstjr](https://github.com/qkralstjr)                                |                                 [@prac2317](https://github.com/prac2317)                                 |                              [@Sooamazing](https://github.com/Sooamazing)                               |
-| **주요 담당**  |                                             게시물 관리, 반응하기 기능                                              |                                       Vertex AI 연동, 신고 처리, 욕설 감지                                        |                                          소셜 로그인, 회원 프로필, 성취 배지                                           |                                  AI 첨삭 미리보기, 댓글, 랭킹 시스템 설계, 프로젝트 공통 설정                                  |
-| **세부 기능**  |                                         게시물 관리 시스템 구축, 반응 기능 구현                                          |                                        AI 프롬프트 엔지니어링, 신고 시스템 설계                                         |                                         OAuth2 인증 시스템, 배지 시스템 설계                                         |                                미리보기 세션 관리, 3 계층 댓글, 일/주/월별 랭킹 자동 집계 시스템                                 |
-| **기술적 기여** |                               **CI/CD, AWS 인프라 구축**<br/>EC2, RDS, S3 환경 구성                               |                                  **S3 이미지 업로드 시스템**<br/>파일 업로드 및 관리 구현                                  |                                  **인증 및 보안 시스템**<br/>OAuth2, JWT 토큰 관리                                   |                               랭킹 점수 집계 스케줄링, **공통 응답 및 예외 체계 프로젝트 초기 설정**                               |
+| **주요 담당**  |                                          게시물 관리 시스템 설계, 반응하기 기능                                          |                                       Vertex AI 연동, 신고 처리, 욕설 감지                                        |                                          소셜 로그인, 회원 프로필, 성취 배지                                           |                                  AI 첨삭 미리보기, 댓글, 랭킹 시스템 설계, 프로젝트 공통 설정                                  |
+| **세부 기능**  |                             게시글 작성/삭제/숨김 기능 구현, 게시물 페이지네이션 조회, 게시글에 반응 기능 구현                             |                                        AI 프롬프트 엔지니어링, 신고 시스템 설계                                         |                                         OAuth2 인증 시스템, 배지 시스템 설계                                         |                                미리보기 세션 관리, 3 계층 댓글, 일/주/월별 랭킹 자동 집계 시스템                                 |
+| **기술적 기여** |                                    CI/CD, AWS 인프라 (C2, RDS, S3) 환경 구성                                    |                                  **S3 이미지 업로드 시스템**<br/>파일 업로드 및 관리 구현                                  |                                  **인증 및 보안 시스템**<br/>OAuth2, JWT 토큰 관리                                   |                               랭킹 점수 집계 스케줄링, **공통 응답 및 예외 체계 프로젝트 초기 설정**                               |
 |   **공통**   |                         **프로젝트 관리 및 문서화**<br/>JavaDoc, Notion, GitHub Issues 활용                          |                                **테스트 자동화 및 품질 보증**<br/>JUnit, Mockito 활용                                |                             **RESTful API 문서화 및 관리**<br/>Notion, Postman 활용                              |                     **코드 리뷰 및 품질 관리**<br/>GitHub Pull Request, Code Review 프로세스 활용                      |
 
 ## 📋 서비스 개요
@@ -75,20 +75,19 @@
 
 ### 주요 화면 및 기능
 
-#### 1. 🏠 메인 랜딩 페이지
+#### 게시물 시스템
 
-- **프리즘 컨셉 소개**: "감정을 프리즘에 통과시켜 무지개빛 문학으로"
-- **실제 변환 예시**: "짜증나" → "마음이 무거운 구름에 가려진 듯하다"
-- **타겟별 어필**: 학습자, 직장인, 세련된 표현을 원하는 사람들
-- **바로 변환해보기 CTA**: 원클릭으로 서비스 체험
+- **게시글 CRUD**: 게시글 작성(작성 시 원하는 , 삭제, 숨김처리를 할 수 있습니다.
+- **게시글 조회**: 게시글을 댓글순, 반응순, 최신순으로 페이지네이션 조회가 가능합니다.
+- **명령-조회 분리**: PostCommandController와 PostQueryController로 CQS 패턴 적용했습니다.
+- **soft delete 적용**: 데이터 보존을 위해 삭제된 게시글도 db에 유지하여 복구가 가능합니다.
+- **N+1 문제 해결**: 댓글 수 기준 정렬 시 한 번의 쿼리로 처리가 가능하게끔 구현했습니다.
 
-#### 2. ✨ AI 첨삭 변환 화면
+#### 반응하기 시스템
 
-- **일상 표현 입력**: 자유로운 감정 표현 작성
-- **감정 인식**: 😤 분노, 😄 기쁨, 😔 우울, 💕 설렘 등 자동 분류
-- **목적별 스타일 선택**: 학술용, 전문가용, SNS용 첨삭 옵션
-- **실시간 변환 결과**: 변환 전후 비교 뷰
-- **점수 시스템**: 작문 실력, 창의성, 감정 표현도 실시간 평가
+- **게시글과 댓글 반응하기**: 게시글과 댓글에 자신의 반응 등록, 동일 반응 누를 시 삭제, 자신의 반응이 존재한 상태에서
+  다른 반응 누를 시 반응이 변경이 됩니다.
+- **복합 유니크 제약조건**: 사용자가 같은 대상에 중복 반응을 방지 하기 위해 사용됩니다.
 
 #### 3. 📊 점수 및 성장 추적
 
@@ -134,66 +133,6 @@
 
 ---
 
-## 🚀 프로젝트 시작하기
-
-### 📋 전제조건
-
-- **Java 21** 이상
-- **Docker & Docker Compose**
-- **MySQL 8.0**
-- **Google Cloud Platform** 계정 (Vertex AI 사용)
-
-### 🔧 설치 및 실행
-
-#### 1. 프로젝트 클론
-
-```bash
-git clone https://github.com/your-repo/verse-by-verse.git
-cd verse-by-verse
-```
-
-#### 2. 환경 변수 설정
-
-```bash
-# Backend 환경 변수 (.env)
-cp versebyverse-backend/.env.example versebyverse-backend/.env
-
-# 필수 환경 변수 설정
-DB_NAME=versebyverse
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-VERTEX_AI_PROJECT_ID=your_gcp_project_id
-```
-
-#### 3. 데이터베이스 실행
-
-```bash
-cd versebyverse-backend
-docker-compose up -d mysql
-```
-
-#### 4. 백엔드 실행
-
-```bash
-cd versebyverse-backend
-./gradlew bootRun
-```
-
-#### 5. 접속 확인
-
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8080
-
-### 🧪 테스트 실행
-
-```bash
-# 백엔드 테스트
-cd versebyverse-backend
-./gradlew test
-```
-
 ## 🛠️ 기술 개요 및 구현 상세
 
 ### 📚 기술 스택
@@ -222,9 +161,9 @@ cd versebyverse-backend
 
 ![Deployment Architecture](docs/images/deployment-architecture.png)
 
-> **배포 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다. Vertex
+> **시스템 아키텍처 개요**: 사용자가 Vercel을 통해 Next.js 프론트엔드에 접근하고, AWS EC2에서 실행되는 Spring Boot 백엔드와 통신합니다.
+> Vertex
 > AI를 통한 AI 기능, MySQL 데이터베이스, S3 파일 저장소가 통합된 클라우드 기반 아키텍처입니다.
-
 
 ### 📊 ERD (Entity Relationship Diagram)
 
