@@ -92,16 +92,16 @@
 
 ### 3. 댓글
 
-![댓글 UI](https://github.com/user-attachments/assets/8d2e809f-2b41-4ec3-a73b-5ddd04510596)
+![댓글 UI](https://github.com/user-attachments/assets/907f0b34-b64b-4464-b89f-766cc928d218)
 
 - 담당자: [@Sooamazing](https://github.com/Sooamazing)
 - **댓글 생성 및 삭제**
   - 댓글 생성 시 댓글 간 관계를 명확히 하기 위해 parent_id, order, level 필드를 활용. 관리자 접근 시 상세 조회 가능.
   - soft-delete를 기본. level은 0(최상위)~2(대댓글 최대)로 제한.
   - order 계산: path를 이용한 계층적 정렬. 부모의 path를 기준으로 자식 그룹을 연속 배치.
-- **댓글 목록 조회**
-  - 페이지네이션, 정렬(작성순/반응순 등), 3단계(최대 level 2) 중첩 대댓글 지원.
-  - API 호출을 줄이기 위해 해당 댓글에 대한 반응 상태(myReaction)와 총합(reactionCount)을 함께 반환.
+- **댓글 (목록) 조회**
+  - 페이지네이션, 정렬(작성순/반응순 등), 3단계(최대 level 2) 중첩 대댓글 지원. 
+  - API 호출을 줄이기 위해 해당 댓글에 대한 반응 상태(myReaction)와 총합(reactionCount)을 함께 반환. 신고, 삭제 등의 UI도 고려해 설계.
 
 ### 4. 반응하기
 
