@@ -220,4 +220,12 @@ public class Comment extends BaseEntity {
         this.isBlocked = true;
     }
 
+    /**
+     * 댓글 신고 횟수를 1 증가시킵니다.
+     */
+    public void increaseReportCount() {
+
+        this.reportCount++;
+    }
+
 }
