@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.global.exception;
+package today.sesac.versebyverse.image.exception;
 
 /**
  * 파일 업로드 관련 예외입니다.

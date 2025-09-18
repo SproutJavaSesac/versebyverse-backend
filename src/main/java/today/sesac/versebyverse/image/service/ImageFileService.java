@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.global.service;
+package today.sesac.versebyverse.image.service;
 
 import java.io.IOException;
 import java.util.Set;
@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import today.sesac.versebyverse.global.enums.FileCategory;
+import today.sesac.versebyverse.image.domain.ImagePurpose;
 
 /**
  * S3 파일 업로드 및 관리를 담당하는 서비스입니다.
@@ -21,7 +21,7 @@ import today.sesac.versebyverse.global.enums.FileCategory;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class S3FileService {
+public class ImageFileService {
 
     private final S3Client s3Client;
 
@@ -35,10 +35,10 @@ public class S3FileService {
      * 이미지 파일을 S3에 업로드합니다.
      *
      * @param file         업로드할 이미지 파일
-     * @param fileCategory S3 내 저장할 디렉토리 (예: "posts", "profiles")
+     * @param imagePurpose S3 내 저장할 디렉토리 (예: "posts", "profiles")
      * @return 업로드된 파일의 S3 URL
      */
-    public String uploadImage(MultipartFile file, FileCategory fileCategory, Long memberId)
+    public String uploadImage(MultipartFile file, ImagePurpose imagePurpose, Long memberId)
             throws RuntimeException {
 
         try {
@@ -48,10 +48,10 @@ public class S3FileService {
             // 고유한 파일명 생성
             String originalFilename = file.getOriginalFilename();
             String fileExtension = getFileExtension(originalFilename);
-            String fileName = generateUniqueFileName(fileCategory, memberId, fileExtension);
+            String fileName = generateUniqueFileName(imagePurpose, memberId, fileExtension);
 
             // S3에 업로드
-            String key = fileCategory + "/" + fileName;
+            String key = imagePurpose + "/" + fileName;
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -68,6 +68,7 @@ public class S3FileService {
 
             return s3Url;
 
+            //TODO : 커스텀 예외 처리하기
         } catch (IOException e) {
             log.error("이미지 파일 읽기 실패", e);
             throw new RuntimeException("이미지 파일을 읽을 수 없습니다.", e);
@@ -137,17 +138,17 @@ public class S3FileService {
     /**
      * 게시글 이미지용 고유 파일명을 생성합니다.
      */
-    private String generateUniqueFileName(FileCategory fileCategory, Long memberId,
+    private String generateUniqueFileName(ImagePurpose imagePurpose, Long memberId,
             String extension) {
 
         String timestamp = String.valueOf(System.currentTimeMillis());
         String uuid = UUID.randomUUID().toString().substring(0, 8);
 
-        return String.format("%s/member/%d/%s/%s.%s", fileCategory, memberId,
+        return String.format("%s/member/%d/%s/%s.%s", imagePurpose, memberId,
                 timestamp, uuid, extension);
     }
 
-    //TODO: 프로필 이미지 업로드 구현완료시 generateUiqueFileName() 오버로딩하기
+    //TODO: 프로필 이미지 업로드 구현완료시 generateUniqueFileName() 오버로딩하기
 
     /**
      * S3 URL을 생성합니다.

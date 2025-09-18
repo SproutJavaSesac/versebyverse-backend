@@ -1,4 +1,4 @@
-package today.sesac.versebyverse.global.config;
+package today.sesac.versebyverse.image.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
