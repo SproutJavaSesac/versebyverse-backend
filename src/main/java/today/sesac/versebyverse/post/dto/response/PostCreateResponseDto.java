@@ -11,13 +11,16 @@ public record PostCreateResponseDto(
 
         String afterTitle,
 
-        String afterContent
+        String afterContent,
+
+        String imageUrl
 ) {
     public static PostCreateResponseDto of(Post post) {
         return new PostCreateResponseDto(
                 post.getId(),
                 post.getAfterTitle(),
-                post.getAfterContent()
+                post.getAfterContent(),
+                post.getImageUrl()
         );
     }
 }
