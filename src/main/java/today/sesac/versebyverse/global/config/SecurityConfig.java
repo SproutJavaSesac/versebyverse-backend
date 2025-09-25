@@ -44,10 +44,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/oauth2/authorization",
-                                "/login/oauth2/code/*",
-                                "/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
+                                "/login/oauth2/code/*"
                         ).permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**")
+                        .permitAll() // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
