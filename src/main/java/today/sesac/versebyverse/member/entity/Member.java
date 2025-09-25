@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     private Member(RoleType roleType, SocialType socialType, String email, String nickname,
-            String profileImageUrl) {
+                   String profileImageUrl) {
 
         this.roleType = roleType;
         this.socialType = socialType;
@@ -73,7 +73,7 @@ public class Member extends BaseEntity {
      * @return 생성된 회원 엔티티
      */
     public static Member create(RoleType roleType, SocialType socialType, String email,
-            String nickname) {
+                                String nickname) {
 
         return new Member(roleType, socialType, email, nickname, null);
     }
@@ -98,8 +98,12 @@ public class Member extends BaseEntity {
         this.roleType = roleType;
     }
 
+    /**
+     * 회원을 삭제합니다. soft delete 방식을 사용합니다.
+     * 재가입을 고려하여 삭제될 때는 email에 deleted라는 문구와 회원의 id를 결합하여 중복을 방지합니다.
+     */
     public void delete() {
-
         this.isDeleted = true;
+        this.email = email + "_deleted" + this.id.toString();
     }
 }

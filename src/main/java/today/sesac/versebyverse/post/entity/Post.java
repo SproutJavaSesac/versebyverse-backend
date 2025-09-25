@@ -172,6 +172,14 @@ public class Post extends BaseEntity {
     }
 
     /**
+     * 게시글 신고 횟수를 1 증가시킵니다.
+     */
+    public void increaseReportCount() {
+
+        this.reportCount++;
+    }
+
+    /**
      * 게시글 삭제 버튼을 위한 boolean값.
      *
      * @param memberId 사용자 id
@@ -179,6 +187,6 @@ public class Post extends BaseEntity {
      */
     public boolean isMine(Long memberId) {
 
-        return memberId.equals(this.getAuthor().getId());
+        return this.getAuthor().getId().equals(memberId);
     }
 }

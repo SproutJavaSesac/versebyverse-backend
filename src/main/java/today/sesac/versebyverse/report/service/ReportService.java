@@ -63,6 +63,8 @@ public class ReportService {
                         reportRequestDto.getReasonDetail())
         );
 
+        post.increaseReportCount();
+
         return PostReportResponseDto.of(report.getId(), report.getReporter().getId(),
                 report.getPost().getId(), report.getReasonType(), report.getReasonDetail(),
                 report.getStatusType(), report.getCreatedAt());
@@ -90,6 +92,8 @@ public class ReportService {
                 Report.createCommentReport(reporter, comment, reportRequestDto.getReasonType(),
                         reportRequestDto.getReasonDetail())
         );
+
+        comment.increaseReportCount();
 
         return CommentReportResponseDto.of(report.getId(),
                 report.getReporter().getId(),
