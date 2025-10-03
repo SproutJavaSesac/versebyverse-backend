@@ -2,6 +2,8 @@ package today.sesac.versebyverse.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.dto.response.LoginStatusResponseDto;
@@ -54,7 +56,24 @@ public class AuthService {
             member.updateRoleType(RoleType.ROLE_ADMIN);
         }
 
+        changeAuthenticationAuthority(member);
+
         return UpdateRoleResponseDto.of(member.getRoleType());
+    }
+
+    private void changeAuthenticationAuthority(Member member) {
+
+        OAuth2AuthenticationToken authentication =
+                (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String authorizedClientRegistrationId = authentication.getAuthorizedClientRegistrationId();
+        UserPrincipal newPrincipal =
+                UserPrincipal.create(member.getId(), member.getRoleType(), member.getSocialType(),
+                        member.getEmail());
+        OAuth2AuthenticationToken newAuthentication =
+                new OAuth2AuthenticationToken(newPrincipal, newPrincipal.getAuthorities(),
+                        authorizedClientRegistrationId);
+
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
     }
 
 }
