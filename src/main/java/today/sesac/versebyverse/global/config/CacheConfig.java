@@ -6,10 +6,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -22,6 +26,21 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 @Configuration
 public class CacheConfig {
+
+    @Bean
+    public Caffeine caffeineConfig() {
+
+        return Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES);
+    }
+
+    @Primary
+    @Bean
+    public CacheManager caffeineCacheManager(Caffeine caffeine) {
+
+        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager();
+        caffeineCacheManager.setCaffeine(caffeine);
+        return caffeineCacheManager;
+    }
 
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
