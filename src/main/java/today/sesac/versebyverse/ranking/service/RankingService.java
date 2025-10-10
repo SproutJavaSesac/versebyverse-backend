@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ import today.sesac.versebyverse.ranking.util.DateTimeRangeCalculator;
 /**
  * 순위(랭킹) 정보를 관리하는 서비스입니다. 다른 서비스에서 순위 정보를 조회할 때 사용됩니다.
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -53,6 +56,7 @@ public class RankingService {
      * @param pageable    페이징 정보
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
+    @Cacheable(cacheNames = "rankingCache", key = "{#category, #periodType, #periodValue, #pageable}")
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
                                                                  RankingPeriodType periodType,
                                                                  LocalDate periodValue,
