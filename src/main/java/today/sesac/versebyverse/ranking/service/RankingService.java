@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import today.sesac.versebyverse.member.dto.response.MyRankingListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyRankingSummary;
 import today.sesac.versebyverse.member.entity.Member;
@@ -32,7 +35,6 @@ import today.sesac.versebyverse.ranking.util.DateTimeRangeCalculator;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class RankingService {
 
     private static final String RANKING_NEW = "NEW";
@@ -47,6 +49,25 @@ public class RankingService {
 
     private final PostQueryService postQueryService;
 
+    private final CacheManager l1CacheManager;
+
+    private final CacheManager l2CacheManager;
+
+    public RankingService(
+            RankingRepository rankingRepository,
+            MemberService memberService,
+            PostQueryService postQueryService,
+            @Qualifier("caffeineCacheManager") CacheManager l1CacheManager,
+            @Qualifier("redisCacheManager") CacheManager l2CacheManager) {
+
+        this.rankingRepository = rankingRepository;
+        this.memberService = memberService;
+        this.postQueryService = postQueryService;
+        this.l1CacheManager = l1CacheManager;
+        this.l2CacheManager = l2CacheManager;
+
+    }
+
     /**
      * 특정 카테고리와 기간 유형에 해당하는 순위(랭킹) 정보를 조회합니다.
      *
@@ -56,11 +77,37 @@ public class RankingService {
      * @param pageable    페이징 정보
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
-    @Cacheable(cacheNames = "rankingCache", key = "{#category, #periodType, #periodValue, #pageable}")
+//    @Cacheable(cacheNames = "rankingCache", key = "{#category, #periodType, #periodValue, #pageable}")
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
                                                                  RankingPeriodType periodType,
                                                                  LocalDate periodValue,
                                                                  Pageable pageable) {
+
+        // 1. 사용할 캐시 저장소 가져오기
+        String cacheName = "rankingCache";
+        Cache l1Cache = l1CacheManager.getCache(cacheName);
+        Cache l2Cache = l2CacheManager.getCache(cacheName);
+
+        // 2. 캐시 키 생성
+        Object cacheKey = List.of(category, periodType, periodValue, pageable);
+
+        // 3. L1 캐시 조회 (DTO 객체를 직접 조회)
+        RankingListResponseDto responseDto = l1Cache.get(cacheKey, RankingListResponseDto.class);
+        if (responseDto != null) {
+            log.info("L1 캐시 조회: {}", cacheKey);
+            return responseDto;
+        }
+
+        // 4. L2 캐시 조회
+        responseDto = l2Cache.get(cacheKey, RankingListResponseDto.class);
+        if (responseDto != null) {
+            log.info("L2 캐시 조회: {}", cacheKey);
+            l1Cache.put(cacheKey, responseDto); // L1에 저장
+            return responseDto;
+        }
+
+        // 5. DB 조회 (Cache Miss)
+        log.info("캐시 미스. DB 조회: {}", cacheKey);
 
         DateTimeRange periodDateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(
                 periodValue, periodType);
@@ -78,8 +125,16 @@ public class RankingService {
                         getRankChangeWithSymbol(ranking.getRank(), ranking.getPreviousRank())
                 )).toList();
 
+        RankingListResponseDto rankingListResponseDto =
+                new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
 
-        return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
+        // 5. 조회 결과를 캐시에 저장
+        if (rankingListResponseDto != null) {
+            l2Cache.put(cacheKey, rankingListResponseDto);
+            l1Cache.put(cacheKey, rankingListResponseDto);
+        }
+
+        return rankingListResponseDto;
     }
 
     private String getRankChangeWithSymbol(int currentRank, Integer historicalRank) {
