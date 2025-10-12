@@ -3,6 +3,7 @@ package today.sesac.versebyverse.comment.service;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.exception.CommentErrorCode;
 import today.sesac.versebyverse.comment.exception.CommentException;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
+import today.sesac.versebyverse.global.event.CommentCreatedEvent;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
@@ -43,6 +45,8 @@ public class CommentService {
     private final CommentAiService commentAiService;
 
     private final ReactionService reactionService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 댓글을 작성합니다.
@@ -73,6 +77,8 @@ public class CommentService {
                 activePost, member);
         Comment savedComment = commentRepository.save(comment);
         savedComment.updatePath(); // 댓글 경로 자동 생성
+
+        eventPublisher.publishEvent(new CommentCreatedEvent(member, activePost));
 
         ReactionResponseDto reactionInfo =
                 reactionService.getTotalReactionAndReactionDetailsByTargetType(null,

@@ -12,7 +12,9 @@ import today.sesac.versebyverse.badge.exception.BadgeErrorCode;
 import today.sesac.versebyverse.badge.exception.BadgeException;
 import today.sesac.versebyverse.badge.repository.BadgeRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
+import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.member.entity.Member;
+import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.repository.PostRepository;
 
 /**
@@ -29,6 +31,8 @@ public class BadgeService {
     private final MemberBadgeRepository memberBadgeRepository;
 
     private final PostRepository postRepository;
+
+    private final CommentRepository commentRepository;
 
     /**
      * 게시글이 작성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
@@ -81,6 +85,84 @@ public class BadgeService {
                             BadgeType.NOVICE_WRITER.getBadgeName()));
 
             MemberBadge memberBadge = MemberBadge.create(author, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    /**
+     * 댓글이 생성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
+     *
+     * @param member 댓글 작성자
+     * @param post   댓글일 작성된 게시글
+     */
+    public void grantCommentBadges(Member member, Post post) {
+
+        List<MemberBadge> commenterMemberBadgeList =
+                memberBadgeRepository.findByMemberId(member.getId());
+
+        checkAndGrantFirstCommentBadge(commenterMemberBadgeList, member);
+        checkAndGrantFifthCommentBadge(commenterMemberBadgeList, member);
+
+        List<MemberBadge> authorMemberBadgeList =
+                memberBadgeRepository.findByMemberId(post.getAuthor().getId());
+
+        checkAndGrantEarnFifthCommentBadges(authorMemberBadgeList, post);
+    }
+
+    private void checkAndGrantFirstCommentBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        String targetBadgeName = BadgeType.FIRST_COMMENT.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        int commentCount = commentRepository.countByCommenterIdAndIsDeletedFalse(member.getId());
+
+        if (commentCount > 0 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    private void checkAndGrantFifthCommentBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        String targetBadgeName = BadgeType.REACTION_FAIRY.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        int commentCount = commentRepository.countByCommenterIdAndIsDeletedFalse(member.getId());
+
+        if (commentCount >= 5 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    private void checkAndGrantEarnFifthCommentBadges(List<MemberBadge> memberBadgeList, Post post) {
+
+        String targetBadgeName = BadgeType.POPULAR_POST.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        int commentCount =
+                commentRepository.countByPostIdAndIsDeletedFalseAndIsBlockedFalse(post.getId());
+
+        if (commentCount >= 5 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
+
+            MemberBadge memberBadge = MemberBadge.create(post.getAuthor(), badge);
             memberBadgeRepository.save(memberBadge);
         }
     }
