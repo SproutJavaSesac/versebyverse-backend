@@ -146,6 +146,8 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         log.info("회원 가입이 완료되었습니다. memberId = {}", savedMember.getId());
 
+        eventPublisher.publishEvent(new MemberCreatedEvent(savedMember));
+
         return savedMember;
     }
 
