@@ -31,7 +31,7 @@ public class MyBadgeListResponseDto {
 
         return badges.stream()
                 .map(badge -> MyBadgeSummaryDto.of(
-                        badge.getId(),
+                        badge.getBadge().getId(),
                         badge.getBadge().getName(),
                         badge.getBadge().getDescription()))
                 .toList();
