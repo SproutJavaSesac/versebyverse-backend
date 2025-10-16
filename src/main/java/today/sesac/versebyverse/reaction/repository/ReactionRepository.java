@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.reaction.entity.Reaction;
 
 /**
@@ -78,6 +79,13 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
      * @param postId 게시글 id
      */
     int countByPostId(@Param("postId") Long postId);
+
+    /**
+     * memberId로 회원이 작성한 총 반응 갯수 조회.
+     *
+     * @param memberId 회원의 id
+     */
+    int countByMemberId(Long memberId);
 
     /**
      * 여러 댓글의 리액션을 한 번에 조회.

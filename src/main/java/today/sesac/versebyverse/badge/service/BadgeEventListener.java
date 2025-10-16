@@ -11,8 +11,10 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import today.sesac.versebyverse.global.event.CommentCreatedEvent;
 import today.sesac.versebyverse.global.event.MemberCreatedEvent;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
+import today.sesac.versebyverse.global.event.ReactionCreatedEvent;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.post.entity.Post;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * 배지관련 이벤트를 수신하는 클래스.
@@ -55,6 +57,31 @@ public class BadgeEventListener {
         Post post = commentCreatedEvent.getPost();
 
         badgeService.grantCommentBadges(member, post);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleReactionCreated(ReactionCreatedEvent reactionCreatedEvent) {
+
+        Long memberId = reactionCreatedEvent.getMemberId();
+
+        Long targetId = reactionCreatedEvent.getTargetId();
+
+        TargetType targetType = reactionCreatedEvent.getTargetType();
+
+        badgeService.grantReactionBadges(memberId, targetId, targetType);
+
+//        Member member = reactionCreatedEvent.getMember();
+//
+//        Optional<Post> postOptional = reactionCreatedEvent.getPostOptional();
+//        Optional<Comment> commentOptional = reactionCreatedEvent.getCommentOptional();
+//
+//        if (postOptional.isPresent()) {
+//            badgeService.grantReactionBadges(member, postOptional.get());
+//        } else if (commentOptional.isPresent()) {
+//            badgeService.grantReactionBadges(member, commentOptional.get());
+//        }
     }
 
     /**

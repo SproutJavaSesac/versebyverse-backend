@@ -7,12 +7,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.exception.CommentErrorCode;
 import today.sesac.versebyverse.comment.exception.CommentException;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.global.domain.Emotion;
+import today.sesac.versebyverse.global.event.ReactionCreatedEvent;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.entity.Post;
@@ -43,6 +45,9 @@ public class ReactionService {
     private final PostRepository postRepository;
 
     private final CommentRepository commentRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
+
     //TODO 일관성을 위해 service에 의존하게 코드 변경
 
     /**
@@ -85,6 +90,8 @@ public class ReactionService {
         }
 
         saveReaction(targetType, targetId, memberId, reactionRequestDto);
+
+        eventPublisher.publishEvent(new ReactionCreatedEvent(memberId, targetId, targetType));
 
         return getTotalReactionAndReactionDetailsByTargetType(reactionRequestDto.type(), targetId,
                 targetType);

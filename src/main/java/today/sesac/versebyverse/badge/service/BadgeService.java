@@ -1,6 +1,7 @@
 package today.sesac.versebyverse.badge.service;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,15 @@ import today.sesac.versebyverse.badge.exception.BadgeErrorCode;
 import today.sesac.versebyverse.badge.exception.BadgeException;
 import today.sesac.versebyverse.badge.repository.BadgeRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
+import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
 import today.sesac.versebyverse.member.entity.Member;
+import today.sesac.versebyverse.member.exception.MemberNotFoundException;
+import today.sesac.versebyverse.member.repository.MemberRepository;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.repository.PostRepository;
+import today.sesac.versebyverse.reaction.repository.ReactionRepository;
+import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
  * BadgeService는 배지 관련 비즈니스 로직을 처리하는 서비스입니다.
@@ -33,6 +39,10 @@ public class BadgeService {
     private final PostRepository postRepository;
 
     private final CommentRepository commentRepository;
+
+    private final ReactionRepository reactionRepository;
+
+    private final MemberRepository memberRepository;
 
     /**
      * 게시글이 작성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
@@ -163,6 +173,89 @@ public class BadgeService {
                             targetBadgeName));
 
             MemberBadge memberBadge = MemberBadge.create(post.getAuthor(), badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+//
+//    /**
+//     * 반응하기가 생성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
+//     *
+//     * @param member 반응하기 작성자
+//     * @param post   반응한 게시글
+//     */
+//    public void grantReactionBadges(Member member, Post post) {
+//
+//        List<MemberBadge> memberBadgeList =
+//                memberBadgeRepository.findByMemberId(member.getId());
+//
+//        checkAndGrantFirstReactionBadge(memberBadgeList, member);
+//        checkAndGrantTenthReactionBadge(memberBadgeList, member);
+//
+//    }
+//
+//    /**
+//     * 반응하기가 생성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
+//     *
+//     * @param member  반응하기 작성자
+//     * @param comment 반응한 댓글
+//     */
+//    public void grantReactionBadges(Member member, Comment comment) {
+//
+//        List<MemberBadge> memberBadgeList =
+//                memberBadgeRepository.findByMemberId(member.getId());
+//
+//        checkAndGrantFirstReactionBadge(memberBadgeList, member);
+//        checkAndGrantTenthReactionBadge(memberBadgeList, member);
+//    }
+
+    public void grantReactionBadges(Long memberId, Long targetId, TargetType targetType) {
+
+        Member member = memberRepository.findByIdAndIsDeletedFalse(memberId).orElseThrow(
+                () -> new MemberNotFoundException(String.valueOf(memberId),
+                        "해당 id를 가진 회원을 찾을 수 없습니다."));
+
+        List<MemberBadge> memberBadgeList =
+                memberBadgeRepository.findByMemberId(member.getId());
+
+        checkAndGrantFirstReactionBadge(memberBadgeList, member);
+        checkAndGrantTenthReactionBadge(memberBadgeList, member);
+
+    }
+
+    private void checkAndGrantFirstReactionBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        String targetBadgeName = BadgeType.FIRST_REACTION.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        int reactionCount = reactionRepository.countByMemberId(member.getId());
+
+        if (reactionCount > 0 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    private void checkAndGrantTenthReactionBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        String targetBadgeName = BadgeType.FRIENDLY_NEIGHBOR.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        int reactionCount = reactionRepository.countByMemberId(member.getId());
+
+        if (reactionCount >= 10 && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
             memberBadgeRepository.save(memberBadge);
         }
     }
