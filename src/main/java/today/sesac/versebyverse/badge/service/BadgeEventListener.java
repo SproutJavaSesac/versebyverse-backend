@@ -11,9 +11,11 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import today.sesac.versebyverse.global.event.CommentCreatedEvent;
 import today.sesac.versebyverse.global.event.MemberCreatedEvent;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
+import today.sesac.versebyverse.global.event.RankingCreatedEvent;
 import today.sesac.versebyverse.global.event.ReactionCreatedEvent;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.post.entity.Post;
+import today.sesac.versebyverse.ranking.entity.Ranking;
 import today.sesac.versebyverse.reaction.utils.TargetType;
 
 /**
@@ -82,6 +84,18 @@ public class BadgeEventListener {
 //        } else if (commentOptional.isPresent()) {
 //            badgeService.grantReactionBadges(member, commentOptional.get());
 //        }
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void handleRankingCreated(RankingCreatedEvent rankingCreatedEvent) {
+
+        Member member = rankingCreatedEvent.getMember();
+
+        Ranking ranking = rankingCreatedEvent.getRanking();
+
+        badgeService.grantRankingBadges(member);
     }
 
     /**

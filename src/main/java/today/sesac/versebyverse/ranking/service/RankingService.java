@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import today.sesac.versebyverse.global.event.RankingCreatedEvent;
 import today.sesac.versebyverse.member.dto.response.MyRankingListResponseDto;
 import today.sesac.versebyverse.member.dto.response.MyRankingSummary;
 import today.sesac.versebyverse.member.entity.Member;
@@ -44,6 +46,8 @@ public class RankingService {
 
     private final PostQueryService postQueryService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     /**
      * 특정 카테고리와 기간 유형에 해당하는 순위(랭킹) 정보를 조회합니다.
      *
@@ -54,9 +58,9 @@ public class RankingService {
      * @return 해당 카테고리와 기간 유형에 해당하는 순위 목록
      */
     public RankingListResponseDto getRankingsByCategoryAndPeriod(RankingCategory category,
-                                                                 RankingPeriodType periodType,
-                                                                 LocalDate periodValue,
-                                                                 Pageable pageable) {
+            RankingPeriodType periodType,
+            LocalDate periodValue,
+            Pageable pageable) {
 
         DateTimeRange periodDateTimeRange = DateTimeRangeCalculator.getStartDateAndEndDateByPeriod(
                 periodValue, periodType);
@@ -73,7 +77,6 @@ public class RankingService {
                         ranking,
                         getRankChangeWithSymbol(ranking.getRank(), ranking.getPreviousRank())
                 )).toList();
-
 
         return new RankingListResponseDto(category, periodType, periodValue, rankingDtoList);
     }
@@ -101,8 +104,8 @@ public class RankingService {
      * @return 해당 회원의 순위(랭킹) 정보
      */
     public MyRankingListResponseDto getMyRankingByMemberId(Long memberId, RankingCategory category,
-                                                           RankingPeriodType periodType,
-                                                           int maxCount) {
+            RankingPeriodType periodType,
+            int maxCount) {
 
         memberService.validateMemberActiveExists(memberId);
 
@@ -126,8 +129,8 @@ public class RankingService {
     }
 
     private LocalDateTime getStartTimeFromEndTimeAndPeriod(LocalDateTime endDateTime,
-                                                           RankingPeriodType periodType,
-                                                           int maxCount) {
+            RankingPeriodType periodType,
+            int maxCount) {
 
         return switch (periodType) {
             case DAILY -> endDateTime.minusDays(maxCount);
@@ -146,7 +149,7 @@ public class RankingService {
      */
     @Transactional
     public void calculatePostsRanking(LocalDateTime startDateTime, LocalDateTime endDateTime,
-                                      RankingPeriodType periodType) {
+            RankingPeriodType periodType) {
 
         List<AuthorPostCountDto> authorPostCountList = postQueryService
                 .getAuthorAndPostCount(startDateTime, endDateTime);
@@ -224,6 +227,8 @@ public class RankingService {
                 .orElse(createNewRanking(member, postCount, rank, periodType));
 
         rankingRepository.save(ranking);
+
+        eventPublisher.publishEvent(new RankingCreatedEvent(member, ranking));
     }
 
     private Ranking createNewRanking(

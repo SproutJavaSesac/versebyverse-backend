@@ -20,6 +20,7 @@ import today.sesac.versebyverse.member.exception.MemberNotFoundException;
 import today.sesac.versebyverse.member.repository.MemberRepository;
 import today.sesac.versebyverse.post.entity.Post;
 import today.sesac.versebyverse.post.repository.PostRepository;
+import today.sesac.versebyverse.ranking.repository.RankingRepository;
 import today.sesac.versebyverse.reaction.repository.ReactionRepository;
 import today.sesac.versebyverse.reaction.utils.TargetType;
 
@@ -43,6 +44,8 @@ public class BadgeService {
     private final ReactionRepository reactionRepository;
 
     private final MemberRepository memberRepository;
+
+    private final RankingRepository rankingRepository;
 
     /**
      * 게시글이 작성되었을 때, 조건을 만족하는 배지가 있으면 획득하는 메서드.
@@ -283,6 +286,33 @@ public class BadgeService {
             Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
                     () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
                             BadgeType.FIRST_SIGNUP.getBadgeName()));
+
+            MemberBadge memberBadge = MemberBadge.create(member, badge);
+            memberBadgeRepository.save(memberBadge);
+        }
+    }
+
+    public void grantRankingBadges(Member member) {
+
+        List<MemberBadge> memberBadgeList =
+                memberBadgeRepository.findByMemberId(member.getId());
+
+        checkAndGrantFirstRankingBadge(memberBadgeList, member);
+    }
+
+    private void checkAndGrantFirstRankingBadge(List<MemberBadge> memberBadgeList, Member member) {
+
+        String targetBadgeName = BadgeType.FIRST_RANKING.getBadgeName();
+
+        boolean hasTargetBadge = memberBadgeList.stream()
+                .anyMatch(memberBadge -> memberBadge.getBadge().getName().equals(targetBadgeName));
+
+        boolean isExist = rankingRepository.existsById(member.getId());
+
+        if (!isExist && !hasTargetBadge) {
+            Badge badge = badgeRepository.findByName(targetBadgeName).orElseThrow(
+                    () -> new BadgeException(BadgeErrorCode.BADGE_NOT_FOUND,
+                            targetBadgeName));
 
             MemberBadge memberBadge = MemberBadge.create(member, badge);
             memberBadgeRepository.save(memberBadge);
