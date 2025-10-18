@@ -45,9 +45,9 @@ public class RedisStreamConfig {
     @Bean
     public Subscription subscription() {
 
-        createStreamConsumerGroup(STREAM_KEY, CONSUMER_GROUP_NAME);
+        createStreamConsumerGroup();
 
-        // 1. 컨테이너 옵션 설정 (예: 한 번에 몇 개씩 가져올지 등)
+        // 1. 컨테이너 옵션 설정
         StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>>
                 options =
                 StreamMessageListenerContainer.StreamMessageListenerContainerOptions
@@ -60,22 +60,20 @@ public class RedisStreamConfig {
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> container =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
 
-        // 3. 리스너 등록 (가장 중요한 부분!)
+        // 3. 리스너 등록
         Subscription subscription = container.receive(
-                // Consumer.from("그룹이름", "소비자이름")
-                Consumer.from(CONSUMER_GROUP_NAME, "badge-consumer-1"), // ★ 바로 이것이 '그룹'입니다!
-                // StreamOffset.create("스트림키", ReadOffset.lastConsumed())
+                Consumer.from(CONSUMER_GROUP_NAME, "badge-consumer-1"),
                 StreamOffset.create(STREAM_KEY, ReadOffset.lastConsumed()),
-                badgeEventConsumer // 어떤 리스너가 처리할지 지정
+                badgeEventConsumer
         );
 
-        container.start(); // 컨테이너 시작
+        container.start();
         return subscription;
     }
 
-    private void createStreamConsumerGroup(String streamKey, String consumerGroupName) {
+    private void createStreamConsumerGroup() {
 
-        if (!redisTemplate.hasKey(streamKey)) {
+        if (!redisTemplate.hasKey(STREAM_KEY)) {
             RedisClusterAsyncCommands commands = (RedisClusterAsyncCommands) redisTemplate
                     .getConnectionFactory()
                     .getConnection()
@@ -83,29 +81,28 @@ public class RedisStreamConfig {
 
             CommandArgs<String, String> args = new CommandArgs<>(StringCodec.UTF8)
                     .add(CommandKeyword.CREATE)
-                    .add(streamKey)
-                    .add(consumerGroupName)
+                    .add(STREAM_KEY)
+                    .add(CONSUMER_GROUP_NAME)
                     .add("0")
                     .add("MKSTREAM");
 
             commands.dispatch(CommandType.XGROUP, new StatusOutput(StringCodec.UTF8), args);
         } else {
-            if (!isStreamConsumerGroupExist(streamKey, consumerGroupName)) {
+            if (!isStreamConsumerGroupExist()) {
                 this.redisTemplate.opsForStream()
-                        .createGroup(streamKey, ReadOffset.from("0"), consumerGroupName);
+                        .createGroup(STREAM_KEY, ReadOffset.from("0"), CONSUMER_GROUP_NAME);
             }
         }
     }
 
-    private boolean isStreamConsumerGroupExist(String streamKey, String consumerGroupName) {
+    private boolean isStreamConsumerGroupExist() {
 
         try {
             return redisTemplate.opsForStream()
-                    .groups(streamKey)
+                    .groups(STREAM_KEY)
                     .stream()
-                    .anyMatch(group -> consumerGroupName.equals(group.groupName()));
+                    .anyMatch(group -> CONSUMER_GROUP_NAME.equals(group.groupName()));
         } catch (Exception e) {
-            // Stream이 존재하지 않거나 다른 오류가 발생한 경우
             return false;
         }
     }
