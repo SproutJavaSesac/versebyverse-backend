@@ -1,5 +1,7 @@
 package today.sesac.versebyverse.member.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import today.sesac.versebyverse.auth.service.SocialLoginService;
+import today.sesac.versebyverse.badge.entity.BadgeOutbox;
 import today.sesac.versebyverse.badge.entity.MemberBadge;
+import today.sesac.versebyverse.badge.entity.MemberCreatedEventPayload;
+import today.sesac.versebyverse.badge.entity.OutboxMessageType;
+import today.sesac.versebyverse.badge.entity.OutboxStatus;
+import today.sesac.versebyverse.badge.entity.PostCreatedEventPayload;
+import today.sesac.versebyverse.badge.repository.BadgeOutboxRepository;
 import today.sesac.versebyverse.badge.repository.MemberBadgeRepository;
 import today.sesac.versebyverse.comment.entity.Comment;
 import today.sesac.versebyverse.comment.repository.CommentRepository;
@@ -52,6 +60,10 @@ public class MemberService {
     private final MemberBadgeRepository memberBadgeRepository;
 
     private final ApplicationEventPublisher eventPublisher;
+
+    private final BadgeOutboxRepository badgeOutboxRepository;
+
+    private final ObjectMapper objectMapper;
 
     /**
      * TODO: 서비스와 나머지(ex.controller) 사이도 DTO로 통신하기? return값 엔티티 그대로 말고 다른 방식으로 결정하기. 다음 pr(소셜로그인 예외, 테스트코드 추가)에서 설명 추가
@@ -145,6 +157,24 @@ public class MemberService {
         Member member = Member.create(roleType, socialType, email, nickname);
         Member savedMember = memberRepository.save(member);
         log.info("회원 가입이 완료되었습니다. memberId = {}", savedMember.getId());
+
+        try {
+
+            MemberCreatedEventPayload payload =
+                    MemberCreatedEventPayload.of(savedMember.getId());
+
+            String payloadJson = objectMapper.writeValueAsString(payload);
+
+            BadgeOutbox badgeOutbox =
+                    BadgeOutbox.create(OutboxMessageType.MEMBER_CREATED, payloadJson,
+                            OutboxStatus.WAITING);
+            badgeOutboxRepository.save(badgeOutbox);
+            log.info("BadgeOutbox created: {}", badgeOutbox);
+
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize outbox payload", e);
+            throw new RuntimeException("Failed to serialize outbox payload", e);
+        }
 
         return savedMember;
     }

@@ -30,24 +30,21 @@ public class RedisConfig {
      *
      * @return Redis 서버와의 연결을 관리하는 RedisConnectionFactory 인스턴스
      */
-    private RedisConnectionFactory redisConnectionFactory() {
-
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(host);
-        config.setPort(port);
-        config.setPassword(password);
-
-        return new LettuceConnectionFactory(config);
-    }
-
+//    private RedisConnectionFactory redisConnectionFactory() {
+//
+//        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+//        config.setHostName(host);
+//        config.setPort(port);
+//        config.setPassword(password);
+//
+//        return new LettuceConnectionFactory(config);
+//    }
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-
-        RedisConnectionFactory redisConnectionFactory = redisConnectionFactory();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
 
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(connectionFactory);
 
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
