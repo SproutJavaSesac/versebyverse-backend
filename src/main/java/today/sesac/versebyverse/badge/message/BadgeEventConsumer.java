@@ -1,7 +1,5 @@
 package today.sesac.versebyverse.badge.message;
 
-import static io.lettuce.core.pubsub.PubSubOutput.Type.message;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.Optional;
@@ -11,18 +9,13 @@ import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import today.sesac.versebyverse.badge.entity.BadgeOutbox;
 import today.sesac.versebyverse.badge.entity.MemberCreatedEventPayload;
 import today.sesac.versebyverse.badge.entity.OutboxMessageType;
-import today.sesac.versebyverse.badge.entity.OutboxStatus;
 import today.sesac.versebyverse.badge.entity.PostCreatedEventPayload;
-import today.sesac.versebyverse.badge.repository.BadgeOutboxRepository;
 import today.sesac.versebyverse.badge.service.BadgeService;
 import today.sesac.versebyverse.global.config.RedisStreamConfig;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.repository.MemberRepository;
-import today.sesac.versebyverse.post.repository.PostRepository;
 
 @Slf4j
 @Component
@@ -35,8 +28,6 @@ public class BadgeEventConsumer implements
     private final ObjectMapper objectMapper;
 
     private final MemberRepository memberRepository;
-
-    private final BadgeOutboxRepository badgeOutboxRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -85,7 +76,7 @@ public class BadgeEventConsumer implements
             }
 
             redisTemplate.opsForStream().acknowledge(
-                    record.getStream(),   // 스트림 키 ("badge-events")
+                    record.getStream(),   // 스트림 키
                     RedisStreamConfig.CONSUMER_GROUP_NAME,        // 그룹 이름
                     record.getId()        // 처리 완료한 메시지의 ID
             );
