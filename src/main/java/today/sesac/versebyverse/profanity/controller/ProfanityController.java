@@ -103,10 +103,13 @@ public class ProfanityController {
 
     /**
      * 비속어 키워드 검색 API.
-     * original, replacement, description 컬럼에 검색 키워드가 포함된 비속어 목록을 반환합니다.
+     * 비속어 원문(original), 대체어(replacement), 설명(description) 필드에서
+     * 대소문자 구분 없이 키워드를 포함하는 비속어 목록을 검색합니다.
      *
-     * @param keyword 검색 키워드
-     * @return 키워드가 포함된 비속어 페이징 처리 목록
+     * @param keyword 검색할 키워드 (비속어 원문, 대체어, 설명에서 검색)
+     * @param page    현재 페이지 (기본값: 0)
+     * @param size    한 페이지에 나타낼 데이터 수 (기본값: 20)
+     * @return 키워드가 포함된 비속어 목록과 페이지네이션 정보를 담은 응답
      */
     @GetMapping("/search")
     public ApiResponse<ProfanityListResponseWrapperDto> searchProfanities(
