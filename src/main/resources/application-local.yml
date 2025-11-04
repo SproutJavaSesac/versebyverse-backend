@@ -12,7 +12,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
+      ddl-auto: update # DDL 자동 생성 설정, entity 클래스에 따라 테이블을 생성함.
     defer-datasource-initialization: true # Hibernate가 생성한 스키마에 data.sql을 사용하고 싶다면 설정해야 함.
 
     properties:
