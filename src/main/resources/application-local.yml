@@ -5,10 +5,10 @@ spring:
     url: jdbc:mysql://localhost:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  sql:
-    init:
-      data-locations: classpath:data.sql # 초기 데이터 로딩을 위한 SQL 파일 위치
-      mode: always # 애플리케이션 시작 시 항상 초기 데이터를 로딩하도록 설정
+#  sql:
+#    init:
+#      data-locations: classpath:data.sql # 초기 데이터 로딩을 위한 SQL 파일 위치
+#      mode: always # 애플리케이션 시작 시 항상 초기 데이터를 로딩하도록 설정
 
   jpa:
     hibernate:
