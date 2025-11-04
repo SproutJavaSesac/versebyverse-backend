@@ -34,7 +34,7 @@ public class Profanity extends BaseEntity {
      * 비속어 원문을 나타냅니다.
      */
     @NotNull
-    @Column(length = 50)
+    @Column(length = 20, unique = true)
     private String original;
 
     /**
