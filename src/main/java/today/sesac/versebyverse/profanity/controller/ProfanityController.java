@@ -1,9 +1,15 @@
 package today.sesac.versebyverse.profanity.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +30,7 @@ import today.sesac.versebyverse.profanity.service.ProfanityService;
  * 비속어 관련 API 컨트롤러.
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/profanities")
 @RequiredArgsConstructor
@@ -92,6 +99,25 @@ public class ProfanityController {
     public ApiResponse<String> deleteProfanity(@PathVariable long profanityId) {
 
         return ApiResponse.success(profanityService.deleteProfanity(profanityId));
+    }
+
+    /**
+     * 비속어 키워드 검색 API.
+     * original, replacement, description 컬럼에 검색 키워드가 포함된 비속어 목록을 반환합니다.
+     *
+     * @param keyword 검색 키워드
+     * @return 키워드가 포함된 비속어 페이징 처리 목록
+     */
+    @GetMapping("/search")
+    public ApiResponse<ProfanityListResponseWrapperDto> searchProfanities(
+            @RequestParam @NotBlank String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ){
+
+        Pageable pageable = PageRequest.of(page, size,  Sort.by(Direction.DESC, "createdAt"));
+        ProfanityListResponseWrapperDto profanityPagingList = profanityService.searchProfanities(keyword, pageable);
+        return ApiResponse.success(profanityPagingList);
     }
 
 }

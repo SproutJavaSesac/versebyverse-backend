@@ -137,4 +137,13 @@ public class ProfanityService {
         return sort != null && (sort.equals("createdAt") || sort.equals("updatedAt") || sort.equals(
                 "original") || sort.equals("id"));
     }
+
+    public ProfanityListResponseWrapperDto searchProfanities(String keyword, Pageable pageable) {
+
+        Page<Profanity> profanities =
+                profanityRepository.searchByKeyword(
+                        keyword, pageable);
+
+        return ProfanityListResponseWrapperDto.of(profanities);
+    }
 }
