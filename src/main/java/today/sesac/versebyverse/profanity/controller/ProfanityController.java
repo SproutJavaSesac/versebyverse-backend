@@ -118,7 +118,7 @@ public class ProfanityController {
             @RequestParam(defaultValue = "20") int size
     ){
 
-        Pageable pageable = PageRequest.of(page, size,  Sort.by(Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(page, size,  Sort.by(Direction.DESC, "created_at"));
         ProfanityListResponseWrapperDto profanityPagingList = profanityService.searchProfanities(keyword, pageable);
         return ApiResponse.success(profanityPagingList);
     }
