@@ -137,4 +137,21 @@ public class ProfanityService {
         return sort != null && (sort.equals("createdAt") || sort.equals("updatedAt") || sort.equals(
                 "original") || sort.equals("id"));
     }
+
+    /**
+     * 키워드로 비속어를 검색합니다.
+     * 비속어 원문, 대체어, 설명에서 키워드가 포함된 비속어 목록을 페이지네이션과 함께 반환합니다.
+     *
+     * @param keyword  검색할 키워드 (original, replacement, description 필드에서 검색)
+     * @param pageable 페이지네이션 및 정렬 정보
+     * @return 키워드가 포함된 비속어 목록과 페이지네이션 정보
+     */
+    public ProfanityListResponseWrapperDto searchProfanities(String keyword, Pageable pageable) {
+
+        Page<Profanity> profanities =
+                profanityRepository.searchByKeyword(
+                        keyword, pageable);
+
+        return ProfanityListResponseWrapperDto.of(profanities);
+    }
 }

@@ -1,8 +1,11 @@
 package today.sesac.versebyverse.profanity.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import today.sesac.versebyverse.profanity.entity.Profanity;
 
 /**
@@ -27,4 +30,19 @@ public interface ProfanityRepository extends JpaRepository<Profanity, Long> {
     @Modifying
     @Query("DELETE FROM Profanity p WHERE p.id = :profanityId")
     int deleteByIdIfExists(long profanityId);
+
+    /**
+     * 키워드로 비속어를 검색합니다.
+     * 비속어 원문(original), 대체어(replacement), 설명(description) 필드에서 대소문자 구분 없이 부분 일치 검색을 수행합니다.
+     *
+     * @param keyword  검색할 키워드 (비속어 원문, 대체어, 설명에서 검색)
+     * @param pageable 페이지네이션 및 정렬 정보
+     * @return 키워드가 포함된 비속어 목록 페이지
+     */
+    @Query(value = "SELECT * FROM profanities WHERE " +
+            "MATCH(original, replacement, description) AGAINST(:keyword IN BOOLEAN MODE)",
+    countQuery = "SELECT COUNT(*) FROM profanities WHERE " +
+            "MATCH(original, replacement, description) AGAINST(:keyword IN BOOLEAN MODE)",
+    nativeQuery = true)
+    Page<Profanity> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }
