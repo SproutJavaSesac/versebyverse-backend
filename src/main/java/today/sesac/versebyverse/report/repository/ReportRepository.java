@@ -3,6 +3,7 @@ package today.sesac.versebyverse.report.repository;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,7 +41,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      * @param pageable   페이지네이션 정보 (페이지 번호, 크기, 정렬 기준)
      * @return 페이지네이션된 신고 목록
      */
-    @Query("SELECT r FROM Report r WHERE (:statusType IS NULL OR r.statusType = :statusType)")
+    @EntityGraph(attributePaths = {"reporter", "post", "comment", "comment.post"})
+    @Query("SELECT r FROM Report r " + "WHERE (:statusType IS NULL OR r.statusType = :statusType) "
+            + "ORDER BY r.createdAt DESC")
     Page<Report> findAllByStatusType(@Param("statusType") StatusType statusType, Pageable pageable);
 
 }
