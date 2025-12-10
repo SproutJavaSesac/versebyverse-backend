@@ -9,9 +9,10 @@ import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.service.PostAiService;
 import today.sesac.versebyverse.global.event.PostCreatedEvent;
-import today.sesac.versebyverse.global.exception.FileUploadException;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
-import today.sesac.versebyverse.global.service.S3FileService;
+import today.sesac.versebyverse.image.domain.ImagePurpose;
+import today.sesac.versebyverse.image.exception.FileUploadException;
+import today.sesac.versebyverse.image.service.ImageFileService;
 import today.sesac.versebyverse.member.entity.Member;
 import today.sesac.versebyverse.member.service.MemberService;
 import today.sesac.versebyverse.post.dto.request.PostCreateRequestDto;
@@ -39,7 +40,7 @@ public class PostCommandService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private final S3FileService s3FileService;
+    private final ImageFileService imageFileService;
 
     /**
      * 게시물 작성 api.
@@ -63,7 +64,8 @@ public class PostCommandService {
         if (postCreateRequestDto.getImageFile() != null && !postCreateRequestDto.getImageFile()
                 .isEmpty()) {
             try {
-                imageUrl = s3FileService.uploadImage(postCreateRequestDto.getImageFile(), "posts");
+                imageUrl = imageFileService.uploadImage(postCreateRequestDto.getImageFile(),
+                        ImagePurpose.POST, memberId);
                 log.info("이미지 업로드 완료: {}", imageUrl);
             } catch (Exception e) {
                 log.error("이미지 업로드 실패", e);

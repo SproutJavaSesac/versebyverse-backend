@@ -1,9 +1,15 @@
 package today.sesac.versebyverse.profanity.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +30,7 @@ import today.sesac.versebyverse.profanity.service.ProfanityService;
  * 비속어 관련 API 컨트롤러.
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/v1/profanities")
 @RequiredArgsConstructor
@@ -92,6 +99,28 @@ public class ProfanityController {
     public ApiResponse<String> deleteProfanity(@PathVariable long profanityId) {
 
         return ApiResponse.success(profanityService.deleteProfanity(profanityId));
+    }
+
+    /**
+     * 비속어 키워드 검색 API.
+     * 비속어 원문(original), 대체어(replacement), 설명(description) 필드에서
+     * 대소문자 구분 없이 키워드를 포함하는 비속어 목록을 검색합니다.
+     *
+     * @param keyword 검색할 키워드 (비속어 원문, 대체어, 설명에서 검색)
+     * @param page    현재 페이지 (기본값: 0)
+     * @param size    한 페이지에 나타낼 데이터 수 (기본값: 20)
+     * @return 키워드가 포함된 비속어 목록과 페이지네이션 정보를 담은 응답
+     */
+    @GetMapping("/search")
+    public ApiResponse<ProfanityListResponseWrapperDto> searchProfanities(
+            @RequestParam @NotBlank String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ){
+
+        Pageable pageable = PageRequest.of(page, size,  Sort.by(Direction.DESC, "created_at"));
+        ProfanityListResponseWrapperDto profanityPagingList = profanityService.searchProfanities(keyword, pageable);
+        return ApiResponse.success(profanityPagingList);
     }
 
 }
