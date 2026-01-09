@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import today.sesac.versebyverse.member.entity.RoleType;
 import today.sesac.versebyverse.member.entity.SocialType;
@@ -53,14 +54,16 @@ public class UserPrincipal implements OAuth2User {
     }
 
     /**
-     * TODO: 권한 추가하기
+     * 요청한 사용자의 권한을 불러옵니다.
      *
-     * @return
+     * @return 사용자의 권한
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return List.of();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleType.name());
+
+        return List.of(authority);
     }
 
     @Override

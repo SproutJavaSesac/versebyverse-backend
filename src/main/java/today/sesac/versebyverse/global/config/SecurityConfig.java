@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
+import today.sesac.versebyverse.auth.CustomAuthenticationEntryPoint;
 import today.sesac.versebyverse.auth.CustomLogoutSuccessHandler;
 import today.sesac.versebyverse.auth.OAuth2AuthenticationSuccessHandler;
 import today.sesac.versebyverse.auth.service.CustomOAuth2UserService;
@@ -30,6 +31,8 @@ public class SecurityConfig {
 
     private final CorsConfigurationSource corsConfigurationSource;
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -41,9 +44,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/oauth2/authorization",
-                                "/login/oauth2/code/*",
-                                "/api/**"  // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
+                                "/login/oauth2/code/*"
                         ).permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**")
+                        .permitAll() // TODO: 팀원 기능 구현에 방해되지 않도록 임시 설정, 추후 삭제할 것
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -62,6 +67,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .clearAuthentication(true)
                         .logoutSuccessHandler(customLogoutSuccessHandler)
+                ).exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
         ;
 

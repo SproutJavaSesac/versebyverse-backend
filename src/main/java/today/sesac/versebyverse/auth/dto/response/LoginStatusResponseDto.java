@@ -2,6 +2,7 @@ package today.sesac.versebyverse.auth.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import today.sesac.versebyverse.member.entity.RoleType;
 
 /**
  * 로그인 상태 반환 DTO.
@@ -18,6 +19,8 @@ public class LoginStatusResponseDto {
 
     private String email;
 
+    private RoleType roleType;
+
     /**
      * 사용자가 인증되지 않았을 경우의 DTO를 생성합니다. idAuthenticated만 false를 입력하고, 나머지 필드에는 null을 입력합니다.
      *
@@ -25,7 +28,7 @@ public class LoginStatusResponseDto {
      */
     public static LoginStatusResponseDto createUnauthenticated() {
 
-        return new LoginStatusResponseDto(false, null, null, null);
+        return new LoginStatusResponseDto(false, null, null, null, null);
     }
 
     /**
@@ -34,12 +37,13 @@ public class LoginStatusResponseDto {
      * @param memberId 사용자의 ID
      * @param nickname 사용자의 nickname
      * @param email    사용자의 email
+     * @param roleType 사용자의 권한
      * @return 로그인 상태 반환 DTO.
      */
     public static LoginStatusResponseDto createAuthenticated(Long memberId, String nickname,
-            String email) {
+            String email, RoleType roleType) {
 
-        return new LoginStatusResponseDto(true, memberId, nickname, email);
+        return new LoginStatusResponseDto(true, memberId, nickname, email, roleType);
     }
 
 }
