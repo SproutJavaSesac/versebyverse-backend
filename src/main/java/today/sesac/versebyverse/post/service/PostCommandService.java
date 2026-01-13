@@ -1,5 +1,7 @@
 package today.sesac.versebyverse.post.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +10,11 @@ import org.springframework.stereotype.Service;
 import today.sesac.versebyverse.ai.dto.request.PostAiRequestDto;
 import today.sesac.versebyverse.ai.dto.response.PostAiResponseDto;
 import today.sesac.versebyverse.ai.service.PostAiService;
-import today.sesac.versebyverse.global.event.PostCreatedEvent;
+import today.sesac.versebyverse.badge.entity.BadgeOutbox;
+import today.sesac.versebyverse.badge.entity.OutboxMessageType;
+import today.sesac.versebyverse.badge.entity.OutboxStatus;
+import today.sesac.versebyverse.badge.entity.PostCreatedEventPayload;
+import today.sesac.versebyverse.badge.repository.BadgeOutboxRepository;
 import today.sesac.versebyverse.global.exception.PermissionRequiredException;
 import today.sesac.versebyverse.image.domain.ImagePurpose;
 import today.sesac.versebyverse.image.exception.FileUploadException;
@@ -39,6 +45,10 @@ public class PostCommandService {
     private final PostAiService postAiService;
 
     private final ApplicationEventPublisher eventPublisher;
+
+    private final BadgeOutboxRepository badgeOutboxRepository;
+
+    private final ObjectMapper objectMapper;
 
     private final ImageFileService imageFileService;
 
@@ -101,7 +111,25 @@ public class PostCommandService {
 
         Post savedPost = postRepository.save(post);
 
-        eventPublisher.publishEvent(new PostCreatedEvent(author));
+//        eventPublisher.publishEvent(new PostCreatedEvent(author));
+
+        try {
+
+            PostCreatedEventPayload payload =
+                    PostCreatedEventPayload.of(savedPost.getId(), savedPost.getAuthor().getId());
+
+            String payloadJson = objectMapper.writeValueAsString(payload);
+
+            BadgeOutbox badgeOutbox =
+                    BadgeOutbox.create(OutboxMessageType.POST_CREATED, payloadJson,
+                            OutboxStatus.WAITING);
+            badgeOutboxRepository.save(badgeOutbox);
+            log.info("BadgeOutbox created: {}", badgeOutbox);
+
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize outbox payload", e);
+            throw new RuntimeException("Failed to serialize outbox payload", e);
+        }
 
         return PostCreateResponseDto.of(savedPost);
     }

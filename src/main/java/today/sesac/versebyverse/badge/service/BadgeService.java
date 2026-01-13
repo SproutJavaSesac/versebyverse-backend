@@ -21,7 +21,6 @@ import today.sesac.versebyverse.post.repository.PostRepository;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BadgeService {
 
     private final BadgeRepository badgeRepository;
@@ -35,7 +34,10 @@ public class BadgeService {
      *
      * @param author 게시글 작성자 객체.
      */
+    @Transactional
     public void grantPostBadges(Member author) {
+
+        log.info("grantPostBadges 호출");
 
         List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(author.getId());
 
@@ -90,7 +92,10 @@ public class BadgeService {
      *
      * @param member 가입한 회원 객체.
      */
+    @Transactional
     public void grantMemberBadges(Member member) {
+
+        log.info("grantMemberBadges 호출");
 
         List<MemberBadge> memberBadgeList = memberBadgeRepository.findByMemberId(member.getId());
 
