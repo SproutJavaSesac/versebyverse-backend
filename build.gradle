@@ -52,6 +52,11 @@ dependencies {
     implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1')
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
 
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
